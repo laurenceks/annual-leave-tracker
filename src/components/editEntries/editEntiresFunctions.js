@@ -3,6 +3,7 @@ import {variantPairings} from "../common/styles";
 import naturalSort from "../../functions/naturalSort";
 import {Fragment} from "react";
 import formatMySqlTimestamp, {timestampToDate} from "../../functions/formatMySqlTimestamp";
+import setCase from "../../functions/setCase";
 
 const singleEntryRow = (entry, type, functions, editId) => {
     return (
@@ -119,11 +120,15 @@ export const makeRows = (type, entryList, editId, functions) => {
     const rowFunctions = {
         booking: () => entryList.map(booking => {
             return (
+                //TODO style status cells, user/manager comments if empty
                 booking.id !== editId ? [
                     booking.id,
-                    booking.name,
-                    `${booking.currentStock} ${booking.unit}`,
-                    `${booking.warningLevel} ${booking.unit}`,
+                    booking.dateFrom,
+                    booking.dateTo,
+                    booking.hours.toFixed(2),
+                    setCase(booking.status, "capitalise"),
+                    booking.userComments,
+                    booking.managerComments || "None",
                     !editId ? {
                         type: "button",
                         id: 1,
@@ -139,14 +144,15 @@ export const makeRows = (type, entryList, editId, functions) => {
                         text: "Delete",
                         buttonClass: "btn-danger btn-sm",
                         handler: () => {
+                            const dirtyBookingName = `from ${booking.dateFrom} to ${booking.dateTo} costing ${booking.hours} hours`;
                             functions.setModalOptions(prevState => {
                                 return {
                                     ...prevState,
                                     show: true,
                                     deleteId: booking.id,
-                                    targetName: booking.name,
-                                    bodyText: `Are you sure you want to delete ${booking.name}?\n\nThe item will also be removed from any lists containing it.`,
-                                    handleYes: () => functions.deleteEntry(booking.id, booking.name)
+                                    targetName: dirtyBookingName,
+                                    bodyText: `Are you sure you want to delete your booking ${dirtyBookingName}?`,
+                                    handleYes: () => functions.deleteEntry(booking.id, dirtyBookingName)
                                 }
                             })
                         }
@@ -268,47 +274,62 @@ const makeEditRow = (type, entry, functions, editId, entryList = []) => {
     const editRowFunctions = {
         booking: () => {
             const inputIds = {
-                name: `editBookingRow-${entry.id}-name`,
-                unit: `editBookingRow-${entry.id}-unit`,
-                warningLevel: `editBookingRow-${entry.id}-warningLevel`
+                from: `editBookingRow-${entry.id}-from`,
+                to: `editBookingRow-${entry.id}-to`,
+                hours: `editBookingRow-${entry.id}-hours`,
+                userComments: `editBookingRow-${entry.id}-userComments`
             };
             return [
                 entry.id,
                 {
                     type: "input",
                     props: {
-                        type: "text",
-                        id: inputIds.name,
-                        label: "Booking name",
-                        defaultValue: entry.name,
-                        form: "editBookingForm",
-                        forceCase: "title"
+                        type: "date",
+                        id: inputIds.from,
+                        label: "From",
+                        defaultValue: entry.dateFrom ?? "",
+                        form: "editPeriodForm",
                     },
-                    invalidFeedback: "You must specify a name",
-                    sortValue: entry.name
+                    invalidFeedback: "You must specify a date from",
+                    sortValue: entry.dateFrom
                 }, {
                     type: "input",
                     props: {
-                        type: "text",
-                        id: inputIds.unit,
-                        label: "Unit name",
-                        defaultValue: entry.unit && entry.unit ? entry.unit.trim() : "",
-                        form: "editBookingForm",
-                        forceCase: "lower"
+                        type: "date",
+                        id: inputIds.to,
+                        label: "To",
+                        defaultValue: entry.dateTo ?? entry.dateFrom ?? "",
+                        form: "editPeriodForm",
+                        disabled: true
                     },
-                    invalidFeedback: "You must specify a unit type",
-                    sortValue: `${entry.currentStock} ${entry.unit}`
+                    invalidFeedback: "You must specify a date to",
+                    sortValue: entry.dateFrom
                 }, {
                     type: "input",
                     props: {
                         type: "number",
-                        id: inputIds.warningLevel,
-                        label: "Warning level",
-                        defaultValue: entry.warningLevel,
+                        id: inputIds.hours,
+                        label: "Hours",
+                        defaultValue: entry.hours,
                         form: "editBookingForm",
                     },
                     invalidFeedback: "You must specify a warning level",
                     sortValue: `${entry.warningLevel} ${entry.unit}`
+                }, {
+                    text: setCase(entry.status, "capitalise")
+                }, {
+                    //TODO disable validation
+                    type: "input",
+                    props: {
+                        type: "text",
+                        id: inputIds.userComments,
+                        label: "Comments",
+                        defaultValue: entry.userComments,
+                        form: "editPeriodForm",
+                    },
+                    sortValue: entry.name
+                }, {
+                    text: entry.managerComments
                 }, {
                     type: "submit",
                     buttonClass: "btn-success",
@@ -316,14 +337,26 @@ const makeEditRow = (type, entry, functions, editId, entryList = []) => {
                     id: entry.id,
                     className: "text-center buttonCell",
                     form: "editBookingForm",
+                    //TODO confirm modal that this will reset to "requested"
                     handler: (e) => {
-                        validateForm(e, [inputIds.name, inputIds.unit, inputIds.warningLevel], (x) => {
-                            if (x.isValid) {
-                                functions.editEntry({
-                                    name: x.values[inputIds.name],
-                                    unit: x.values[inputIds.unit],
-                                    warningLevel: x.values[inputIds.warningLevel],
-                                    id: entry.id
+                        const dirtyBookingName = `from ${entry.dateFrom} to ${entry.dateTo} costing ${entry.hours} hours`;
+                        functions.setModalOptions((prevState) => {
+                            return {
+                                ...prevState,
+                                show: true,
+                                deleteId: entry.id,
+                                targetName: dirtyBookingName,
+                                bodyText: `Are you sure you want to edit your booking ${dirtyBookingName}?\n\nThis will change the status to "Requested" and the booking will need approval by a manager`,
+                                handleYes: () => validateForm(e, [inputIds.from, inputIds.to, inputIds.userComments, inputIds.hours], (x) => {
+                                    if (x.isValid) {
+                                        functions.editEntry({
+                                            from: x.values[inputIds.from],
+                                            to: x.values[inputIds.to],
+                                            hours: x.values[inputIds.hours],
+                                            userComments: x.values[inputIds.userComments],
+                                            id: entry.id
+                                        })
+                                    }
                                 })
                             }
                         })
@@ -417,7 +450,7 @@ const makeEditRow = (type, entry, functions, editId, entryList = []) => {
                         label: "Item",
                         id: `input-listId-${x.id}-itemId-${y.itemId}-name`,
                         inputClass: `form-listId-${x.id}`,
-                        defaultSelected: x.items[i].itemId?[{
+                        defaultSelected: x.items[i].itemId ? [{
                             ...x.items[i],
                             name: x.items[i].itemName,
                             id: x.items[i].itemId
@@ -585,27 +618,28 @@ const makeEditRow = (type, entry, functions, editId, entryList = []) => {
 export const makeUndeleteRow = (type, deletedEntryList, functions) => {
     const deleteRowFunctions = {
         booking: () => {
-            return deletedEntryList.map(item => {
+            return deletedEntryList.map(booking => {
                 return ([
-                        item.id,
-                        item.name,
-                        `${item.currentStock} ${item.unit}`,
-                        {text: formatMySqlTimestamp(item.lastUpdated), sortValue: item.lastUpdated},
+                        booking.id,
+                        booking.dateFrom,
+                        booking.dateTo,
+                        {text: formatMySqlTimestamp(booking.lastUpdated), sortValue: booking.lastUpdated},
                         {
                             type: "button",
                             text: "Restore",
                             buttonClass: "btn-warning btn-sm",
                             handler: () => {
+                                const dirtyBookingName = `from ${booking.dateFrom} to ${booking.dateTo} costing ${booking.hours} hours`;
                                 functions.setModalOptions(prevState => {
                                     return {
                                         ...prevState,
                                         show: true,
-                                        deleteId: item.id,
-                                        targetName: item.name,
+                                        deleteId: booking.id,
+                                        targetName: booking.name,
                                         headerClass: variantPairings.warning.header,
                                         yesButtonVariant: "warning",
-                                        bodyText: `Are you sure you want to restore ${item.name}?\n\nThe item will also be re-added to any lists that contained it.`,
-                                        handleYes: () => functions.restoreEntry(item.id, item.name)
+                                        bodyText: `Are you sure you want to restore your booking ${dirtyBookingName}?`,
+                                        handleYes: () => functions.restoreEntry(booking.id, dirtyBookingName)
                                     }
                                 })
                             }
