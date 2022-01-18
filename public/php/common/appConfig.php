@@ -1,2 +1,2 @@
 <?php
-$appName = "Restocker";
+$appName = "Annual leave tracker";
