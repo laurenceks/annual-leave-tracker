@@ -1,14 +1,28 @@
 import FormInput from "../../common/forms/FormInput";
 
-const AddFormBooking = ({addData, setAddData}) => {
+const AddFormPeriod = ({addData, setAddData}) => {
 
     return (
         <div className="row my-3">
-            <h3>Make a new booking</h3>
+            <h3>Add new period</h3>
+            <div className="col-12 col-md-4 mb-3 mb-md-0">
+                <div className="formInputGroup">
+                    <FormInput type={"text"}
+                               id={"inputAddPeriodName"}
+                               label={"Name"}
+                               invalidFeedback={"You must name the period"}
+                               value={addData.hours}
+                               onChange={(e, x) => {
+                                   setAddData(prevState => {
+                                       return {...prevState, hours: x}
+                                   })
+                               }}/>
+                </div>
+            </div>
             <div className="col-12 col-md-3 mb-3 mb-md-0">
                 <div className="formInputGroup">
                     <FormInput type={"date"}
-                               id={"inputNewBookingFrom"}
+                               id={"inputAddPeriodFrom"}
                                label={"From"}
                                invalidFeedback={"You must enter a date from"}
                                value={addData.from}
@@ -22,39 +36,12 @@ const AddFormBooking = ({addData, setAddData}) => {
             <div className="col-12 col-md-3 mb-3 mb-md-0">
                 <div className="formInputGroup">
                     <FormInput type={"date"}
-                               id={"inputNewBookingTo"}
+                               id={"inputAddPeriodTo"}
                                label={"To"}
+                               min={addData.from}
                                invalidFeedback={"You must enter a date to"}
                                value={addData.from}
-                               disabled={true}
                     />
-                </div>
-            </div>
-            <div className="col-12 col-md-2 mb-3 mb-md-0">
-                <div className="formInputGroup">
-                    <FormInput type={"number"}
-                               id={"inputNewBookingHours"}
-                               label={"Hours"}
-                               invalidFeedback={"You must enter the number of hours this will take"}
-                               value={addData.hours}
-                               onChange={(e, x) => {
-                                   setAddData(prevState => {
-                                       return {...prevState, hours: x}
-                                   })
-                               }}/>
-                </div>
-            </div>
-            <div className="col-12 col-md-3 mb-3 mb-md-0">
-                <div className="formInputGroup">
-                    <FormInput type={"text"}
-                               id={"inputNewBookingUserComments"}
-                               label={"Comments"}
-                               value={addData.userComments}
-                               onChange={(e, x) => {
-                                   setAddData(prevState => {
-                                       return {...prevState, userComments: x}
-                                   })
-                               }}/>
                 </div>
             </div>
             <div className="col-12 col-md-1 d-flex align-items-center">
@@ -64,4 +51,4 @@ const AddFormBooking = ({addData, setAddData}) => {
     );
 }
 
-export default AddFormBooking;
+export default AddFormPeriod;
