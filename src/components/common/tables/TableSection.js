@@ -4,7 +4,7 @@ import Table from "./Table";
 
 const TableSection = ({title, tableProps}) => {
     return (
-        <div className="my-3">
+        <div className={`my-3${tableProps.fullWidth && " w-100"}`}>
             <h3>{title}</h3>
             <Table {...tableProps}/>
         </div>
