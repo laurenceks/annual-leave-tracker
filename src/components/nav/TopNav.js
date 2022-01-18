@@ -11,10 +11,10 @@ const TopNav = ({user}) => {
     const history = useNavigate()
     const [searchState, setSearchState] = useState([]);
     return (
-        <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
+        <nav className="navbar navbar-expand-lg navbar-dark bg-primary shadow">
             <div className="container-fluid">
                 <NavLink to={"/"} className="navbar-brand">
-                    <img alt="Restocker logo" src="./img/logoNav.svg" style={{height: "35px"}}/>
+                    <img alt="AL tracker logo" src="./img/logoNav.svg" style={{height: "35px"}}/>
                 </NavLink>
                 <button className="navbar-toggler" type="button" data-bs-toggle="collapse"
                         data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
@@ -27,16 +27,7 @@ const TopNav = ({user}) => {
                             <NavLink to={"/"} className="nav-link rounded-3 mx-1 px-2">Home</NavLink>
                         </li>
                         <li className="nav-item">
-                            <NavLink to={"/stock"} className="nav-link rounded-3 mx-1 px-2">Stock</NavLink>
-                        </li>
-                        <li className="nav-item">
-                            <NavLink to={"/withdraw"} className="nav-link rounded-3 mx-1 px-2">Withdraw</NavLink>
-                        </li>
-                        <li className="nav-item">
-                            <NavLink to={"/restock"} className="nav-link rounded-3 mx-1 px-2">Restock</NavLink>
-                        </li>
-                        <li className="nav-item">
-                            <NavLink to={"/transfer"} className="nav-link rounded-3 mx-1 px-2">Transfer</NavLink>
+                            <NavLink to={"/bookings"} className="nav-link rounded-3 mx-1 px-2">Bookings</NavLink>
                         </li>
                         {(user?.admin || user?.superAdmin) ?
                             <li className="nav-item dropdown mx-1">
@@ -48,12 +39,12 @@ const TopNav = ({user}) => {
                                     aria-expanded="false">
                                     <p className="m-0 px-2">Admin</p>
                                 </div>
-                                <ul className="dropdown-menu" aria-labelledby="adminDropdown">
-                                    <li><NavLink className="dropdown-item" to={"/items"}>Items</NavLink></li>
-                                    <li><NavLink className="dropdown-item" to={"/lists"}>Lists</NavLink></li>
+                                <ul className="dropdown-menu shadow" aria-labelledby="adminDropdown">
+                                    <li><NavLink className="dropdown-item" to={"/requests"}>Requests</NavLink></li>
+                                    <li><NavLink className="dropdown-item" to={"/allocations"}>Allocations</NavLink></li>
                                     <li><NavLink className="dropdown-item" to={"/locations"}>Locations</NavLink></li>
+                                    <li><NavLink className="dropdown-item" to={"/payGrades"}>Pay grades</NavLink></li>
                                     <li><NavLink className="dropdown-item" to={"/users"}>Users</NavLink></li>
-                                    <li><NavLink className="dropdown-item" to={"/settings"}>Settings</NavLink></li>
                                 </ul>
                             </li>
                             : ""
@@ -101,7 +92,7 @@ const TopNav = ({user}) => {
                                 <IoPersonCircle className="smallIcon mx-2 mx-lg-0"/>
                                 <NavLink className="m-0 mx-2 d-lg-none" to={"/account"}>{user.email}</NavLink>
                             </div>
-                            <ul className="dropdown-menu userDropdown" aria-labelledby="userDropdown">
+                            <ul className="dropdown-menu userDropdown shadow" aria-labelledby="userDropdown">
                                 <li className="d-none d-lg-block"><NavLink className="dropdown-item"
                                                                            to={`/account`}>{user.email}</NavLink></li>
                                 <li className="d-none d-lg-block">
