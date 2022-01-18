@@ -1,6 +1,7 @@
 import AddFormLocation from "./addEntryForms/AddFormLocation";
 import AddFormBooking from "./addEntryForms/AddFormBooking";
 import AddFormPayGrade from "./addEntryForms/AddFormPayGrade";
+import AddFormPeriod from "./addEntryForms/AddFormPeriod";
 
 const addDataTemplates = {
     booking: {
@@ -8,7 +9,15 @@ const addDataTemplates = {
         to: "",
         hours: ""
     },
+    period: {
+        name: "",
+        from: "",
+        to: "",
+    },
     location: {
+        name: ""
+    },
+    payGrade: {
         name: ""
     },
     list: {
@@ -31,6 +40,7 @@ const addDataForms = {
     location: AddFormLocation,
     booking: AddFormBooking,
     payGrade: AddFormPayGrade,
+    period: AddFormPeriod,
 }
 
 export {addDataTemplates, addDataForms};

@@ -2,7 +2,7 @@ import validateForm from "../../functions/formValidation";
 import {variantPairings} from "../common/styles";
 import naturalSort from "../../functions/naturalSort";
 import {Fragment} from "react";
-import formatMySqlTimestamp from "../../functions/formatMySqlTimestamp";
+import formatMySqlTimestamp, {timestampToDate} from "../../functions/formatMySqlTimestamp";
 
 const singleEntryRow = (entry, type, functions, editId) => {
     return (
@@ -154,6 +154,43 @@ export const makeRows = (type, entryList, editId, functions) => {
                 ] : makeEditRow(type, booking, functions)
             )
         }),
+        period: () => entryList.map(period => {
+            return (
+                period.id !== editId ? [
+                    period.id,
+                    period.name,
+                    timestampToDate(period.dateFrom),
+                    timestampToDate(period.dateTo),
+                    !editId ? {
+                        type: "button",
+                        id: 1,
+                        text: "Edit",
+                        buttonClass: "btn-warning btn-sm",
+                        handler: () => {
+                            functions.setEditId(period.id)
+                        }
+                    } : {text: ""},
+                    !editId ? {
+                        type: "button",
+                        id: 1,
+                        text: "Delete",
+                        buttonClass: "btn-danger btn-sm",
+                        handler: () => {
+                            functions.setModalOptions(prevState => {
+                                return {
+                                    ...prevState,
+                                    show: true,
+                                    deleteId: period.id,
+                                    targetName: period.name,
+                                    bodyText: `Are you sure you want to delete ${period.name}?\n\nThe period will also be removed from any lists containing it.`,
+                                    handleYes: () => functions.deleteEntry(period.id, period.name)
+                                }
+                            })
+                        }
+                    } : {text: ""}
+                ] : makeEditRow(type, period, functions)
+            )
+        }),
         location: () => entryList.map((entry) => singleEntryRow(entry, type, functions, editId)),
         payGrade: () => entryList.map((entry) => singleEntryRow(entry, type, functions, editId)),
         list: () => {
@@ -231,9 +268,9 @@ const makeEditRow = (type, entry, functions, editId, entryList = []) => {
     const editRowFunctions = {
         booking: () => {
             const inputIds = {
-                name: `editItemRow-${entry.id}-name`,
-                unit: `editItemRow-${entry.id}-unit`,
-                warningLevel: `editItemRow-${entry.id}-warningLevel`
+                name: `editBookingRow-${entry.id}-name`,
+                unit: `editBookingRow-${entry.id}-unit`,
+                warningLevel: `editBookingRow-${entry.id}-warningLevel`
             };
             return [
                 entry.id,
@@ -242,9 +279,9 @@ const makeEditRow = (type, entry, functions, editId, entryList = []) => {
                     props: {
                         type: "text",
                         id: inputIds.name,
-                        label: "Item name",
+                        label: "Booking name",
                         defaultValue: entry.name,
-                        form: "editItemForm",
+                        form: "editBookingForm",
                         forceCase: "title"
                     },
                     invalidFeedback: "You must specify a name",
@@ -256,7 +293,7 @@ const makeEditRow = (type, entry, functions, editId, entryList = []) => {
                         id: inputIds.unit,
                         label: "Unit name",
                         defaultValue: entry.unit && entry.unit ? entry.unit.trim() : "",
-                        form: "editItemForm",
+                        form: "editBookingForm",
                         forceCase: "lower"
                     },
                     invalidFeedback: "You must specify a unit type",
@@ -268,7 +305,7 @@ const makeEditRow = (type, entry, functions, editId, entryList = []) => {
                         id: inputIds.warningLevel,
                         label: "Warning level",
                         defaultValue: entry.warningLevel,
-                        form: "editItemForm",
+                        form: "editBookingForm",
                     },
                     invalidFeedback: "You must specify a warning level",
                     sortValue: `${entry.warningLevel} ${entry.unit}`
@@ -278,7 +315,7 @@ const makeEditRow = (type, entry, functions, editId, entryList = []) => {
                     text: "Save",
                     id: entry.id,
                     className: "text-center buttonCell",
-                    form: "editItemForm",
+                    form: "editBookingForm",
                     handler: (e) => {
                         validateForm(e, [inputIds.name, inputIds.unit, inputIds.warningLevel], (x) => {
                             if (x.isValid) {
@@ -286,6 +323,76 @@ const makeEditRow = (type, entry, functions, editId, entryList = []) => {
                                     name: x.values[inputIds.name],
                                     unit: x.values[inputIds.unit],
                                     warningLevel: x.values[inputIds.warningLevel],
+                                    id: entry.id
+                                })
+                            }
+                        })
+                    }
+                }, {
+                    type: "button",
+                    buttonClass: "btn-danger",
+                    text: "Cancel",
+                    id: entry.id,
+                    className: "text-center buttonCell",
+                    handler: functions.getEntries
+                }];
+        },
+        period: () => {
+            const inputIds = {
+                name: `editPeriodRow-${entry.id}-name`,
+                from: `editPeriodRow-${entry.id}-from`,
+                to: `editPeriodRow-${entry.id}-to`,
+            };
+            return [
+                entry.id,
+                {
+                    type: "input",
+                    props: {
+                        type: "text",
+                        id: inputIds.name,
+                        label: "Period name",
+                        defaultValue: entry.name,
+                        form: "editPeriodForm",
+                        forceCase: "title"
+                    },
+                    invalidFeedback: "You must specify a name",
+                    sortValue: entry.name
+                }, {
+                    type: "input",
+                    props: {
+                        type: "date",
+                        id: inputIds.from,
+                        label: "From",
+                        defaultValue: entry.dateFrom ?? "",
+                        form: "editPeriodForm",
+                    },
+                    invalidFeedback: "You must specify a date from",
+                    sortValue: entry.dateFrom
+                }, {
+                    type: "input",
+                    props: {
+                        type: "date",
+                        id: inputIds.to,
+                        label: "To",
+                        defaultValue: entry.dateTo ?? "",
+                        form: "editPeriodForm",
+                    },
+                    invalidFeedback: "You must specify a date to",
+                    sortValue: entry.dateFrom
+                }, {
+                    type: "submit",
+                    buttonClass: "btn-success",
+                    text: "Save",
+                    id: entry.id,
+                    className: "text-center buttonCell",
+                    form: "editPeriodForm",
+                    handler: (e) => {
+                        validateForm(e, [inputIds.name, inputIds.from, inputIds.to], (x) => {
+                            if (x.isValid) {
+                                functions.editEntry({
+                                    name: x.values[inputIds.name],
+                                    from: x.values[inputIds.from],
+                                    to: x.values[inputIds.to],
                                     id: entry.id
                                 })
                             }
@@ -507,6 +614,7 @@ export const makeUndeleteRow = (type, deletedEntryList, functions) => {
                 )
             })
         },
+        period: () => singleUndeleteRow(deletedEntryList, functions),
         location: () => singleUndeleteRow(deletedEntryList, functions),
         payGrade: () => singleUndeleteRow(deletedEntryList, functions),
         list: () => {
