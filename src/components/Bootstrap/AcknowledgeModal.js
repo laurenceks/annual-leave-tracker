@@ -43,7 +43,7 @@ AcknowledgeModal.defaultProps = {
     title: "Error",
     bodyText: "An unknown error occurred",
     headClass: null,
-    buttonVariant: "primary"
+    buttonVariant: "warning"
 }
 
 export default AcknowledgeModal;
