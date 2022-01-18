@@ -54,7 +54,7 @@ const FormInput = ({
                        max={max}
                        step={step}
                        onChange={(e) => {
-                           const returnValue = type === "number" && e.target.value ? parseInt(e.target.value) : forceCase && forceCase !== "" ? setCase(e.target.value, forceCase) : e.target.value;
+                           const returnValue = type === "number" && e.target.value ? Number(e.target.value) : forceCase && forceCase !== "" ? setCase(e.target.value, forceCase) : e.target.value;
                            setInputState(returnValue);
 
                            if (onChange) {
@@ -81,8 +81,8 @@ FormInput.propTypes = {
     label: PropTypes.string,
     placeholder: PropTypes.string,
     type: PropTypes.string,
-    max: PropTypes.number,
-    min: PropTypes.number,
+    max: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    min: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     passwordId: PropTypes.number,
     step: PropTypes.number,
     reset: PropTypes.number,
