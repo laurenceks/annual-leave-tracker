@@ -4,22 +4,133 @@ import naturalSort from "../../functions/naturalSort";
 import {Fragment} from "react";
 import formatMySqlTimestamp from "../../functions/formatMySqlTimestamp";
 
+const singleEntryRow = (entry, type, functions, editId) => {
+    return (
+        entry.id !== editId ? [
+            entry.id,
+            entry.name,
+            !editId ? {
+                type: "button",
+                id: 1,
+                text: "Edit",
+                buttonClass: "btn-warning btn-sm",
+                handler: () => {
+                    functions.setEditId(entry.id)
+                }
+            } : {text: ""},
+            !editId ? {
+                type: "button",
+                id: 1,
+                text: "Delete",
+                buttonClass: "btn-danger btn-sm",
+                handler: () => {
+                    functions.setModalOptions(prevState => {
+                        return {
+                            ...prevState,
+                            show: true,
+                            deleteId: entry.id,
+                            targetName: entry.name,
+                            bodyText: `Are you sure you want to delete ${entry.name}?\n\n${entry.currentStock ? `There ${entry.currentStock > 1 ? "are" : "is"} currently ${entry.currentStock || 0} item${entry.currentStock === 1 ? "" : "s"} at ${entry.name} and you will not be able to alter stock once the entry is deleted.` : "This entry does not currently have any stock."}`,
+                            handleYes: () => functions.deleteEntry(entry.id, entry.name)
+                        }
+                    })
+                }
+            } : {text: ""}
+        ] : singleEditRow(type, entry, functions)
+    )
+}
+
+const singleEditRow = (type, entry, functions) => {
+    const inputIds = {
+        name: `editLocationRow-${entry.id}-name`,
+        unit: `editLocationRow-${entry.id}-unit`,
+        warningLevel: `editLocationRow-${entry.id}-warningLevel`
+    };
+    return [
+        entry.id,
+        {
+            type: "input",
+            props: {
+                type: "text",
+                id: inputIds.name,
+                label: "Location name",
+                defaultValue: entry.name,
+                form: "editLocationForm",
+                forceCase: "title"
+            },
+            invalidFeedback: "You must specify a name"
+        }, {
+            type: "submit",
+            buttonClass: "btn-success",
+            text: "Save",
+            id: entry.id,
+            className: "text-center buttonCell",
+            handler: (e) => {
+                validateForm(e, [inputIds.name], (x) => {
+                    if (x.isValid) {
+                        functions.editEntry({
+                            name: x.values[inputIds.name],
+                            id: entry.id
+                        })
+                    }
+                })
+            }
+        }, {
+            type: "button",
+            buttonClass: "btn-danger",
+            text: "Cancel",
+            id: entry.id,
+            className: "text-center buttonCell",
+            handler: functions.getEntries
+        }]
+}
+
+const singleUndeleteRow = (deletedEntryList, functions) => {
+    return deletedEntryList.map(entry => {
+        return ([
+                entry.id,
+                entry.name,
+                {text: formatMySqlTimestamp(entry.lastUpdated), sortValue: entry.lastUpdated},
+                {
+                    type: "button",
+                    text: "Restore",
+                    buttonClass: "btn-warning btn-sm",
+                    handler: () => {
+                        functions.setModalOptions(prevState => {
+                            return {
+                                ...prevState,
+                                show: true,
+                                deleteId: entry.id,
+                                targetName: entry.name,
+                                headerClass: variantPairings.warning.header,
+                                yesButtonVariant: "warning",
+                                bodyText: `Are you sure you want to restore ${entry.name}?`,
+                                handleYes: () => functions.restoreEntry(entry.id, entry.name)
+                            }
+                        })
+                    }
+                }
+            ]
+        )
+    })
+}
+
 export const makeRows = (type, entryList, editId, functions) => {
     const rowFunctions = {
-        booking: () => entryList.map(item => {
+        booking: () => entryList.map(booking => {
             return (
-                item.id !== editId ? [
-                    item.id,
-                    item.name,
-                    `${item.currentStock} ${item.unit}`,
-                    `${item.warningLevel} ${item.unit}`,
+                booking.id !== editId ? [
+                    booking.id,
+                    booking.name,
+                    `${booking.currentStock} ${booking.unit}`,
+                    `${booking.warningLevel} ${booking.unit}`,
                     !editId ? {
                         type: "button",
                         id: 1,
                         text: "Edit",
                         buttonClass: "btn-warning btn-sm",
                         handler: () => {
-                            functions.setEditId(item.id)
+                            functions.setEditId(booking.id)
                         }
                     } : {text: ""},
                     !editId ? {
@@ -32,52 +143,19 @@ export const makeRows = (type, entryList, editId, functions) => {
                                 return {
                                     ...prevState,
                                     show: true,
-                                    deleteId: item.id,
-                                    targetName: item.name,
-                                    bodyText: `Are you sure you want to delete ${item.name}?\n\nThe item will also be removed from any lists containing it.`,
-                                    handleYes: () => functions.deleteEntry(item.id, item.name)
+                                    deleteId: booking.id,
+                                    targetName: booking.name,
+                                    bodyText: `Are you sure you want to delete ${booking.name}?\n\nThe item will also be removed from any lists containing it.`,
+                                    handleYes: () => functions.deleteEntry(booking.id, booking.name)
                                 }
                             })
                         }
                     } : {text: ""}
-                ] : makeEditRow(type, item, functions)
+                ] : makeEditRow(type, booking, functions)
             )
         }),
-        location: () => entryList.map(location => {
-            return (
-                location.id !== editId ? [
-                    location.id,
-                    location.name,
-                    !editId ? {
-                        type: "button",
-                        id: 1,
-                        text: "Edit",
-                        buttonClass: "btn-warning btn-sm",
-                        handler: () => {
-                            functions.setEditId(location.id)
-                        }
-                    } : {text: ""},
-                    !editId ? {
-                        type: "button",
-                        id: 1,
-                        text: "Delete",
-                        buttonClass: "btn-danger btn-sm",
-                        handler: () => {
-                            functions.setModalOptions(prevState => {
-                                return {
-                                    ...prevState,
-                                    show: true,
-                                    deleteId: location.id,
-                                    targetName: location.name,
-                                    bodyText: `Are you sure you want to delete ${location.name}?\n\n${location.currentStock ? `There ${location.currentStock > 1 ? "are" : "is"} currently ${location.currentStock || 0} item${location.currentStock === 1 ? "" : "s"} at ${location.name} and you will not be able to alter stock once the location is deleted.` : "This location does not currently have any stock."}`,
-                                    handleYes: () => functions.deleteEntry(location.id, location.name)
-                                }
-                            })
-                        }
-                    } : {text: ""}
-                ] : makeEditRow(type, location, functions)
-            )
-        }),
+        location: () => entryList.map((entry) => singleEntryRow(entry, type, functions, editId)),
+        payGrade: () => entryList.map((entry) => singleEntryRow(entry, type, functions, editId)),
         list: () => {
             const newListRows = [];
             entryList.forEach((x, i) => {
@@ -148,6 +226,7 @@ export const makeRows = (type, entryList, editId, functions) => {
     }
     return rowFunctions[type]();
 }
+
 const makeEditRow = (type, entry, functions, editId, entryList = []) => {
     const editRowFunctions = {
         booking: () => {
@@ -220,51 +299,6 @@ const makeEditRow = (type, entry, functions, editId, entryList = []) => {
                     className: "text-center buttonCell",
                     handler: functions.getEntries
                 }];
-        },
-        location: () => {
-            const inputIds = {
-                name: `editLocationRow-${entry.id}-name`,
-                unit: `editLocationRow-${entry.id}-unit`,
-                warningLevel: `editLocationRow-${entry.id}-warningLevel`
-            };
-            return [
-                entry.id,
-                {
-                    type: "input",
-                    props: {
-                        type: "text",
-                        id: inputIds.name,
-                        label: "Location name",
-                        defaultValue: entry.name,
-                        form: "editLocationForm",
-                        forceCase: "title"
-                    },
-                    invalidFeedback: "You must specify a name"
-                }, {
-                    type: "submit",
-                    buttonClass: "btn-success",
-                    text: "Save",
-                    id: entry.id,
-                    className: "text-center buttonCell",
-                    form: "editLocationForm",
-                    handler: (e) => {
-                        validateForm(e, [inputIds.name], (x) => {
-                            if (x.isValid) {
-                                functions.editEntry({
-                                    name: x.values[inputIds.name],
-                                    id: entry.id
-                                })
-                            }
-                        })
-                    }
-                }, {
-                    type: "button",
-                    buttonClass: "btn-danger",
-                    text: "Cancel",
-                    id: entry.id,
-                    className: "text-center buttonCell",
-                    handler: functions.getEntries
-                }]
         },
         list: () => {
             const makeInputCells = (x, y, i, cellTemplate = {}, startIndex = 0) => {
@@ -440,6 +474,7 @@ const makeEditRow = (type, entry, functions, editId, entryList = []) => {
     }
     return editRowFunctions[type]();
 }
+
 export const makeUndeleteRow = (type, deletedEntryList, functions) => {
     const deleteRowFunctions = {
         booking: () => {
@@ -472,35 +507,8 @@ export const makeUndeleteRow = (type, deletedEntryList, functions) => {
                 )
             })
         },
-        location: () => {
-            return deletedEntryList.map(location => {
-                return ([
-                        location.id,
-                        location.name,
-                        {text: formatMySqlTimestamp(location.lastUpdated), sortValue: location.lastUpdated},
-                        {
-                            type: "button",
-                            text: "Restore",
-                            buttonClass: "btn-warning btn-sm",
-                            handler: () => {
-                                functions.setModalOptions(prevState => {
-                                    return {
-                                        ...prevState,
-                                        show: true,
-                                        deleteId: location.id,
-                                        targetName: location.name,
-                                        headerClass: variantPairings.warning.header,
-                                        yesButtonVariant: "warning",
-                                        bodyText: `Are you sure you want to restore ${location.name}?`,
-                                        handleYes: () => functions.restoreEntry(location.id, location.name)
-                                    }
-                                })
-                            }
-                        }
-                    ]
-                )
-            })
-        },
+        location: () => singleUndeleteRow(deletedEntryList, functions),
+        payGrade: () => singleUndeleteRow(deletedEntryList, functions),
         list: () => {
             return deletedEntryList.map(list => {
                 return ([

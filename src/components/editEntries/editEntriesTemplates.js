@@ -1,5 +1,6 @@
 import AddFormLocation from "./addEntryForms/AddFormLocation";
 import AddFormBooking from "./addEntryForms/AddFormBooking";
+import AddFormPayGrade from "./addEntryForms/AddFormPayGrade";
 
 const addDataTemplates = {
     booking: {
@@ -29,6 +30,7 @@ const addDataTemplates = {
 const addDataForms = {
     location: AddFormLocation,
     booking: AddFormBooking,
+    payGrade: AddFormPayGrade,
 }
 
 export {addDataTemplates, addDataForms};

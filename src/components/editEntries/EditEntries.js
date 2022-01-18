@@ -10,7 +10,7 @@ import TableSection from "../common/tables/TableSection";
 import {deletedEntryTableHeadings, entryTableHeadings} from "./editEntriesTableHeadings";
 import PropTypes from "prop-types";
 
-const EditEntries = ({type, includeDeleted}) => {
+const EditEntries = ({type, title, includeDeleted}) => {
         const addDataTemplate = addDataTemplates[type];
         const AddDataForm = addDataForms[type];
         const fetchHook = useFetch();
@@ -53,6 +53,7 @@ const EditEntries = ({type, includeDeleted}) => {
             if (form.useEditData) {
                 form = {...form, ...editData};
             }
+            console.log(form);
             fetchHook({
                 type: `edit${setCase(type, "capitalise")}`,
                 options: {
@@ -124,7 +125,7 @@ const EditEntries = ({type, includeDeleted}) => {
                     </div>
                 </form>
                 <div className="row my-3">
-                    <TableSection title={`All ${type}s`}
+                    <TableSection title={`All ${title || `${type}'s`}`}
                                   tableProps={{
                                       headers: entryTableHeadings[type],
                                       rows: makeEntryRows(dataList.filter((x) => !x.deleted)),

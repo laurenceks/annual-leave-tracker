@@ -4,6 +4,7 @@ import {useContext} from "react";
 import {GlobalAppContext} from "../App.js";
 
 const fetchOptions = {
+    getBookings: {url: "./php/bookings/getAllBookings.php", method: "GET"},
     getItems: {url: "./php/items/getAllItems.php", method: "GET"},
     addItem: {url: "./php/items/addItem.php", method: "POST"},
     editItem: {url: "./php/items/editItem.php", method: "POST"},
@@ -14,6 +15,11 @@ const fetchOptions = {
     editLocation: {url: "./php/locations/editLocation.php", method: "POST"},
     deleteLocation: {url: "./php/locations/deleteLocation.php", method: "POST"},
     restoreLocation: {url: "./php/locations/restoreLocation.php", method: "POST"},
+    getPayGrades: {url: "./php/payGrades/getAllPayGrades.php", method: "GET"},
+    addPayGrade: {url: "./php/payGrades/addPayGrade.php", method: "POST"},
+    editPayGrade: {url: "./php/payGrades/editPayGrade.php", method: "POST"},
+    deletePayGrade: {url: "./php/payGrades/deletePayGrade.php", method: "POST"},
+    restorePayGrade: {url: "./php/payGrades/restorePayGrade.php", method: "POST"},
     getLists: {url: "./php/lists/getAllLists.php", method: "GET"},
     addList: {url: "./php/lists/addList.php", method: "POST"},
     editList: {url: "./php/lists/editList.php", method: "POST"},
