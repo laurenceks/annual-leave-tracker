@@ -125,7 +125,7 @@ const EditEntries = ({type, title, includeDeleted}) => {
                     </div>
                 </form>
                 <div className="row my-3">
-                    <TableSection title={`All ${title || `${type}'s`}`}
+                    <TableSection title={`All ${title}`}
                                   tableProps={{
                                       headers: entryTableHeadings[type],
                                       rows: makeEntryRows(dataList.filter((x) => !x.deleted)),
@@ -135,7 +135,7 @@ const EditEntries = ({type, title, includeDeleted}) => {
                                   }}
 
                     />
-                    {includeDeleted && <TableSection title={`Deleted ${type}s`}
+                    {includeDeleted && <TableSection title={`Deleted ${title}`}
                                    tableProps={{
                                        headers: deletedEntryTableHeadings[type],
                                        rows: makeEntryUndeleteRow(dataList.filter((x) => x.deleted)),
