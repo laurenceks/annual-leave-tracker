@@ -34,6 +34,7 @@ const Main = () => {
                     <Route path="/bookings" element={<EditEntries type={"booking"}/>}/>
                     <Route path="/account/*" element={<Account/>}/>
                     <Route path="/locations" element={<ProtectedRoute element={<EditEntries type={"location"}/>}/>}/>
+                    <Route path="/payGrades" element={<ProtectedRoute element={<EditEntries type={"payGrade"} title={"pay grades"}/>}/>}/>
                     <Route path="/users" element={<ProtectedRoute element={<Users userId={globalAppContext.userId}/>}/>}/>
                     <Route path="*" element={<Navigate to="/"/>}/>
                 </Routes>
