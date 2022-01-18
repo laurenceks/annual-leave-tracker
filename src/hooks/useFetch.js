@@ -15,6 +15,11 @@ const fetchOptions = {
     editLocation: {url: "./php/locations/editLocation.php", method: "POST"},
     deleteLocation: {url: "./php/locations/deleteLocation.php", method: "POST"},
     restoreLocation: {url: "./php/locations/restoreLocation.php", method: "POST"},
+    getPeriods: {url: "./php/periods/getAllPeriods.php", method: "POST"},
+    addPeriod: {url: "./php/periods/addPeriod.php", method: "POST"},
+    editPeriod: {url: "./php/periods/editPeriod.php", method: "POST"},
+    deletePeriod: {url: "./php/periods/deletePeriod.php", method: "POST"},
+    restorePeriod: {url: "./php/periods/restorePeriod.php", method: "POST"},
     getPayGrades: {url: "./php/payGrades/getAllPayGrades.php", method: "GET"},
     addPayGrade: {url: "./php/payGrades/addPayGrade.php", method: "POST"},
     editPayGrade: {url: "./php/payGrades/editPayGrade.php", method: "POST"},
@@ -86,6 +91,7 @@ const useFetch = () => {
             method: fetchOptions[type].method,
             ...options
         }, (response) => {
+            console.log(response)
             clearTimeout(slowFetchTimeout);
             if (slowFetchToastId) {
                 setToasts(prevState => prevState.filter(x => x.id !== slowFetchToastId));
