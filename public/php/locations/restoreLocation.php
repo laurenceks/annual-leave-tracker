@@ -22,7 +22,7 @@ if (!checkFunctionExists("locations", "id", array(array("key" => "id", "value" =
         $deleteLocation->bindValue(":uid", $_SESSION["user"]->userId);
         $deleteLocation->execute();
         $output["success"] = true;
-        $output["title"] = "Location deleted";
+        $output["title"] = "Location restored";
         $output["feedback"] = $input["name"] . " was restored successfully";
     } catch (PDOException $e) {
         $output = array_merge($output, array("feedback" => "There was an error querying the database; please try again. If the error persists please contact a system administrator for assistance.", "errorMessage" => "There was an error querying the database; please try again. If the error persists please contact a system administrator for assistance.", "errorType" => "queryError"));
