@@ -1,0 +1,1 @@
+export const maskUserData = (userData) => userData.replace(/\B\w\B/g, "*");

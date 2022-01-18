@@ -1,0 +1,2 @@
+<?php
+$appName = "Restocker";

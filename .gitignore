@@ -21,3 +21,29 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+#IntelliJ
+.idea
+/.idea
+.idea/
+
+#DB passwords
+/public/php/common/dbCredentials.php
+public/php/common/dbCredentials.php
+
+#smtp passwords
+/public/php/common/smtpCredentials.php
+public/php/common/smtpCredentials.php
+
+#archive bin
+archiveBin
+/archiveBin
+/archiveBin/
+archiveBin/
+
+#mock data files
+/Rate calculator.xlsx
+
+#Logo
+
+/public/logo/

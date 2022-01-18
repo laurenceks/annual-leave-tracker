@@ -1,25 +1,42 @@
-import logo from './logo.svg';
+import React, {createContext, useState} from "react";
+import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
+import Main from "./components/Main";
+import NotAuthorised from "./components/NotAuthorised";
+import useInitialise from "./hooks/useInitialise";
+import {useLocation} from "react-router-dom";
+
+export const GlobalAppContext = createContext();
 
 function App() {
+  const [globalAppContext, setGlobalAppContext] = useState({loginCheckedOnce: false, isLoggedIn: false});
+  const currentPath = useLocation().pathname;
+
+  useInitialise(() => {
+    fetch("./php/login/checkUserLogin.php", {
+      method: "GET",
+    }).then((x) => {
+      x.json().then((x) => {
+        setGlobalAppContext({
+          ...globalAppContext,
+          loginCheckedOnce: true,
+          isLoggedIn: x.isLoggedIn,
+          userId: x.user?.userId,
+          user: x.user
+        });
+      })
+    });
+  });
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+      <GlobalAppContext.Provider value={[globalAppContext, setGlobalAppContext]}>
+        <div className={"App"}>
+          {currentPath === "/verify" || currentPath === "/reVerify" ? <NotAuthorised/> :
+              (globalAppContext.loginCheckedOnce && globalAppContext.isLoggedIn) ?
+                  < Main/> : globalAppContext.loginCheckedOnce && <NotAuthorised/>}
+        </div>
+      </GlobalAppContext.Provider>
+  )
 }
 
 export default App;
