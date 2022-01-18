@@ -40,10 +40,11 @@ const TopNav = ({user}) => {
                                     <p className="m-0 px-2">Admin</p>
                                 </div>
                                 <ul className="dropdown-menu shadow" aria-labelledby="adminDropdown">
-                                    <li><NavLink className="dropdown-item" to={"/requests"}>Requests</NavLink></li>
                                     <li><NavLink className="dropdown-item" to={"/allocations"}>Allocations</NavLink></li>
                                     <li><NavLink className="dropdown-item" to={"/locations"}>Locations</NavLink></li>
                                     <li><NavLink className="dropdown-item" to={"/payGrades"}>Pay grades</NavLink></li>
+                                    <li><NavLink className="dropdown-item" to={"/periods"}>Periods</NavLink></li>
+                                    <li><NavLink className="dropdown-item" to={"/requests"}>Requests</NavLink></li>
                                     <li><NavLink className="dropdown-item" to={"/users"}>Users</NavLink></li>
                                 </ul>
                             </li>
