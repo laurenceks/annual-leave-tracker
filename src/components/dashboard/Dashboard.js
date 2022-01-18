@@ -1,19 +1,17 @@
-import {useEffect, useRef, useState} from 'react';
+import {useContext, useEffect, useRef, useState} from 'react';
 import {IoAlarmOutline, IoFlameSharp, IoWarningOutline,} from "react-icons/io5";
 import {MdShowChart} from "react-icons/md";
 import {HiCheck, HiChevronDoubleDown, HiChevronDoubleUp, HiChevronDown, HiChevronUp,} from "react-icons/hi";
-import {BsBoxArrowInRight, BsBoxArrowLeft,} from "react-icons/bs";
 import {AiOutlinePercentage} from "react-icons/ai"
 import DashboardStatTile from "./DashboardStatTile";
-import DashboardActionButton from "./DashboardActionButton";
 import Table from "../common/tables/Table";
 import 'chart.js/auto';
 import {Chart} from 'react-chartjs-2';
 import {bootstrapVariables, commonChartOptions} from "../common/styles";
 import deepmerge from "deepmerge";
-import FormInput from "../common/forms/FormInput";
 import useFetch from "../../hooks/useFetch";
-import FormLocation from "../common/forms/FormLocation";
+import {GlobalAppContext} from "../../App";
+import FormTypeahead from "../common/forms/FormTypeahead";
 
 class dashboardDataTemplate {
     constructor() {
@@ -64,6 +62,7 @@ class dashboardDataTemplate {
 const Dashboard = () => {
     const getRates = useFetch();
     const dashboardLoadedOnce = useRef(false);
+    const user = useContext(GlobalAppContext)[0].user;
     const [dashboardData, setDashboardData] = useState(new dashboardDataTemplate());
     const [dashBoardSettings, setDashBoardSettings] = useState({
         ratePeriod: 90,
@@ -304,27 +303,36 @@ const Dashboard = () => {
 
     return (
         <div className="container">
-            <div className="row my-3 gy-3">
-                <DashboardStatTile title={"Mean stock"}
-                                   number={dashboardData.itemsStats.stockPercentage ? (Math.round(dashboardData.itemsStats.stockPercentage * 1000) / 10).toFixed(dashboardData.itemsStats.stockPercentage < 0.1 ? 1 : 0) + "%" : "N/A"}
-                                   colourClass={dashboardData.tileClasses.stockLevel}
-                                   icon={<MdShowChart/>}/>
-                <DashboardStatTile title={"Burn rate"}
-                                   number={dashboardData.rates.averageRates.burn ? (dashboardData.rates.averageRates.burn.toFixed(dashboardData.rates.averageRates.burn >= 10 ? 1 : 2)) : "N/A"}
-                                   colourClass={dashboardData.tileClasses.burnRate}
-                                   icon={<IoFlameSharp/>}/>
-                <DashboardStatTile title={"Out of stock"}
-                                   number={dashboardData.itemsStats.outOfStock === 0 ? 0 : dashboardData.itemsStats.outOfStock || "N/A"}
-                                   colourClass={dashboardData.tileClasses.outOfStock}
-                                   icon={<IoWarningOutline/>}/>
-                <DashboardStatTile title={"Restock due"}
-                                   number={dashboardData.itemsStats.belowWarningLevel === 0 ? 0 : dashboardData.itemsStats.belowWarningLevel || "N/A"}
-                                   colourClass={dashboardData.tileClasses.belowWarningLevel}
-                                   icon={<IoAlarmOutline/>}/>
+
+            <div className="row my-3 gy-3 flex-row-reverse ">
+                <div className="col-12 col-md-6 gy-3">
+                    <h1 className="display-3 fw-bolder">Hi, {user.firstName}!</h1>
+                    <h2 className="display-6">Welcome to your annual leave tracker account</h2>
+                </div>
+                <div className="col-12 col-md-6 gy-3">
+                    <div className="row gy-3">
+                        <DashboardStatTile title={"Mean stock"}
+                                           number={dashboardData.itemsStats.stockPercentage ? (Math.round(dashboardData.itemsStats.stockPercentage * 1000) / 10).toFixed(dashboardData.itemsStats.stockPercentage < 0.1 ? 1 : 0) + "%" : "N/A"}
+                                           colourClass={dashboardData.tileClasses.stockLevel}
+                                           icon={<MdShowChart/>}/>
+                        <DashboardStatTile title={"Burn rate"}
+                                           number={dashboardData.rates.averageRates.burn ? (dashboardData.rates.averageRates.burn.toFixed(dashboardData.rates.averageRates.burn >= 10 ? 1 : 2)) : "N/A"}
+                                           colourClass={dashboardData.tileClasses.burnRate}
+                                           icon={<IoFlameSharp/>}/>
+                        <DashboardStatTile title={"Out of stock"}
+                                           number={dashboardData.itemsStats.outOfStock === 0 ? 0 : dashboardData.itemsStats.outOfStock || "N/A"}
+                                           colourClass={dashboardData.tileClasses.outOfStock}
+                                           icon={<IoWarningOutline/>}/>
+                        <DashboardStatTile title={"Restock due"}
+                                           number={dashboardData.itemsStats.belowWarningLevel === 0 ? 0 : dashboardData.itemsStats.belowWarningLevel || "N/A"}
+                                           colourClass={dashboardData.tileClasses.belowWarningLevel}
+                                           icon={<IoAlarmOutline/>}/>
+                    </div>
+                </div>
             </div>
             <div className="row my-3 gy-3">
-                <div className="col-12 col-md-6">
-                    <div className="d-flex align-items-center justify-content-center rounded bg-light px-3 py-2"
+                <div className="col col-12 col-md-6">
+                    <div className="d-flex align-items-center justify-content-center rounded bg-light shadow px-3 py-2"
                          style={{height: "15rem"}}>
                         <Chart type={"line"}
                                data={{
@@ -363,75 +371,53 @@ const Dashboard = () => {
                                })}/>
                     </div>
                 </div>
-                <div className="col-12 col-md-6">
-                    <div className="d-flex align-items-center justify-content-center rounded bg-light px-3 py-2"
+                <div className="col col-12 col-md-6">
+                    <div className="d-flex align-items-center justify-content-center rounded bg-light shadow px-3 py-2"
                          style={{height: "15rem"}}>
-                        <Chart type={"doughnut"} data={{
-                            datasets: [{
-                                data: [dashboardData.itemsStats.inStock, dashboardData.itemsStats.belowWarningLevel, dashboardData.itemsStats.outOfStock],
-                                backgroundColor: [bootstrapVariables.green, bootstrapVariables.yellow, bootstrapVariables.red],
-                                borderColor: bootstrapVariables.light
-                            }],
-                            labels: ["Fully in stock",
-                                "Below warning level",
-                                "Out of stock"]
-                        }} options={{maintainAspectRatio: false, cutout: 75, plugins: {legend: {display: false}}}}/>
+                            <Chart type={"doughnut"} data={{
+                                datasets: [{
+                                    data: [dashboardData.itemsStats.inStock, dashboardData.itemsStats.belowWarningLevel, dashboardData.itemsStats.outOfStock],
+                                    backgroundColor: [bootstrapVariables.green, bootstrapVariables.yellow, bootstrapVariables.red],
+                                    borderColor: bootstrapVariables.light
+                                }],
+                                labels: ["Fully in stock",
+                                    "Below warning level",
+                                    "Out of stock"]
+                            }} options={{maintainAspectRatio: false, cutout: 75, plugins: {legend: {display: false}}}}/>
                     </div>
                 </div>
+
             </div>
-            <div className="row my-3">
-                <div className="col">
-                    <div className="d-flex align-items-center justify-content-center">
-                        <Table headers={["Name", "Current stock", <AiOutlinePercentage/>, "Burn rate", "Restock in"]}
-                               defaultSortDirection="desc"
-                               defaultSortHeading={"Burn rate"}
-                               rows={dashboardData.itemsRows}
-                               length={5}
-                               showPaginationButtons={false}
-                               fullWidth
-                        />
-                    </div>
+            <div className="row gy-3 mt-3">
+                <div className="col col-12">
+                    <h3>{user.firstName}'s bookings</h3>
                 </div>
-            </div>
-            <div className="row my-3 gy-3 align-items-center">
-                <div className={"col col-12 col-md-3"}>
-                    <DashboardActionButton
-                        text={"Withdraw"}
-                        icon={<BsBoxArrowLeft/>}
-                        colour={"btn-outline-primary"}
-                        type={"link"}
-                        link={"/withdraw"}
-                    />
-                </div>
-                <div className={"col col-12 col-md-3"}>
-                    <DashboardActionButton
-                        text={"Restock"}
-                        icon={<BsBoxArrowInRight/>}
-                        colour={"btn-outline-primary"}
-                        type={"link"}
-                        link={"/restock"}
-                    />
-                </div>
-                <div className={"col col-12 col-md-3"}>
-                    <FormInput type={"number"} label={"Period (days)"}
-                               value={dashBoardSettings.ratePeriod}
-                               onChange={(id, val) => {
-                                   setDashBoardSettings({...dashBoardSettings, ratePeriod: val})
-                               }}/>
-                </div>
-                <div className={"col col-12 col-md-3"}>
-                    <FormLocation
-                        id="inputDashboardLocation"
+                <div className="col col-12 col-md-3">
+                    <FormTypeahead
+                        id="inputDashboardPeriod"
+                        options={[{label: "2021-2022", id: 1}, {id: 2, label: "2022-2023"}]}
+                        label={"Period"}
+                        labelKey={"label"}
+                        className={"w-auto"}
                         onChange={(e) => {
-                            setDashBoardSettings({
+                            /*setDashBoardSettings({
                                     ...dashBoardSettings,
                                     locationId: e[0]?.id || null,
                                     locationName: e[0]?.name || null,
-                                }
-                            )
+                                }*/
+                            // )
                         }
                         }/>
                 </div>
+                <div className=" col col-12">
+                    <Table headers={["Name", "Current stock", <AiOutlinePercentage/>, "Burn rate", "Restock in"]}
+                           defaultSortDirection="desc"
+                           defaultSortHeading={"Burn rate"}
+                           rows={dashboardData.itemsRows}
+                           length={5}
+                           showPaginationButtons={false}
+                           fullWidth
+                    /></div>
             </div>
         </div>
     );
