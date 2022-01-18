@@ -4,12 +4,11 @@ import {useContext} from "react";
 import {GlobalAppContext} from "../App.js";
 
 const fetchOptions = {
-    getBookings: {url: "./php/bookings/getAllBookings.php", method: "GET"},
-    getItems: {url: "./php/items/getAllItems.php", method: "GET"},
-    addItem: {url: "./php/items/addItem.php", method: "POST"},
-    editItem: {url: "./php/items/editItem.php", method: "POST"},
-    deleteItem: {url: "./php/items/deleteItem.php", method: "POST"},
-    restoreItem: {url: "./php/items/restoreItem.php", method: "POST"},
+    getBookings: {url: "./php/bookings/getBookingsForCurrentUser.php", method: "GET"},
+    addBooking: {url: "./php/bookings/addBooking.php", method: "POST"},
+    editBooking: {url: "./php/bookings/editBooking.php", method: "POST"},
+    deleteBooking: {url: "./php/bookings/deleteBooking.php", method: "POST"},
+    restoreBooking: {url: "./php/bookings/restoreBooking.php", method: "POST"},
     getLocations: {url: "./php/locations/getAllLocations.php", method: "POST"},
     addLocation: {url: "./php/locations/addLocation.php", method: "POST"},
     editLocation: {url: "./php/locations/editLocation.php", method: "POST"},
@@ -25,11 +24,6 @@ const fetchOptions = {
     editPayGrade: {url: "./php/payGrades/editPayGrade.php", method: "POST"},
     deletePayGrade: {url: "./php/payGrades/deletePayGrade.php", method: "POST"},
     restorePayGrade: {url: "./php/payGrades/restorePayGrade.php", method: "POST"},
-    getLists: {url: "./php/lists/getAllLists.php", method: "GET"},
-    addList: {url: "./php/lists/addList.php", method: "POST"},
-    editList: {url: "./php/lists/editList.php", method: "POST"},
-    deleteList: {url: "./php/lists/deleteList.php", method: "POST"},
-    restoreList: {url: "./php/lists/restoreList.php", method: "POST"},
     getUsers: {url: "./php/users/getAllUsers.php", method: "GET"},
     deleteUser: {url: "./php/users/deleteUser.php", method: "POST"},
     approveUser: {url: "./php/users/approveUser.php", method: "POST"},
@@ -46,6 +40,7 @@ const fetchOptions = {
     editAccountEmail: {url: "./php/account/editAccountEmail.php", method: "POST"},
     editAccountPassword: {url: "./php/account/editAccountPassword.php", method: "POST"},
     deleteAccount: {url: "./php/account/deleteAccount.php", method: "POST"},
+    getDashboardData: {url: "./php/dashboard/getDashboardData", method: "POST"},
 }
 
 const useFetch = () => {
