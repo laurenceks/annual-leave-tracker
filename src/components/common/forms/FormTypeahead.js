@@ -12,6 +12,7 @@ const checkIfAncestorsHaveIsInvalidClass = (e) => {
 }
 
 const FormTypeahead = ({
+                           allowNew,
                            defaultSelected,
                            disabled,
                            form,
@@ -53,11 +54,12 @@ const FormTypeahead = ({
         <div className={"formInputWrap"}>
             <Typeahead
                 {...props}
+                allowNew={allowNew}
                 ref={typeaheadInputRef}
                 id={id}
                 form={form}
                 inputProps={{...inputProps}}
-                disabled={disabled || options?.length <= 1}
+                disabled={disabled || (options?.length <= 1 && !allowNew)}
                 options={options}
                 selected={selectedState}
                 onFocus={checkIfAncestorsHaveIsInvalidClass}
