@@ -33,8 +33,10 @@ const Main = () => {
                     <Route path="/" exact element={<Dashboard/>}/>
                     <Route path="/bookings" element={<EditEntries type={"booking"}/>}/>
                     <Route path="/account/*" element={<Account/>}/>
-                    <Route path="/locations" element={<ProtectedRoute element={<EditEntries type={"location"}/>}/>}/>
+                    <Route path="/locations" element={<ProtectedRoute element={<EditEntries type={"location"} title={"locations"}/>}/>}/>
                     <Route path="/payGrades" element={<ProtectedRoute element={<EditEntries type={"payGrade"} title={"pay grades"}/>}/>}/>
+                    <Route path="/periods" element={<ProtectedRoute element={<EditEntries type={"period"} title={"periods"}/>}/>}/>
+                    <Route path="/allocations" element={<ProtectedRoute element={<EditEntries type={"allocation"} title={"allocations"}/>}/>}/>
                     <Route path="/users" element={<ProtectedRoute element={<Users userId={globalAppContext.userId}/>}/>}/>
                     <Route path="*" element={<Navigate to="/"/>}/>
                 </Routes>
