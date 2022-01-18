@@ -181,7 +181,7 @@ const Dashboard = () => {
 
     useEffect(() => {
         getRates({
-            type: "getRates",
+            type: "getDashboardData",
             options: {
                 method: "POST",
                 body: JSON.stringify(dashBoardSettings)
@@ -305,9 +305,11 @@ const Dashboard = () => {
         <div className="container">
 
             <div className="row my-3 gy-3 flex-row-reverse ">
-                <div className="col-12 col-md-6 gy-3">
-                    <h1 className="display-3 fw-bolder">Hi, {user.firstName}!</h1>
-                    <h2 className="display-6">Welcome to your annual leave tracker account</h2>
+                <div className="col-12 col-md-6 gy-3 d-flex align-items-center">
+                    <div>
+                        <h1 className="display-3 fw-bolder">Hi, {user.firstName}!</h1>
+                        <h2 className="display-6">Welcome to your annual leave tracker account</h2>
+                    </div>
                 </div>
                 <div className="col-12 col-md-6 gy-3">
                     <div className="row gy-3">
@@ -374,16 +376,16 @@ const Dashboard = () => {
                 <div className="col col-12 col-md-6">
                     <div className="d-flex align-items-center justify-content-center rounded bg-light shadow px-3 py-2"
                          style={{height: "15rem"}}>
-                            <Chart type={"doughnut"} data={{
-                                datasets: [{
-                                    data: [dashboardData.itemsStats.inStock, dashboardData.itemsStats.belowWarningLevel, dashboardData.itemsStats.outOfStock],
-                                    backgroundColor: [bootstrapVariables.green, bootstrapVariables.yellow, bootstrapVariables.red],
-                                    borderColor: bootstrapVariables.light
-                                }],
-                                labels: ["Fully in stock",
-                                    "Below warning level",
-                                    "Out of stock"]
-                            }} options={{maintainAspectRatio: false, cutout: 75, plugins: {legend: {display: false}}}}/>
+                        <Chart type={"doughnut"} data={{
+                            datasets: [{
+                                data: [dashboardData.itemsStats.inStock, dashboardData.itemsStats.belowWarningLevel, dashboardData.itemsStats.outOfStock],
+                                backgroundColor: [bootstrapVariables.green, bootstrapVariables.yellow, bootstrapVariables.red],
+                                borderColor: bootstrapVariables.light
+                            }],
+                            labels: ["Fully in stock",
+                                "Below warning level",
+                                "Out of stock"]
+                        }} options={{maintainAspectRatio: false, cutout: 75, plugins: {legend: {display: false}}}}/>
                     </div>
                 </div>
 
