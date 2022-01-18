@@ -10,6 +10,7 @@ import ConfirmModal from "./Bootstrap/ConfirmModal";
 import Users from "./users/Users";
 import ProtectedRoute from "./common/ProtectedRoute";
 import Logout from "./login/Logout";
+import EditEntries from "./editEntries/EditEntries";
 
 const Main = () => {
     const [globalAppContext] = useContext(GlobalAppContext);
@@ -28,9 +29,11 @@ const Main = () => {
             <TopNav user={globalAppContext.user}/>
             <div className="main my-5 mx-auto px-1 px-md-0">
                 <Routes>
-                    <Route path="/" exact element={<Dashboard/>}/>
                     <Route path="/logout" element={<Logout/>}/>
+                    <Route path="/" exact element={<Dashboard/>}/>
+                    <Route path="/bookings" element={<EditEntries type={"booking"}/>}/>
                     <Route path="/account/*" element={<Account/>}/>
+                    <Route path="/locations" element={<ProtectedRoute element={<EditEntries type={"location"}/>}/>}/>
                     <Route path="/users" element={<ProtectedRoute element={<Users userId={globalAppContext.userId}/>}/>}/>
                     <Route path="*" element={<Navigate to="/"/>}/>
                 </Routes>
