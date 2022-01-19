@@ -20,6 +20,12 @@ class dashboardDataTemplate {
             remaining: null,
             booked: null
         }
+        this.allocationPercentages = {
+            total: null,
+            taken: null,
+            remaining: null,
+            booked: null
+        }
         this.chartData = {
             chartMonths: {
                 data: [],
@@ -46,119 +52,37 @@ const Dashboard = () => {
     });
 
     const dashboardRanges = {
-        burn: [{
-            upper: 0.9,
-            colourClass: "bad",
-            tableClass: "table-danger",
-            textClass: "text-danger",
-            icon: <HiChevronDoubleDown/>
-        }, {
-            lower: 0.9,
-            upper: 0.95,
-            colourClass: "ok",
-            tableClass: "table-warning",
-            textClass: "text-warning",
-            icon: <HiChevronDown/>
-        }, {
-            lower: 0.95,
-            upper: 1.05,
-            colourClass: "good",
-            tableClass: "table-success",
-            textClass: "text-success",
-            icon: <HiCheck/>
-        }, {
-            lower: 1.05,
-            upper: 1.1,
-            colourClass: "ok",
-            tableClass: "table-warning",
-            textClass: "text-warning",
-            icon: <HiChevronUp/>
-        }, {
-            lower: 1.1,
-            colourClass: "bad",
-            tableClass: "table-danger",
-            textClass: "text-danger",
-            icon: <HiChevronDoubleUp/>
-        },],
-        douse: [{
-            upper: 0.9,
-            colourClass: "bad",
-            tableClass: "table-danger",
-            textClass: "text-danger",
-            icon: <HiChevronDoubleDown/>
-        }, {
-            lower: 0.9,
-            upper: 0.95,
-            colourClass: "ok",
-            tableClass: "table-warning",
-            textClass: "text-warning",
-            icon: <HiChevronDown/>
-        }, {
-            lower: 0.95,
-            upper: 1.05,
-            colourClass: "good",
-            tableClass: "table-success",
-            textClass: "text-success",
-            icon: <HiCheck/>
-        }, {
-            lower: 1.05,
-            upper: 1.1,
-            colourClass: "ok",
-            tableClass: "table-warning",
-            textClass: "text-warning",
-            icon: <HiChevronUp/>
-        }, {
-            lower: 1.1,
-            colourClass: "bad",
-            tableClass: "table-danger",
-            textClass: "text-danger",
-            icon: <HiChevronDoubleUp/>
-        },],
-        stockLevel: [{
-            upper: 0.9,
+        remaining: [{
+            upper: 25,
             colourClass: "bad",
             tableClass: "table-danger",
             textClass: "text-danger"
         }, {
-            lower: 0.9,
-            upper: 0.975,
+            lower: 25,
+            upper: 50,
             colourClass: "ok",
             tableClass: "table-warning",
             textClass: "text-warning"
         }, {
-            lower: 0.975,
+            lower: 75,
             colourClass: "good",
             tableClass: "table-success",
             textClass: "text-success"
         },],
-        outOfStock: [{
-            upper: 0.05,
+        bookedTaken: [{
+            upper: 25,
             colourClass: "good",
             tableClass: "table-success"
         }, {
-            lower: 0.05,
-            upper: 0.1,
+            lower: 25,
+            upper: 75,
             colourClass: "ok",
             tableClass: "table-warning"
         }, {
-            lower: 0.1,
+            lower: 75,
             colourClass: "bad",
             tableClass: "table-danger"
-        },],
-        belowWarningLevel: [{
-            upper: 0.15,
-            colourClass: "good",
-            tableClass: "table-success"
-        }, {
-            lower: 0.15,
-            upper: 0.2,
-            colourClass: "ok",
-            tableClass: "table-warning"
-        }, {
-            lower: 0.2,
-            colourClass: "bad",
-            tableClass: "table-danger"
-        },]
+        }]
     }
 
     const getRangeClass = (val, range, classType = "colourClass") => {
@@ -185,9 +109,6 @@ const Dashboard = () => {
                     allocation: {
                         ...res.allocation,
                         remaining: res.allocation.total ? res.allocation.total - res.allocation.booked : "N/A",
-                        remainingPercentage: res.allocation.total ?
-                            (res.allocation.total - res.allocation.booked) / res.allocation.total * 100 :
-                            100
                     },
                     bookings: res.bookings.map(
                         (x) => [x.dateFrom, x.dateTo, x.hours, setCase(x.status, "capitalise"), x.userComments || {
@@ -214,6 +135,14 @@ const Dashboard = () => {
                         }
                     }
                 }
+                newDashboardData.allocationPercentages = {
+                    remaining: res.allocation.total ?
+                        newDashboardData.allocation.remaining / res.allocation.total * 100 :
+                        100,
+                    taken: res.allocation.total ? newDashboardData.allocation.taken / res.allocation.total * 100 : 100,
+                }
+                newDashboardData.allocationPercentages.booked = 100 - newDashboardData.allocationPercentages.remaining;
+                console.log(newDashboardData)
                 if (res.period?.defaultedToCurrent) {
                     setDashBoardSettings(prevState => ({
                         selectedPeriod: [res.period],
@@ -247,15 +176,15 @@ const Dashboard = () => {
                                        icon={<IoBarChartSharp/>}/>
                     <DashboardStatTile title={"Left"}
                                        number={dashboardData.allocation.remaining || "N/A"}
-                                       colourClass={dashboardData.allocation.remaining ? "good" : "null"}
+                                       colourClass={dashboardData.allocation.remaining ? getRangeClass(dashboardData.allocationPercentages.remaining, dashboardRanges.remaining) : "null"}
                                        icon={<IoBatteryHalfSharp/>}/>
                     <DashboardStatTile title={"Booked"}
                                        number={dashboardData.allocation.booked || 0}
-                                       colourClass={dashboardData.allocation.booked ? "ok" : "good"}
+                                       colourClass={dashboardData.allocation.booked ? getRangeClass(dashboardData.allocationPercentages.booked, dashboardRanges.bookedTaken) : "good"}
                                        icon={<IoBookmarksSharp/>}/>
                     <DashboardStatTile title={"Taken"}
                                        number={dashboardData.allocation.taken || 0}
-                                       colourClass={dashboardData.allocation.taken ? "bad" : "good"}
+                                       colourClass={dashboardData.allocation.taken ? getRangeClass(dashboardData.allocationPercentages.taken, dashboardRanges.bookedTaken) : "good"}
                                        icon={<IoBasketSharp/>}/>
                 </div>
             </div>
@@ -300,7 +229,7 @@ const Dashboard = () => {
                      style={{height: "15rem"}}>
                     <div className="d-flex position-absolute text-center">
                         {(dashboardData.allocation.booked) ? <div>
-                            <p className="m-0 display-6">{dashboardData.allocation.remainingPercentage}%</p>
+                            <p className="m-0 display-6">{dashboardData.allocationPercentages.remaining.toFixed(1)}%</p>
                             <p className="position-absolute w-100">Remaining</p>
                         </div> : ""}
                     </div>
