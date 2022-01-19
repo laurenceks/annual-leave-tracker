@@ -5,55 +5,55 @@ import FormTypeahead from "./FormTypeahead";
 import useInitialise from "../../../hooks/useInitialise";
 import useFetch from "../../../hooks/useFetch";
 
-const FormPeriod = ({
-                        lastUpdated,
-                        filterValues,
-                        defaultSelected,
-                        label,
-                        ...props
-                    }) => {
+const FormUser = ({
+                      lastUpdated,
+                      filterValues,
+                      defaultSelected,
+                      label,
+                      ...props
+                  }) => {
 
-    const [periods, setPeriods] = useState(defaultSelected);
+    const [users, setUsers] = useState(defaultSelected);
     const [updated, setUpdated] = useState(lastUpdated);
-    const periodsLoadedOnce = useRef(false);
+    const usersLoadedOnce = useRef(false);
     const fetchHook = useFetch();
 
     useInitialise(() => {
         setUpdated(Date.now());
-        console.log(props.onBlur)
     });
 
     useEffect(() => {
-        const getPeriods = () => {
+        const getUsers = () => {
             fetchHook({
-                type: "getPeriods",
+                type: "getUsersMin",
                 callback: (x) => {
-                    periodsLoadedOnce.current = true;
+                    console.log(x)
+                    usersLoadedOnce.current = true;
                     if (filterValues) {
-                        setPeriods(x.periods.filter((x) => {
+                        setUsers(x.users.filter((x) => {
                             return filterValues.values.indexOf(x[filterValues.key]) === -1
                         }).concat(defaultSelected || []).sort((a, b) => naturalSort(a.name, b.name))
                             .filter((x) => !x.deleted))
                     } else {
-                        setPeriods(x.periods.sort((a, b) => naturalSort(a.name, b.name)).filter((x) => !x.deleted))
+                        setUsers(x.users.sort((a, b) => naturalSort(a.name, b.name)).filter((x) => !x.deleted))
                     }
                 }
             })
         }
 
-        getPeriods();
+        getUsers();
     }, [updated]);
 
-    return <FormTypeahead {...props} defaultSelected={defaultSelected} label={label} labelKey="name" options={periods}/>;
+    return <FormTypeahead {...props} defaultSelected={defaultSelected} label={label} labelKey="name" options={users || []}/>;
 }
 
-FormPeriod.propTypes = {
+FormUser.propTypes = {
     lastUpdated: PropTypes.number,
     label: PropTypes.string,
 };
-FormPeriod.defaultProps = {
+FormUser.defaultProps = {
     lastUpdated: null,
-    label: "Period",
+    label: "name",
 };
 
-export default FormPeriod;
+export default FormUser;
