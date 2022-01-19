@@ -7,7 +7,7 @@ require "getAllocationForCurrentUserQuery.php";
 $output = array_merge($feedbackTemplate, array("allocations" => array()));
 $input = json_decode(file_get_contents('php://input'), true);
 
-$getAllAllocations = $db->prepare(getAllAllocationsQuery());
+$getAllAllocations = $db->prepare(getAllAllocationsQuery(), $_SESSION["user"]->userId);
 $getAllAllocations->bindValue(':organisationId', $_SESSION["user"]->organisationId);
 $getAllAllocations->execute();
 
