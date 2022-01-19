@@ -61,7 +61,7 @@ const FormTypeahead = ({
                 inputProps={{...inputProps}}
                 disabled={disabled || (options?.length <= 1 && !allowNew)}
                 options={options}
-                selected={selectedState}
+                selected={options?.length === 1 && !allowNew ? options : selectedState}
                 onFocus={checkIfAncestorsHaveIsInvalidClass}
                 onChange={(e) => {
                     forceCase && e[0] && (e[0][labelKey] = setCase(e[0][labelKey], forceCase));
