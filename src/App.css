@@ -137,6 +137,9 @@ div.inputFeedbackTooltip {
   max-height: 0;
   transition: max-height 400ms ease, padding 400ms ease, margin 400ms ease;
 }
+div.formInputWrap.is-invalid{
+  position: relative;
+}
 
 input.is-invalid ~ div.inputFeedbackTooltip,
 div.formInputWrap.is-invalid > div.inputFeedbackTooltip {
