@@ -4,6 +4,11 @@ import {useContext} from "react";
 import {GlobalAppContext} from "../App.js";
 
 const fetchOptions = {
+    getAllocations: {url: "./php/allocations/getAllocations.php", method: "GET"},
+    addAllocation: {url: "./php/allocations/addAllocation.php", method: "POST"},
+    editAllocation: {url: "./php/allocations/editAllocation.php", method: "POST"},
+    deleteAllocation: {url: "./php/allocations/deleteAllocation.php", method: "POST"},
+    restoreAllocation: {url: "./php/allocations/restoreAllocation.php", method: "POST"},
     getBookings: {url: "./php/bookings/getBookingsForCurrentUser.php", method: "GET"},
     addBooking: {url: "./php/bookings/addBooking.php", method: "POST"},
     editBooking: {url: "./php/bookings/editBooking.php", method: "POST"},
@@ -25,6 +30,7 @@ const fetchOptions = {
     deletePayGrade: {url: "./php/payGrades/deletePayGrade.php", method: "POST"},
     restorePayGrade: {url: "./php/payGrades/restorePayGrade.php", method: "POST"},
     getUsers: {url: "./php/users/getAllUsers.php", method: "GET"},
+    getUsersMin: {url: "./php/users/getAllUsersMin.php", method: "GET"},
     deleteUser: {url: "./php/users/deleteUser.php", method: "POST"},
     approveUser: {url: "./php/users/approveUser.php", method: "POST"},
     makeUserAdmin: {url: "./php/users/makeUserAdmin.php", method: "POST"},
@@ -40,7 +46,7 @@ const fetchOptions = {
     editAccountEmail: {url: "./php/account/editAccountEmail.php", method: "POST"},
     editAccountPassword: {url: "./php/account/editAccountPassword.php", method: "POST"},
     deleteAccount: {url: "./php/account/deleteAccount.php", method: "POST"},
-    getDashboardData: {url: "./php/dashboard/getDashboardData", method: "POST"},
+    getDashboardData: {url: "./php/dashboard/getDashboardData.php", method: "POST"},
 }
 
 const useFetch = () => {
@@ -86,7 +92,6 @@ const useFetch = () => {
             method: fetchOptions[type].method,
             ...options
         }, (response) => {
-            console.log(response)
             clearTimeout(slowFetchTimeout);
             if (slowFetchToastId) {
                 setToasts(prevState => prevState.filter(x => x.id !== slowFetchToastId));
