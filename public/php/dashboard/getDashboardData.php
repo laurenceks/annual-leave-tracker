@@ -6,15 +6,20 @@ require "../common/feedbackTemplate.php";
 $output = array_merge($feedbackTemplate, array("bookings" => array()));
 $input = json_decode(file_get_contents('php://input'), true);
 
-$getPeriodId = $db->prepare("SELECT `id`, `name`, `dateFrom`, `dateTo` FROM `periods` WHERE `dateFrom` <= CURRENT_DATE AND `dateTo` >= CURRENT_DATE AND `deleted` = 0");
-$getPeriodId->execute();
-$getPeriodId = $getPeriodId->fetch(PDO::FETCH_ASSOC);
-$period = $getPeriodId ? $getPeriodId : null;
-$output["period"] = $period;
+if (!$input["periodId"]) {
+    $getPeriodId = $db->prepare("SELECT `id`, `name`, `dateFrom`, `dateTo` FROM `periods` WHERE `dateFrom` <= CURRENT_DATE AND `dateTo` >= CURRENT_DATE AND `deleted` = 0");
+    $getPeriodId->execute();
+    $getPeriodId = $getPeriodId->fetch(PDO::FETCH_ASSOC);
+    $period = $getPeriodId ? $getPeriodId : null;
+    $period["defaultedToCurrent"] = true;
+    $output["period"] = $period;
+} else {
+    $period = $input["period"];
+}
 
 if ($period) {
     require "dashboardChartMonthQuery.php";
-    require "../allocations/getAllocationForCurrentUserQuery.php";
+    require "../allocations/getAllocationForCurrentUserByPeriod.php";
 
     $getChartMonths = $db->prepare($dashboardChartMonthQuery);
 
@@ -27,18 +32,20 @@ if ($period) {
     $output["chartData"]["chartMonths"] = $getChartMonths->fetchAll(PDO::FETCH_ASSOC);
 
     $db->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
-    $getAllocations = $db->prepare($getAllocationForCurrentUserQuery);
+    $getAllocationForUserIdByPeriod = $db->prepare($getAllocationForUserIdByPeriod);
 
-    $getAllocations->bindValue(':userId', $_SESSION["user"]->userId);
-    $getAllocations->bindValue(':organisationId', $_SESSION["user"]->organisationId);
-    $getAllocations->bindValue(':dateFrom', $period["dateFrom"]);
-    $getAllocations->bindValue(':dateTo', $period["dateTo"]);
+    $getAllocationForUserIdByPeriod->bindValue(':userId', $_SESSION["user"]->userId);
+    $getAllocationForUserIdByPeriod->bindValue(':organisationId', $_SESSION["user"]->organisationId);
+    $getAllocationForUserIdByPeriod->bindValue(':dateFrom', $period["dateFrom"]);
+    $getAllocationForUserIdByPeriod->bindValue(':dateTo', $period["dateTo"]);
+    $getAllocationForUserIdByPeriod->bindValue(':periodId', $period["id"]);
     $db->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
-    $getAllocations->execute();
+    $getAllocationForUserIdByPeriod->execute();
 
-    $output["allocation"] = $getAllocations->fetch(PDO::FETCH_ASSOC);;
+    $allocationForIdAndPeriod = $getAllocationForUserIdByPeriod->fetch(PDO::FETCH_ASSOC);;
+    $output["allocation"] = $allocationForIdAndPeriod;
 
-    $output["chartData"]["chartHours"] = array(array("label" => "Total", "hours" => 350), array("label" => "Booked", "hours" => 125), array("label" => "Taken", "hours" => 86), array("label" => "Remaining", "hours" => 225));
+    $output["chartData"]["chartHours"] = array(array("label" => "Total", "hours" => isset($allocationForIdAndPeriod["total"]) ? $allocationForIdAndPeriod["total"] : 0), array("label" => "Booked", "hours" => $allocationForIdAndPeriod["booked"]), array("label" => "Taken", "hours" => $allocationForIdAndPeriod["taken"]), array("label" => "Remaining", "hours" => isset($allocationForIdAndPeriod["hours"]) ? $allocationForIdAndPeriod["total"] - $allocationForIdAndPeriod["booked"] : 0));
 
     $getBookings = $db->prepare("SELECT * FROM `bookings` WHERE `dateFrom` >= :dateFrom AND `dateTo` <= :dateTo AND `userId` = :userId AND `organisationId`= :organisationId AND `deleted` = 0");
     $getBookings->bindValue(':userId', $_SESSION["user"]->userId);
@@ -48,7 +55,6 @@ if ($period) {
     $getBookings->execute();
 
     $output["bookings"] = $getBookings->fetchAll(PDO::FETCH_ASSOC);
-
 
 
 } else {
