@@ -31,7 +31,7 @@ const Main = () => {
                 <Routes>
                     <Route path="/logout" element={<Logout/>}/>
                     <Route path="/" exact element={<Dashboard/>}/>
-                    <Route path="/bookings" element={<EditEntries type={"booking"}/>}/>
+                    <Route path="/bookings" element={<EditEntries type={"booking"} title={"bookings"}/>}/>
                     <Route path="/account/*" element={<Account/>}/>
                     <Route path="/locations" element={<ProtectedRoute element={<EditEntries type={"location"} title={"locations"}/>}/>}/>
                     <Route path="/payGrades" element={<ProtectedRoute element={<EditEntries type={"payGrade"} title={"pay grades"}/>}/>}/>
