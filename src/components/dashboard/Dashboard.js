@@ -184,7 +184,10 @@ const Dashboard = () => {
                 const newDashboardData = {
                     allocation: {
                         ...res.allocation,
-                        remaining: res.allocation.total ? res.allocation.total - res.allocation.booked : "N/A"
+                        remaining: res.allocation.total ? res.allocation.total - res.allocation.booked : "N/A",
+                        remainingPercentage: res.allocation.total ?
+                            (res.allocation.total - res.allocation.booked) / res.allocation.total * 100 :
+                            100
                     },
                     bookings: res.bookings.map(
                         (x) => [x.dateFrom, x.dateTo, x.hours, setCase(x.status, "capitalise"), x.userComments || {
@@ -293,8 +296,14 @@ const Dashboard = () => {
                 </div>
             </div>
             <div className="col col-12 col-md-6">
-                <div className="d-flex align-items-center justify-content-center rounded bg-light shadow px-3 py-2"
+                <div className="d-flex position-relative align-items-center justify-content-center rounded bg-light shadow px-3 py-2"
                      style={{height: "15rem"}}>
+                    <div className="d-flex position-absolute text-center">
+                        {(dashboardData.allocation.booked) ? <div>
+                            <p className="m-0 display-6">{dashboardData.allocation.remainingPercentage}%</p>
+                            <p className="position-absolute w-100">Remaining</p>
+                        </div> : ""}
+                    </div>
                     <Chart type={"doughnut"}
                            data={{
                                datasets: [{
@@ -325,7 +334,6 @@ const Dashboard = () => {
                     className={"w-auto"}
                     selected={dashBoardSettings.selectedPeriod}
                     onChange={(e) => {
-                        console.log(e)
                         setDashBoardSettings({
                             ...dashBoardSettings,
                             selectedPeriod: e,
