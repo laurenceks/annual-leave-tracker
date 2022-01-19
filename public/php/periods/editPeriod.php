@@ -8,6 +8,7 @@ require "../common/feedbackTemplate.php";
 $input = json_decode(file_get_contents('php://input'), true);
 
 $output = $feedbackTemplate;
+//TODO check overlapping date bookings (make a common function so bookings can use the same
 
 if (!checkFunctionExists("periods", "id", array(array("key" => "id", "value" => $input["id"])))) {
     $output["feedback"] = $input["name"] . " could not be found - possibly due to deletion - please try again";
