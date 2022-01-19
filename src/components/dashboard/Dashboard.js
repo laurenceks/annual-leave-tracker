@@ -142,7 +142,6 @@ const Dashboard = () => {
                     taken: res.allocation.total ? newDashboardData.allocation.taken / res.allocation.total * 100 : 100,
                 }
                 newDashboardData.allocationPercentages.booked = 100 - newDashboardData.allocationPercentages.remaining;
-                console.log(newDashboardData)
                 if (res.period?.defaultedToCurrent) {
                     setDashBoardSettings(prevState => ({
                         selectedPeriod: [res.period],
@@ -249,7 +248,9 @@ const Dashboard = () => {
                                maintainAspectRatio: false,
                                cutout: 75,
                                plugins: {legend: {display: false}}
-                           }}/>
+                           }}
+                           className="position-relative"
+                    />
                 </div>
             </div>
 
