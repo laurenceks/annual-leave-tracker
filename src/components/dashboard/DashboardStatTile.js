@@ -1,18 +1,19 @@
 import PropTypes from 'prop-types';
+import {variantPairings} from "../common/styles";
 
 const DashboardStatTile = ({title, number, colourClass, isNotInBootstrapGrid, icon}) => {
     const classMap = {
         "good": {
-            bg: "bg-success",
-            text: "text-light"
+            bg: variantPairings.success.bg,
+            text: variantPairings.success.text
         },
         "ok": {
-            bg: "bg-warning",
-            text: "text-primary"
+            bg: variantPairings.warning.bg,
+            text: variantPairings.warning.text
         },
         "bad": {
-            bg: "bg-danger",
-            text: "text-light"
+            bg: variantPairings.danger.bg,
+            text: variantPairings.danger.text
         },
         "null": {
             bg: "bg-light",
@@ -22,7 +23,7 @@ const DashboardStatTile = ({title, number, colourClass, isNotInBootstrapGrid, ic
     return (
         <div className={`${!isNotInBootstrapGrid && "col"} flex-grow-1 flex-shrink-0 }`}>
             <div
-                className={`d-flex align-bottom rounded ${classMap[colourClass]?.bg} dashboardStatTileContainer px-2 py-1 position-relative`}>
+                className={`d-flex align-bottom rounded ${classMap[colourClass]?.bg} dashboardStatTileContainer px-2 py-1 position-relative shadow-sm`}>
                 <div className="d-flex flex-grow-0 align-items-end dashboardStatTileTitleWrap">
                     <p className={`fs-4 text-end lh-1 py-1 m-0 ${classMap[colourClass]?.text} dashboardStatTileTitle`}>{title}</p>
                 </div>
