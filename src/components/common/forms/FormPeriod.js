@@ -1,47 +1,58 @@
 import {useEffect, useRef, useState} from "react";
 import PropTypes from 'prop-types';
-import fetchAllLocations from "../../../functions/fetchAllLocations";
 import naturalSort from "../../../functions/naturalSort";
 import FormTypeahead from "./FormTypeahead";
 import useInitialise from "../../../hooks/useInitialise";
+import useFetch from "../../../hooks/useFetch";
 
-const FormLocation = ({lastUpdated, filterValues, defaultSelected, label, ...props}) => {
+const FormPeriod = ({
+                        lastUpdated,
+                        filterValues,
+                        defaultSelected,
+                        label,
+                        ...props
+                    }) => {
 
-    const [locations, setLocations] = useState([]);
+    const [periods, setPeriods] = useState(defaultSelected);
     const [updated, setUpdated] = useState(lastUpdated);
-    const locationsLoadedOnce = useRef(false);
+    const periodsLoadedOnce = useRef(false);
+    const fetchHook = useFetch();
 
     useInitialise(() => {
         setUpdated(Date.now());
     });
 
     useEffect(() => {
-        const getLocations = () => {
-            fetchAllLocations((x) => {
-                locationsLoadedOnce.current = true;
-                if (filterValues) {
-                    setLocations(x.locations.filter((x) => {
-                        return filterValues.values.indexOf(x[filterValues.key]) === -1
-                    }).concat(defaultSelected || []).sort((a, b) => naturalSort(a.name, b.name)).filter((x) => !x.deleted))
-                } else {
-                    setLocations(x.locations.sort((a, b) => naturalSort(a.name, b.name)).filter((x) => !x.deleted))
+        const getPeriods = () => {
+            fetchHook({
+                type: "getPeriods",
+                callback: (x) => {
+                    periodsLoadedOnce.current = true;
+                    if (filterValues) {
+                        setPeriods(x.periods.filter((x) => {
+                            return filterValues.values.indexOf(x[filterValues.key]) === -1
+                        }).concat(defaultSelected || []).sort((a, b) => naturalSort(a.name, b.name))
+                            .filter((x) => !x.deleted))
+                    } else {
+                        setPeriods(x.periods.sort((a, b) => naturalSort(a.name, b.name)).filter((x) => !x.deleted))
+                    }
                 }
             })
         }
 
-        getLocations();
+        getPeriods();
     }, [updated]);
 
-    return <FormTypeahead {...props} label={label} options={locations}/>;
+    return <FormTypeahead {...props} defaultSelected={defaultSelected} label={label} labelKey="name" options={periods}/>;
 }
 
-    FormLocation.propTypes = {
+FormPeriod.propTypes = {
     lastUpdated: PropTypes.number,
     label: PropTypes.string,
 };
-FormLocation.defaultProps = {
+FormPeriod.defaultProps = {
     lastUpdated: null,
-    label: "Location",
+    label: "Period",
 };
 
-export default FormLocation;
+export default FormPeriod;
