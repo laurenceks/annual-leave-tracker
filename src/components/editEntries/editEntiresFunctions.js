@@ -199,69 +199,69 @@ export const makeRows = (type, entryList, editId, functions) => {
         }),
         location: () => entryList.map((entry) => singleEntryRow(entry, type, functions, editId)),
         payGrade: () => entryList.map((entry) => singleEntryRow(entry, type, functions, editId)),
-        list: () => {
+        allocation: () => {
             const newListRows = [];
-            entryList.forEach((x, i) => {
+            entryList.forEach((allocation) => {
                 const cellTemplate = {
-                    cellData: {"data-rowGroupId": x.id},
-                    className: `td-rowGroupId-${x.id}`,
+                    cellData: {"data-rowGroupId": allocation.id},
+                    className: `td-rowGroupId-${allocation.id}`,
                     text: ""
                 };
-                if (x.id !== editId) {
-                    x.items?.sort((a, b) => naturalSort(a.itemName, b.itemName)).forEach((y, j) => {
+                if (allocation.id !== editId) {
+                    allocation.periods?.sort((a, b) => naturalSort(a.itemName, b.itemName)).forEach((y, j) => {
                         newListRows.push((j === 0 ? [
                             {
                                 ...cellTemplate,
-                                rowspan: x.items.filter(x => !x.deleted).length,
-                                text: x.id
+                                rowspan: allocation.periods.filter(x => !x.deleted).length,
+                                text: allocation.id
                             },
                             {
                                 ...cellTemplate,
-                                rowspan: x.items.filter(x => !x.deleted).length,
-                                text: x.name,
+                                rowspan: allocation.periods.filter(x => !x.deleted).length,
+                                text: allocation.name,
                             }] : []).concat(
                             [{
                                 ...cellTemplate,
-                                sortValue: `${x.name}-${y.itemName}`,
+                                sortValue: `${allocation.name}-${y.itemName}`,
                                 text: y.itemName
                             }, {
                                 ...cellTemplate,
-                                sortValue: `${x.name}-${y.quantity} ${y.unit}`,
+                                sortValue: `${allocation.name}-${y.quantity} ${y.unit}`,
                                 text: `${y.quantity} ${y.unit}`
                             }]).concat((j === 0 && !editId) ? [{
                             ...cellTemplate,
                             type: "button",
                             text: "Edit",
                             buttonClass: "btn-warning",
-                            rowspan: x.items.filter(x => !x.deleted).length,
+                            rowspan: allocation.periods.filter(x => !x.deleted).length,
                             className: "text-center " + cellTemplate.className,
                             handler: () => {
-                                functions.setEditId(x.id);
-                                functions.setEditData({name: x.name, id: x.id, items: x.items});
+                                functions.setEditId(allocation.id);
+                                functions.setEditData({name: allocation.name, id: allocation.id, periods: allocation.periods});
                             }
                         }, {
                             ...cellTemplate,
                             type: "button",
                             text: "Delete",
                             buttonClass: "btn-danger",
-                            rowspan: x.items.filter(x => !x.deleted).length,
+                            rowspan: allocation.periods.filter(x => !x.deleted).length,
                             className: "text-center " + cellTemplate.className,
                             handler: () => {
                                 functions.setModalOptions(prevState => {
                                     return {
                                         ...prevState,
                                         show: true,
-                                        deleteId: x.id,
-                                        targetName: x.name,
-                                        bodyText: `Are you sure you want to delete ${x.name}?\n\nThe item will also be removed from any lists containing it.`,
-                                        handleYes: () => functions.deleteEntry(x.id, x.name)
+                                        deleteId: allocation.id,
+                                        targetName: allocation.name,
+                                        bodyText: `Are you sure you want to delete ${allocation.name}?\n\nThis will not delete any bookings during this period.`,
+                                        handleYes: () => functions.deleteEntry(allocation.id, allocation.name)
                                     }
                                 })
                             }
                         }] : editId ? [cellTemplate, cellTemplate] : []));
                     })
                 } else {
-                    newListRows.push(...makeEditRow(type, x, functions, editId, entryList))
+                    newListRows.push(...makeEditRow(type, allocation, functions, editId, entryList))
                 }
             })
             return newListRows;
@@ -440,7 +440,7 @@ const makeEditRow = (type, entry, functions, editId, entryList = []) => {
                     handler: functions.getEntries
                 }];
         },
-        list: () => {
+        allocation: () => {
             const makeInputCells = (x, y, i, cellTemplate = {}, startIndex = 0) => {
                 return [{
                     ...cellTemplate,
@@ -651,7 +651,7 @@ export const makeUndeleteRow = (type, deletedEntryList, functions) => {
         period: () => singleUndeleteRow(deletedEntryList, functions),
         location: () => singleUndeleteRow(deletedEntryList, functions),
         payGrade: () => singleUndeleteRow(deletedEntryList, functions),
-        list: () => {
+        allocation: () => {
             return deletedEntryList.map(list => {
                 return ([
                         list.id,
