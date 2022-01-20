@@ -14,7 +14,7 @@ const ConfirmModal = ({
                           noText,
                           headerClass,
                           yesButtonVariant,
-                          noButtonVariant,
+                          noButtonVariant
                       }) => {
 
     const setModalOptions = useContext(GlobalAppContext)[0].setStateFunctions.confirmModal;
@@ -25,13 +25,12 @@ const ConfirmModal = ({
         setModalOptions({})
     }, [lastExited, setModalOptions]);
 
-    return (
-        <Modal show={show}
-               onHide={handleNo}
-               onExited={() => setLastExited(Date.now())}
-               backdrop="static"
-               aria-labelledby="contained-modal-title-vcenter"
-               centered>
+    return (<Modal show={show}
+                   onHide={handleNo}
+                   onExited={() => setLastExited(Date.now())}
+                   backdrop="static"
+                   aria-labelledby="contained-modal-title-vcenter"
+                   centered>
             <Modal.Header className={headerClass}>
                 <Modal.Title>{title}</Modal.Title>
             </Modal.Header>
@@ -39,23 +38,28 @@ const ConfirmModal = ({
             <Modal.Footer>
                 <Button variant={noButtonVariant} onClick={(() => {
                     setModalOptions(prevState => {
-                        return {...prevState, show: false}
+                        return {
+                            ...prevState,
+                            show: false
+                        }
                     })
                     handleNo && handleNo();
                 })}>
                     {noText}
                 </Button>
-                <Button variant={yesButtonVariant} onClick={()=>{
+                <Button variant={yesButtonVariant} onClick={() => {
                     setModalOptions(prevState => {
-                        return {...prevState, show: false}
+                        return {
+                            ...prevState,
+                            show: false
+                        }
                     })
                     handleYes && handleYes();
                 }}>
                     {yesText}
                 </Button>
             </Modal.Footer>
-        </Modal>
-    );
+        </Modal>);
 };
 
 ConfirmModal.propTypes = {
