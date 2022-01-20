@@ -324,7 +324,7 @@ const Users = () => {
 
     return (
         <div>
-            <h1 className="mb-5">Restocker users for {globalAppContext.user.organisation}</h1>
+            <h1 className="mb-5">Annual Leave Tracker users for {globalAppContext.user.organisation}</h1>
             <TableSection title={"All users"} tableProps={usersTableData.all}/>
             <TableSection title={"Active users"} tableProps={usersTableData.active}/>
             <TableSection title={"Unapproved users"} tableProps={usersTableData.unapproved}/>

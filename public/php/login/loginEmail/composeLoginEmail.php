@@ -1,6 +1,6 @@
 <?php
 function composeLoginEmail($emailProps) {
-    $serverString = $_SERVER['SERVER_NAME'] === "localhost" ? "http://192.168.0.60:3000/#" : ("https://" . $_SERVER['SERVER_NAME'] ."/demos/restocker/#");
+    $serverString = $_SERVER['SERVER_NAME'] === "localhost" ? "http://192.168.0.60:3000/#" : ("https://" . $_SERVER['SERVER_NAME'] ."/demos/annual-leave-tracker/#");
     $messageAlt = ($emailProps["alt"] || "") . ($emailProps["url"] || "");
     $message = file_get_contents('loginEmailTemplate.html', __DIR__);
     $message = mb_convert_encoding($message, 'HTML-ENTITIES', "UTF-8");

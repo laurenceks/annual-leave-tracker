@@ -5,10 +5,10 @@ use PHPMailer\PHPMailer\PHPMailer;
 function composeSmtpMail($email, $name, $subject, $message, $messageAlt) {
     require 'smtpCredentials.php';
     require 'appConfig.php';
-    $emailFrom = "noreply@restocker.com";
+    $emailFrom = "noreply@annual-leave-tracker.com";
     $emailFromName = $appName;
-    $headers = "From: " . $appName . " <noreply@restocker.com>";
-    $headers .= "Reply-To: noreply@restocker.com";
+    $headers = "From: " . $appName . " <noreply@annual-leave-tracker.com>";
+    $headers .= "Reply-To: noreply@annual-leave-tracker.com";
     $headers .= "MIME-Version: 1.0\r\n";
     $headers .= "Content-Type: text/html; charset=ISO-8859-1\r\n";
 
