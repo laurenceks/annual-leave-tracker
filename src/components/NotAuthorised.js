@@ -11,7 +11,7 @@ const NotAuthorised = () => {
 
     return (
         <div className="loginForm align-middle">
-            <img src="./img/tempLogo.svg" alt="Annual Leave Tracker logo" className="w-100 p-3 mb-4"/>
+            <img src="./img/logo/tempLogo.svg" alt="Annual Leave Tracker logo" className="w-100 p-3 mb-4"/>
             <Routes>
                 <Route path="/verify" element={<Verify/>}/>
                 <Route path="/reVerify" element={<ReVerify/>}/>
