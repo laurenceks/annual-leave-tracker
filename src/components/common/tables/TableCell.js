@@ -4,7 +4,7 @@ import FormInput from "../forms/FormInput";
 
 const renderCellContent = (x) => {
     if (!x.type) {
-        return typeof x === "string" || typeof x === "number" ? x : x.text || "";
+        return typeof x === "string" || typeof x === "number" ? x : x.text ?? "";
     } else {
         switch (x.type) {
             case "tick":
@@ -29,7 +29,7 @@ const renderCellContent = (x) => {
                     <FormInput {...x.props}/>
                 )
             default:
-                return x.text || "";
+                return x.text ?? "";
         }
     }
 }
