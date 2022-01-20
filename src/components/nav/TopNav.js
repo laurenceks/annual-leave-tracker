@@ -45,7 +45,7 @@ const TopNav = ({user}) => {
                                     <li><NavLink className="dropdown-item" to={"/payGrades"}>Pay grades</NavLink></li>
                                     <li><NavLink className="dropdown-item" to={"/periods"}>Periods</NavLink></li>
                                     <li><NavLink className="dropdown-item" to={"/requests"}>Requests</NavLink></li>
-                                    <li><NavLink className="dropdown-item" to={"/requests"}>Staff</NavLink></li>
+                                    <li><NavLink className="dropdown-item" to={"/staff"}>Staff</NavLink></li>
                                     <li><NavLink className="dropdown-item" to={"/users"}>Users</NavLink></li>
                                 </ul>
                             </li>
