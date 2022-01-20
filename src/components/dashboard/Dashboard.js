@@ -1,10 +1,9 @@
 import {useContext, useEffect, useRef, useState} from 'react';
-import {HiCheck, HiChevronDoubleDown, HiChevronDoubleUp, HiChevronDown, HiChevronUp,} from "react-icons/hi";
 import DashboardStatTile from "./DashboardStatTile";
 import Table from "../common/tables/Table";
 import 'chart.js/auto';
 import {Chart} from 'react-chartjs-2';
-import {bootstrapVariables, commonChartOptions} from "../common/styles";
+import {bootstrapVariables, commonChartOptions, statusCells} from "../common/styles";
 import useFetch from "../../hooks/useFetch";
 import {GlobalAppContext} from "../../App";
 import {IoBarChartSharp, IoBasketSharp, IoBatteryHalfSharp, IoBookmarksSharp} from "react-icons/io5";
@@ -110,14 +109,16 @@ const Dashboard = () => {
                         ...res.allocation,
                         remaining: res.allocation.total ? res.allocation.total - res.allocation.booked : "N/A",
                     },
-                    bookings: res.bookings.map(
-                        (x) => [x.dateFrom, x.dateTo, x.hours, setCase(x.status, "capitalise"), x.userComments || {
-                            className: "table-light",
-                            sortValue: 0
-                        }, x.managerComments || {
-                            className: "table-light",
-                            sortValue: ""
-                        }]),
+                    bookings: res.bookings.map((x) => [x.dateFrom, x.dateTo, x.hours, {
+                        text: setCase(x.status, "capitalise"),
+                        className: statusCells[x.status]
+                    }, x.userComments || {
+                        className: "table-light",
+                        sortValue: 0
+                    }, x.managerComments || {
+                        className: "table-light",
+                        sortValue: ""
+                    }]),
                     chartData: {
                         chartMonths: {
                             data: {
@@ -175,15 +176,24 @@ const Dashboard = () => {
                                        icon={<IoBarChartSharp/>}/>
                     <DashboardStatTile title={"Left"}
                                        number={dashboardData.allocation.remaining || "N/A"}
-                                       colourClass={dashboardData.allocation.total ? getRangeClass(dashboardData.allocationPercentages.remaining, dashboardRanges.remaining) : "null"}
+                                       colourClass={dashboardData.allocation.total ?
+                                           getRangeClass(dashboardData.allocationPercentages.remaining,
+                                               dashboardRanges.remaining) :
+                                           "null"}
                                        icon={<IoBatteryHalfSharp/>}/>
                     <DashboardStatTile title={"Booked"}
                                        number={dashboardData.allocation.booked || 0}
-                                       colourClass={dashboardData.allocation.booked ? getRangeClass(dashboardData.allocationPercentages.booked, dashboardRanges.bookedTaken) : "good"}
+                                       colourClass={dashboardData.allocation.booked ?
+                                           getRangeClass(dashboardData.allocationPercentages.booked,
+                                               dashboardRanges.bookedTaken) :
+                                           "good"}
                                        icon={<IoBookmarksSharp/>}/>
                     <DashboardStatTile title={"Taken"}
                                        number={dashboardData.allocation.taken || 0}
-                                       colourClass={dashboardData.allocation.taken ? getRangeClass(dashboardData.allocationPercentages.taken, dashboardRanges.bookedTaken) : "good"}
+                                       colourClass={dashboardData.allocation.taken ?
+                                           getRangeClass(dashboardData.allocationPercentages.taken,
+                                               dashboardRanges.bookedTaken) :
+                                           "good"}
                                        icon={<IoBasketSharp/>}/>
                 </div>
             </div>

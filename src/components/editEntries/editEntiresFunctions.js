@@ -1,19 +1,11 @@
 import validateForm from "../../functions/formValidation";
-import {variantPairings} from "../common/styles";
+import {statusCells, variantPairings} from "../common/styles";
 import naturalSort from "../../functions/naturalSort";
 import formatMySqlTimestamp, {dateToShortDate, timestampToDate} from "../../functions/formatMySqlTimestamp";
 import setCase from "../../functions/setCase";
 import ModalHighlight from "../Bootstrap/modalHighlight";
 import FormLocation from "../common/forms/FormLocation";
 import FormPayGrade from "../common/forms/FormPayGrade";
-
-const statusCells = {
-    approved: "table-success",
-    requested: "table-warning",
-    denied: "table-danger",
-    withdrawn: "table-light",
-    default: "table-light",
-}
 
 const singleEntryRow = (entry, type, functions, editId) => {
     return (entry.id !== editId ? [entry.id, entry.name, !editId ? {

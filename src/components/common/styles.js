@@ -30,6 +30,13 @@ const variantPairings = {
     }
 }
 
+const statusCells = {
+    approved: "table-success",
+    requested: "table-warning",
+    denied: "table-danger",
+    withdrawn: "table-light",
+    default: "table-light",
+}
 
 Object.keys(variantPairings).forEach(x => {
     variantPairings[x].header = `${variantPairings[x].bg || ""} ${variantPairings[x].text || ""}`
@@ -69,4 +76,4 @@ const commonChartOptions = {
     }
 }
 
-export {bootstrapVariables, commonChartOptions, variantPairings};
+export {bootstrapVariables, commonChartOptions, variantPairings, statusCells};
