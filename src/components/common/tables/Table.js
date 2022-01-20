@@ -26,7 +26,8 @@ const Table = ({
     const headerIndex = headers.findIndex((x) => (x.text || x) === defaultSortHeading);
     const [sortSettings, setSortSettings] = useState({
         index: headerIndex >= 0 ? headerIndex : defaultSortIndex || 0,
-        ascending: ["descending", "desc", "dsc", "d", "down", "bigToSmall", "largeToSmall", "ZtoA", 0, false].indexOf(defaultSortDirection) === -1,
+        ascending: ["descending", "desc", "dsc", "d", "down", "bigToSmall", "largeToSmall", "ZtoA", 0, false].indexOf(
+            defaultSortDirection) === -1,
     });
     const [showSortArrow, setShowSortArrow] = useState(false);
     const [currentHeadingHoverIndex, setCurrentHeadingHoverIndex] = useState(null);
@@ -49,7 +50,9 @@ const Table = ({
             pageNumbers.current = pageCount.current ? [...Array(pageCount.current).keys()].map(x => ++x) : [];
         }
 
-        const sortTableRows = (a, b, columnStructure = null, aIndex = sortSettings.index + (columnCount.current - a.length), bIndex = sortSettings.index + (columnCount.current - b.length)) => {
+        const sortTableRows = (a, b, columnStructure = null,
+                               aIndex = sortSettings.index + (columnCount.current - a.length),
+                               bIndex = sortSettings.index + (columnCount.current - b.length)) => {
             if (columnStructure) {
                 const col = columnStructure.reduce((a, b, c) => c < sortSettings.index ? a + b : a, 0)
                 aIndex = columnStructure?.length === a.length ? aIndex : col;
@@ -60,7 +63,9 @@ const Table = ({
             } else if (a[aIndex]?.alwaysAtEnd || b[bIndex]?.alwaysAtStart) {
                 return sortSettings.ascending ? -1 : 1;
             } else {
-                return naturalSort(a[aIndex]?.sortValue ?? a[aIndex]?.text ?? a[aIndex]?.props?.defaultValue ?? a[aIndex], b[bIndex]?.sortValue ?? b[bIndex]?.text ?? b[bIndex]?.props?.defaultValue ?? b[bIndex]);
+                return naturalSort(
+                    a[aIndex]?.sortValue ?? a[aIndex]?.text ?? a[aIndex]?.props?.defaultValue ?? a[aIndex],
+                    b[bIndex]?.sortValue ?? b[bIndex]?.text ?? b[bIndex]?.props?.defaultValue ?? b[bIndex]);
             }
         };
 
@@ -93,8 +98,10 @@ const Table = ({
                         }
 
                         //then move cells with a rowspan to the first row
-                        const maxFindCols = Math.min(x.reduce((a, b) => Math.max(a, b.reduce(countColumnsInRow, 0)), 0), maxCols);
-                        const spannedRowCells = [...x.find((y) => y.length === maxFindCols)].filter((y) => y.rowspan && y.rowspan > 1);
+                        const maxFindCols = Math.min(x.reduce((a, b) => Math.max(a, b.reduce(countColumnsInRow, 0)), 0),
+                            maxCols);
+                        const spannedRowCells = [...x.find((y) => y.length === maxFindCols)].filter(
+                            (y) => y.rowspan && y.rowspan > 1);
 
                         x = x.map(y => y.filter(z => !z.rowspan || z.rowspan === 1))
                         const firstValues = [...x[0]];
@@ -114,102 +121,104 @@ const Table = ({
         }
         setTableRows(sortedRows);
     }, [sortSettings, rows, currentPageIndex]);
-    return (
-        <div className={`table-responsive ${fullWidth && "w-100"}`}>
-            {(rows && rows.length > 0) ?
-                <>
-                    <table className={`table table-hover ${tableClassName}`}>
-                        <thead>
-                        <tr onMouseEnter={() => setShowSortArrow(true)}
-                            onMouseLeave={() => setShowSortArrow(false)}
-                        >
-                            {headers.map((x, i) => {
-                                return x ? (<th key={`${title}-th-${i}`}
-                                                colSpan={x.colspan}
-                                                rowSpan={x.rowspan}
-                                                className={`${allowSorting && " cursor-pointer user-select-none"} ${x.className || ""}`}
-                                                data-index={i}
-                                                onMouseEnter={(e) => setCurrentHeadingHoverIndex(parseInt(e.target.dataset.index))}
-                                                onClick={() => {
-                                                    setSortSettings(prevState => {
-                                                        return {
-                                                            ascending: i === prevState.index ? !prevState.ascending : true,
-                                                            index: i
-                                                        }
-                                                    })
-                                                }}
-                                >
-                                    <div className="d-flex flex-row align-items-center">
-                                        {(x.text || x.length > 0 || isValidElement(x)) &&
-                                        <ArrowIconTransition
-                                            in={(showSortArrow && (sortSettings.index === i || currentHeadingHoverIndex === i))}
-                                            colourVariant={sortSettings.index !== i ? "secondary" : null}
-                                        >
-                                            {(sortSettings.ascending || sortSettings.index !== i ?
-                                                <IoArrowDown className="d-block"/> :
-                                                <IoArrowUp className="d-block"/>)}
-                                        </ArrowIconTransition>}
-                                        <div>{x.text ?? x}</div>
-                                    </div>
-                                </th>) : null
-                            })}
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {tableRows.map((x, i) => {
-                            return (
-                                <tr key={`${title}-tr-${i}`}
+    return (<div className={`table-responsive ${fullWidth && "w-100"}`}>
+            {(rows && rows.length > 0) ? <>
+                <table className={`table table-hover ${tableClassName}`}>
+                    <thead>
+                    <tr onMouseEnter={() => setShowSortArrow(true)}
+                        onMouseLeave={() => setShowSortArrow(false)}
+                    >
+                        {headers.map((x, i) => {
+                            return x ? (<th key={`${title}-th-${i}`}
+                                            colSpan={x.colspan}
+                                            rowSpan={x.rowspan}
+                                            className={`${allowSorting && " cursor-pointer user-select-none"} ${x.className || ""}`}
+                                            data-index={i}
+                                            onMouseEnter={(e) => setCurrentHeadingHoverIndex(
+                                                parseInt(e.target.dataset.index))}
+                                            onClick={() => {
+                                                setSortSettings(prevState => {
+                                                    return {
+                                                        ascending: i === prevState.index ? !prevState.ascending : true,
+                                                        index: i
+                                                    }
+                                                })
+                                            }}
+                            >
+                                <div className="d-flex flex-row align-items-center">
+                                    {(x.text || x.length > 0 || isValidElement(x)) && <ArrowIconTransition
+                                        in={(showSortArrow && (sortSettings.index === i || currentHeadingHoverIndex === i))}
+                                        colourVariant={sortSettings.index !== i ? "secondary" : null}
+                                    >
+                                        {(sortSettings.ascending || sortSettings.index !== i ?
+                                            <IoArrowDown className="d-block"/> :
+                                            <IoArrowUp className="d-block"/>)}
+                                    </ArrowIconTransition>}
+                                    <div>{x.text ?? x}</div>
+                                </div>
+                            </th>) : null
+                        })}
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {tableRows.map((x, i) => {
+                        return (<tr key={`${title}-tr-${i}`}
                                     onMouseEnter={rowEnter}
                                     onMouseLeave={rowLeave}>
-                                    {x.map((y, j) => {
-                                        return y || y === 0 || y === "" ?
-                                            <TableCell key={`${title}-tr-${i}-td-${j}`}
-                                                       content={y}
-                                                       className={y?.className}
-                                                       align={y?.cellAlignClass}
-                                                       hoverGroup={{current: currentHoverGroup, set: setCurrentHoverGroup}}
-                                            />
-                                            : null
-                                    })}
-                                </tr>
-                            )
+                                {x.map((y, j) => {
+                                    return <TableCell key={`${title}-tr-${i}-td-${j}`}
+                                                      content={y}
+                                                      className={y?.className}
+                                                      align={y?.cellAlignClass}
+                                                      hoverGroup={{
+                                                          current: currentHoverGroup,
+                                                          set: setCurrentHoverGroup
+                                                      }}
+                                    />
+
+                                })}
+                            </tr>)
+                    })}
+                    </tbody>
+                </table>
+                {(length && pageCount.current > 1 && showPaginationButtons) && <nav aria-label="Table pages">
+                    <ul className="pagination justify-content-center">
+                        <li className={`page-item user-select-none ${currentPageIndex === 0 ?
+                            "disabled" :
+                            "cursor-pointer"}`}>
+                            <button className="page-link"
+                                    aria-label="Previous"
+                                    onClick={() => setCurrentPageIndex(prevState => Math.max(0, --prevState))}
+                            >
+                                <span aria-hidden="true">&laquo;</span>
+                            </button>
+                        </li>
+                        {pageNumbers.current.map((x, i) => {
+                            return <li key={`table-${title}-page-${i + 1}`}
+                                       className={`page-item user-select-none ${currentPageIndex === i ?
+                                           "active" :
+                                           "cursor-pointer"}`}>
+                                <button className="page-link"
+                                        onClick={i !== currentPageIndex ?
+                                            (() => setCurrentPageIndex(i)) :
+                                            null}>{x}</button>
+                            </li>
                         })}
-                        </tbody>
-                    </table>
-                    {(length && pageCount.current > 1 && showPaginationButtons) &&
-                    <nav aria-label="Table pages">
-                        <ul className="pagination justify-content-center">
-                            <li className={`page-item user-select-none ${currentPageIndex === 0 ? "disabled" : "cursor-pointer"}`}>
-                                <button className="page-link"
-                                        aria-label="Previous"
-                                        onClick={() => setCurrentPageIndex(prevState => Math.max(0, --prevState))}
-                                >
-                                    <span aria-hidden="true">&laquo;</span>
-                                </button>
-                            </li>
-                            {pageNumbers.current.map((x, i) => {
-                                return <li key={`table-${title}-page-${i + 1}`}
-                                           className={`page-item user-select-none ${currentPageIndex === i ? "active" : "cursor-pointer"}`}>
-                                    <button className="page-link"
-                                            onClick={i !== currentPageIndex ? (() => setCurrentPageIndex(i)) : null}>{x}</button>
-                                </li>
-                            })}
-                            <li className={`page-item user-select-none ${currentPageIndex === pageCount.current - 1 ? "disabled" : "cursor-pointer"}`}>
-                                <button className="page-link"
-                                        aria-label="Next"
-                                        onClick={() => setCurrentPageIndex(prevState => Math.min(pageCount.current - 1, ++prevState))}
-                                >
-                                    <span aria-hidden="true">&raquo;</span>
-                                </button>
-                            </li>
-                        </ul>
-                    </nav>
-                    }
-                </>
-                :
-                <p className=" p-3 my-3 bg-light text-dark rounded-3 text-center">No data to display</p>}
-        </div>
-    );
+                        <li className={`page-item user-select-none ${currentPageIndex === pageCount.current - 1 ?
+                            "disabled" :
+                            "cursor-pointer"}`}>
+                            <button className="page-link"
+                                    aria-label="Next"
+                                    onClick={() => setCurrentPageIndex(
+                                        prevState => Math.min(pageCount.current - 1, ++prevState))}
+                            >
+                                <span aria-hidden="true">&raquo;</span>
+                            </button>
+                        </li>
+                    </ul>
+                </nav>}
+            </> : <p className=" p-3 my-3 bg-light text-dark rounded-3 text-center">No data to display</p>}
+        </div>);
 };
 
 Table.propTypes = {

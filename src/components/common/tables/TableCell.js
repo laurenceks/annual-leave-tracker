@@ -3,8 +3,8 @@ import {IoCheckmarkCircleSharp, IoCloseCircleSharp} from "react-icons/io5";
 import FormInput from "../forms/FormInput";
 
 const renderCellContent = (x) => {
-    if (!x.type) {
-        return typeof x === "string" || typeof x === "number" ? x : x.text ?? "";
+    if (!x || !x.type) {
+        return typeof x === "string" || typeof x === "number" ? x : x?.text ?? "";
     } else {
         switch (x.type) {
             case "tick":
@@ -37,17 +37,17 @@ const renderCellContent = (x) => {
 const TableCell = ({className, content, align, hoverGroup}) => {
     return (
         <td className={`${align && align + " "} ${content?.cellData?.["data-rowGroupId"] === hoverGroup.current && hoverGroup.current && "hover"} ${className || ""}`}
-            colSpan={content.colspan}
-            rowSpan={content.rowspan}
+            colSpan={content?.colspan}
+            rowSpan={content?.rowspan}
             onMouseEnter={() => {
                 hoverGroup.set(content?.cellData?.["data-rowGroupId"])
             }}
             onMouseLeave={() => {
                 hoverGroup.set(null)
             }}
-            {...content.cellData}
+            {...content?.cellData}
         >
-            {content.fragment ?? renderCellContent(content)}
+            {content?.fragment ?? renderCellContent(content)}
         </td>
     );
 };
@@ -61,6 +61,7 @@ TableCell.propTypes = {
 TableCell.defaultProps = {
     title: "Users",
     className: "",
+    content: "",
     align: "align-middle"
 }
 
