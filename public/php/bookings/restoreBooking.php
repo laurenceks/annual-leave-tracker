@@ -15,7 +15,7 @@ if (!checkFunctionExists("bookings", "id", array(array("key" => "id", "value" =>
     $output["errorType"] = "bookingMissing";
 } else {
     try {
-        $deleteBooking = $db->prepare("UPDATE bookings SET deleted = 0, editedBy = :uid WHERE id = :id AND organisationId = :organisationId");
+        $deleteBooking = $db->prepare("UPDATE `bookings` SET `deleted` = 0, `status`='requested', `editedBy` = :uid WHERE `id` = :id AND `organisationId` = :organisationId");
         $deleteBooking->bindValue(":organisationId", $_SESSION["user"]->organisationId);
         $deleteBooking->bindParam(":id", $input["id"]);
         $deleteBooking->bindValue(":uid", $_SESSION["user"]->userId);
