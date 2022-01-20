@@ -39,7 +39,6 @@ const EditAccountForm = () => {
             }
         })
     }
-
     return (
         <form ref={formRef}
               id={"profileForm"}
