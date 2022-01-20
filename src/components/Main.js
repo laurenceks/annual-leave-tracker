@@ -40,7 +40,9 @@ const Main = () => {
                            element={<ProtectedRoute element={<EditEntries type={"period"} title={"periods"}/>}/>}/>
                     <Route path="/allocations"
                            element={<ProtectedRoute element={<EditEntries type={"allocation"}
-                                                                          title={"allocations"}/>}/>}/>
+                                                                          title={"allocations"}
+                                                                          includeDeleted={false}
+                           />}/>}/>
                     <Route path="/requests"
                            element={<ProtectedRoute element={<EditEntries type={"request"}
                                                                           title={"requests"}
