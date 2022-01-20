@@ -5,6 +5,7 @@ import {GlobalAppContext} from "../../../App";
 import useFetch from "../../../hooks/useFetch";
 import {maskUserData} from "../../../functions/maskUserData";
 import {useNavigate} from "react-router-dom";
+import ModalHighlight from "../../Bootstrap/modalHighlight";
 
 const DeleteAccountForm = () => {
 
@@ -48,7 +49,10 @@ const DeleteAccountForm = () => {
                                       return {
                                           ...prevState,
                                           show: true,
-                                          bodyText: "Are you really sure? This action CANNOT be undone!",
+                                          bodyText: <>
+                                              <p>Are you really sure?</p>
+                                              <p className="m-0">This action <ModalHighlight variety="danger">CANNOT</ModalHighlight> be undone!</p>
+                                          </>,
                                           handleYes: () => deleteAccount({
                                               ...form,
                                               values: {
