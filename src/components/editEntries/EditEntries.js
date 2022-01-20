@@ -39,6 +39,7 @@ const EditEntries = ({
             options: {includeDeleted: true},
             dontHandleFeedback: !dataLoadedOnce.current,
             callback: (result) => {
+                console.log(result)
                 dataLoadedOnce.current = true;
                 splitArray.current = splitOn ? splitKeys || (result[resultsKey || `${type}s`] || []).reduce((a, b) => {
                     b[splitOn] && a.indexOf(b[splitOn]) === -1 && (a = [...a, b[splitOn]]);
@@ -48,12 +49,12 @@ const EditEntries = ({
             }
         });
     }
-    const addEntry = (form) => {
+    const addEntry = (values) => {
         fetchHook({
             type: `add${setCase(type, "capitalise")}`,
             options: {
                 method: "POST",
-                body: JSON.stringify({...addData, ...form.values}),
+                body: JSON.stringify({...addData, ...values.values}),
             },
             callback: () => {
                 setAddData({...addDataTemplate});
@@ -66,7 +67,6 @@ const EditEntries = ({
         if (values.useEditData) {
             values = {...values, ...editData};
         }
-        console.log(values);
         fetchHook({
             type: `edit${setCase(type, "capitalise")}`,
             options: {
@@ -74,7 +74,7 @@ const EditEntries = ({
                 body: JSON.stringify(values),
             },
             callback: (response) => {
-                if (response.success || response.errorType !== "itemExists") {
+                if (response.success || response.errorType !== "allocationExists") {
                     getEntries();
                 }
             }
@@ -153,7 +153,7 @@ const EditEntries = ({
                 return <TableSection title={`${setCase(x)} ${title}`}
                                      tableProps={{
                                          headers: entryTableHeadings[type],
-                                         rows: makeEntryRows(dataList.filter((y) => !y.deleted && y[splitOn] === x)),
+                                         rows: makeEntryRows(dataList.filter((y) => !y.deleted && y[splitOn] === x)) || [],
                                          defaultSortIndex: sortIndex,
                                          updated: typeChanged,
                                          defaultHoverGroup: editId

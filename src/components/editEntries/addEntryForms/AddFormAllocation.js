@@ -14,11 +14,14 @@ const AddFormLocation = ({
                 <FormUser id={"inputAddAllocationUser"}
                           label={"User"}
                           invalidFeedback={"You must select a user"}
+                          selected={addData.user}
                           onChange={(e) => {
                               setAddData(prevState => {
                                   return {
                                       ...prevState,
-                                      userId: e[0]?.id || null
+                                      user: e,
+                                      userId: e[0]?.id || null,
+                                      userFullName: e[0]?.name || null
                                   }
                               })
                           }}/>
@@ -29,11 +32,14 @@ const AddFormLocation = ({
                 <FormPeriod id={"inputAddAllocationPeriod"}
                             label={"Period"}
                             invalidFeedback={"You must select a period"}
+                            selected={addData.period}
                             onChange={(e) => {
                                 setAddData(prevState => {
                                     return {
                                         ...prevState,
-                                        periodId: e[0]?.id || null
+                                        period: e,
+                                        periodId: e[0]?.id || null,
+                                        periodName: e[0]?.name || null,
                                     }
                                 })
                             }}/>

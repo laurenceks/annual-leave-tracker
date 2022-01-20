@@ -6,8 +6,12 @@ import AddFormAllocation from "./addEntryForms/AddFormAllocation";
 
 const addDataTemplates = {
     allocation: {
+        user: [],
         userId: null,
+        userFullName: null,
+        period: [],
         periodId: null,
+        periodName: null,
         hours: ""
     },
     booking: {

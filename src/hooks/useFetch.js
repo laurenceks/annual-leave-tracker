@@ -4,7 +4,7 @@ import {useContext} from "react";
 import {GlobalAppContext} from "../App.js";
 
 const fetchOptions = {
-    getAllocations: {url: "./php/allocations/getAllocations.php", method: "GET"},
+    getAllocations: {url: "./php/allocations/getAllAllocations.php", method: "GET"},
     addAllocation: {url: "./php/allocations/addAllocation.php", method: "POST"},
     editAllocation: {url: "./php/allocations/editAllocation.php", method: "POST"},
     deleteAllocation: {url: "./php/allocations/deleteAllocation.php", method: "POST"},

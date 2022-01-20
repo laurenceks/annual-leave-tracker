@@ -1,7 +1,6 @@
 import validateForm from "../../functions/formValidation";
 import {variantPairings} from "../common/styles";
 import naturalSort from "../../functions/naturalSort";
-import {Fragment} from "react";
 import formatMySqlTimestamp, {dateToShortDate, timestampToDate} from "../../functions/formatMySqlTimestamp";
 import setCase from "../../functions/setCase";
 import ModalHighlight from "../Bootstrap/modalHighlight";
@@ -239,7 +238,8 @@ export const makeRows = (type, entryList, editId, functions) => {
                                             show: true,
                                             headerClass: variantPairings.warning.header,
                                             yesButtonVariant: "warning",
-                                            bodyText: <>Are you sure you reset {request.userFullName}'s request to <ModalHighlight variety="warning">requested</ModalHighlight>?`</>,
+                                            bodyText: <>Are you sure you reset {request.userFullName}'s request
+                                                to <ModalHighlight variety="warning">requested</ModalHighlight>?`</>,
                                             handleYes: () => functions.editEntry({
                                                 feedbackVerb: "reset",
                                                 status: "requested",
@@ -302,63 +302,69 @@ export const makeRows = (type, entryList, editId, functions) => {
                     className: `td-rowGroupId-${allocation.id}`,
                     text: ""
                 };
-                if (allocation.id !== editId) {
-                    allocation.periods?.sort((a, b) => naturalSort(a.itemName, b.itemName)).forEach((y, j) => {
-                        newListRows.push((j === 0 ? [{
+
+                allocation.periods?.sort((a, b) => naturalSort(a.name, b.name)).forEach((y, j) => {
+                    newListRows.push((j === 0 ? [{
+                        ...cellTemplate,
+                        rowspan: allocation.periods.length,
+                        text: allocation.userId
+                    }, {
+                        ...cellTemplate,
+                        rowspan: allocation.periods.length,
+                        text: allocation.userFullName,
+                    }, {
+                        ...cellTemplate,
+                        rowspan: allocation.periods.length,
+                        text: allocation.locationName,
+                    }, {
+                        ...cellTemplate,
+                        rowspan: allocation.periods.length,
+                        text: allocation.payGradeName,
+                    }] : []).concat([{
+                        ...cellTemplate,
+                        sortValue: y.periodName,
+                        text: y.periodName
+                    }].concat(
+                        (editId !== y.allocationId && editId !== `${allocation.userId}-${y.periodId}`) || !editId ? [{
                             ...cellTemplate,
-                            rowspan: allocation.periods.filter(x => !x.deleted).length,
-                            text: allocation.id
-                        }, {
-                            ...cellTemplate,
-                            rowspan: allocation.periods.filter(x => !x.deleted).length,
-                            text: allocation.name,
-                        }] : []).concat([{
-                            ...cellTemplate,
-                            sortValue: `${allocation.name}-${y.itemName}`,
-                            text: y.itemName
-                        }, {
-                            ...cellTemplate,
-                            sortValue: `${allocation.name}-${y.quantity} ${y.unit}`,
-                            text: `${y.quantity} ${y.unit}`
-                        }]).concat((j === 0 && !editId) ? [{
+                            sortValue: y.hours,
+                            text: !y.deleted ? y.hours : "Deleted",
+                            className: `${cellTemplate.className}${((!y.hours && y.hours !== 0) || y.deleted) && " table-light"}`
+                        }, !editId && {
                             ...cellTemplate,
                             type: "button",
-                            text: "Edit",
-                            buttonClass: "btn-warning",
-                            rowspan: allocation.periods.filter(x => !x.deleted).length,
+                            text: y.allocationId ? (y.deleted ? "Restore" : "Edit") : "Add",
+                            buttonClass: y.allocationId || y.deleted ? "btn-warning" : "btn-success",
                             className: "text-center " + cellTemplate.className,
                             handler: () => {
-                                functions.setEditId(allocation.id);
+                                functions.setEditId(y.allocationId || `${allocation.userId}-${y.periodId}`);
                                 functions.setEditData({
-                                    name: allocation.name,
-                                    id: allocation.id,
-                                    periods: allocation.periods
+                                    allocationId: y.allocationId,
+                                    periodId: y.periodId,
+                                    periodName: y.periodName,
+                                    userFullName: allocation.userFullName,
+                                    userId: allocation.userId,
                                 });
                             }
-                        }, {
+                        }, y.allocationId && !editId && !y.deleted ? {
                             ...cellTemplate,
                             type: "button",
                             text: "Delete",
                             buttonClass: "btn-danger",
-                            rowspan: allocation.periods.filter(x => !x.deleted).length,
                             className: "text-center " + cellTemplate.className,
                             handler: () => {
                                 functions.setModalOptions(prevState => {
                                     return {
                                         ...prevState,
                                         show: true,
-                                        deleteId: allocation.id,
-                                        targetName: allocation.name,
-                                        bodyText: `Are you sure you want to delete ${allocation.name}?\n\nThis will not delete any bookings during this period.`,
-                                        handleYes: () => functions.deleteEntry(allocation.id, allocation.name)
+                                        bodyText: `Are you sure you want to delete ${allocation.userFullName}'s allocation for ${y.periodName}?\n\nThis will not delete any bookings during this period.`,
+                                        handleYes: () => functions.deleteEntry(y.allocationId,
+                                            `${allocation.userFullName}'s allocation for ${y.periodName}`)
                                     }
                                 })
                             }
-                        }] : editId ? [cellTemplate, cellTemplate] : []));
-                    })
-                } else {
-                    newListRows.push(...makeEditRow(type, allocation, functions, editId, entryList))
-                }
+                        } : ""] : makeEditRow(type, {...y, ...allocation}, functions, editId, entryList))));
+                })
             })
             return newListRows;
         }
@@ -403,11 +409,13 @@ const makeEditRow = (type, entry, functions, editId, entryList = []) => {
                 props: {
                     type: "number",
                     id: inputIds.hours,
+                    min: 0,
+                    step: 0.01,
                     label: "Hours",
                     defaultValue: entry.hours,
                     form: "editBookingForm",
                 },
-                invalidFeedback: "You must specify a warning level",
+                invalidFeedback: "You must specify the number of hours this booking will cost",
                 sortValue: `${entry.warningLevel} ${entry.unit}`
             }, {
                 text: setCase(entry.status, "capitalise")
@@ -430,7 +438,7 @@ const makeEditRow = (type, entry, functions, editId, entryList = []) => {
                 text: "Save",
                 id: entry.id,
                 className: "text-center buttonCell",
-                form: "editBookingForm", //TODO confirm modal that this will reset to "requested"
+                form: "editBookingForm",
                 handler: (e) => {
                     const dirtyBookingName = `from ${entry.dateFrom} to ${entry.dateTo} costing ${entry.hours} hours`;
                     functions.setModalOptions((prevState) => {
@@ -574,193 +582,53 @@ const makeEditRow = (type, entry, functions, editId, entryList = []) => {
             }];
         },
         allocation: () => {
-            const makeInputCells = (x, y, i, cellTemplate = {}, startIndex = 0) => {
-                return [{
-                    ...cellTemplate,
-                    sortValue: x.items[i].itemName,
-                    type: "formItem",
-                    props: {
-                        label: "Item",
-                        id: `input-listId-${x.id}-itemId-${y.itemId}-name`,
-                        inputClass: `form-listId-${x.id}`,
-                        defaultSelected: x.items[i].itemId ? [{
-                            ...x.items[i],
-                            name: x.items[i].itemName,
-                            id: x.items[i].itemId
-                        }] : [],
-                        filterValues: {
-                            key: "id",
-                            values: x.items.map(x => x.itemId)
-                        },
-                        onChange: (e) => {
-                            x.items.splice(i, 1, {
-                                ...x.items[i],
-                                itemName: e?.[0]?.name || null,
-                                itemId: e?.[0]?.id || null,
-                                unit: e?.[0]?.unit || null,
-                            })
-                            //update the editedList with new items
-                            functions.setEditData(prevState => {
-                                return {
-                                    ...prevState,
-                                    items: x.items
-                                }
-                            });
-                            //update the full list so the table is re-rendered
-                            functions.setDataList((prevState) => {
-                                prevState[startIndex] = x;
-                                return [...prevState];
-                            })
-                        }
-                    },
-                }, {
-                    ...cellTemplate,
-                    sortValue: x.items[i]?.quantity || 0,
-                    type: "input",
-                    props: {
-                        label: "Quantity",
-                        type: "Number",
-                        id: `input-listId-${x.id}-itemId-${y.itemId}-quantity`,
-                        inputClass: `form-listId-${x.id}`,
-                        defaultValue: x.items[i]?.quantity || null,
-                        onChange: (e, v) => {
-                            x.items.splice(i, 1, {
-                                ...x.items[i],
-                                quantity: v
-                            })
-                            functions.setEditData(prevState => {
-                                return {
-                                    ...prevState,
-                                    items: x.items
-                                }
-                            })
-                            //update the full list so the table is re-rendered
-                            functions.setDataList((prevState) => {
-                                prevState[startIndex] = x;
-                                return [...prevState];
-                            })
-                        }
-                    }
-                }, {
-                    ...cellTemplate,
-                    className: `align-middle ${cellTemplate.className}`,
-                    sortValue: x.items[i]?.unit || "units",
-                    text: x.items[i]?.unit || "units"
-                }, x.items.filter(x => !x.deleted).length > 1 ? {
-                    ...cellTemplate,
-                    type: "button",
-                    text: "Delete",
-                    buttonClass: "btn-danger",
-                    className: "align-middle " + cellTemplate.className,
-                    handler: () => {
-                        const newDeleteItems = [...entryList[startIndex].items];
-                        newDeleteItems[i] = {
-                            ...newDeleteItems[i],
-                            deleted: 1
-                        }
-                        functions.setEditData((prevState) => {
-                            return {
-                                ...prevState,
-                                items: newDeleteItems
-                            }
-                        })
-                        functions.setDataList((x) => {
-                            x[startIndex].items = newDeleteItems;
-                            return [...x];
-                        })
-                    }
-                } : ""]
-
-            }
             const inputIds = {
-                name: `input-listId-${entry.id}-name`,
+                hours: `input-userIdPeriodId-${entry.userId}-${entry.periodId}-hours`,
             };
-            const listIndex = entryList.findIndex((x) => x.id === editId)
             const cellTemplate = {
-                cellData: {"data-rowGroupId": entry.id},
+                //TODO: pass an id to group rows - perhaps piggyback on editId??
+                cellData: {"data-rowGroupId": entry.allocationId},
                 className: `td-rowGroupId-${entry.id}`,
                 cellAlignClass: "align-top"
             };
-            const newEditRow = [];
-            const firstRow = [{
+            return ([{
                 ...cellTemplate,
-                text: entry.id,
-                rowspan: entry.items?.length + 1 || 1
-            }, {
-                ...cellTemplate,
-                rowspan: entry.items?.length + 1 || 1,
                 type: "input",
                 props: {
-                    type: "text",
-                    label: "Name",
-                    id: inputIds.name,
-                    defaultValue: entry.name,
-                    onChange: (e, v) => {
-                        functions.setEditData(prevState => {
-                            return {
-                                ...prevState,
-                                name: v
-                            }
-                        });
-                    }
-                }
-            }];
-            entry.items.forEach((y, i) => {
-                newEditRow.push((i === 0 ? firstRow : []).concat(
-                    y.deleted ? [] : makeInputCells(entry, y, i, cellTemplate, listIndex)))
-            })
-            newEditRow.push([{
-                ...cellTemplate,
-                type: "button",
-                text: "Add item",
-                buttonClass: "btn-primary",
-                className: cellTemplate.className,
-                alwaysAtEnd: true,
-                handler: () => {
-                    const newItems = [...entry.items];
-                    newItems.push({
-                        itemId: null,
-                        itemName: "",
-                        unit: "units",
-                        quantity: null,
-                        listId: entry.id,
-                        listItemsId: null,
-                        deleted: 0
-                    });
-                    //save new item in edited list
-                    functions.setEditData((prevState) => {
-                        return {
-                            ...prevState,
-                            items: newItems
-                        }
-                    });
-                    functions.setDataList((x) => {
-                        x[listIndex].items = newItems;
-                        return [...x];
-                    })
-                }
+                    type: "number",
+                    id: inputIds.hours,
+                    min: 0,
+                    step: 0.01,
+                    label: "Hours",
+                    defaultValue: entry.hours,
+                    form: "editAllocationForm",
+                },
+                invalidFeedback: "You must specify the number of hours",
+                sortValue: entry.hours
             }, {
                 ...cellTemplate,
-                colspan: 3,
-                alwaysAtEnd: true,
-                fragment: <Fragment>
-                    <button className="btn btn-success me-3"
-                            onClick={(e) => validateForm(e, `#${inputIds.name}, .form-listId-${entry.id}`, (x) => {
-                                if (x.isValid) {
-                                    functions.editEntry({
-                                        useEditData: true,
-                                        id: entry.id,
-                                        name: x.values[inputIds.name]
-                                    });
-                                }
-                            })}>
-                        Save
-                    </button>
-                    <button className="btn btn-danger" onClick={() => functions.getEntries()}>Cancel</button>
-                </Fragment>,
-                className: cellTemplate.className,
+                type: "button",
+                text: "Save",
+                buttonClass: "btn-success",
+                className: "text-center" + cellTemplate.className,
+                cellAlignClass: "align-middle",
+                handler: (e) => validateForm(e, `#${inputIds.hours}`, (x) => {
+                    if (x.isValid) {
+                        functions.editEntry({
+                            useEditData: true,
+                            hours: x.values[inputIds.hours]
+                        });
+                    }
+                })
+            }, {
+                ...cellTemplate,
+                type: "button",
+                text: "Cancel",
+                buttonClass: "btn-secondary",
+                className: "text-center" + cellTemplate.className,
+                cellAlignClass: "align-middle",
+                handler: () => functions.setEditId(null)
             }]);
-            return newEditRow;
         }
     }
     return editRowFunctions[type]();
@@ -795,7 +663,8 @@ export const makeUndeleteRow = (type, deletedEntryList, functions) => {
                                 yesButtonVariant: "warning",
                                 bodyText: <>
                                     <p>Are you sure you want to restore your booking ${dirtyBookingName}?</p>
-                                    <p className="m-0">Its status will be changed back to <ModalHighlight variety="warning">"requested"</ModalHighlight></p>
+                                    <p className="m-0">Its status will be changed back
+                                        to <ModalHighlight variety="warning">"requested"</ModalHighlight></p>
                                 </>,
                                 handleYes: () => functions.restoreEntry(booking.id, dirtyBookingName)
                             }
@@ -808,10 +677,10 @@ export const makeUndeleteRow = (type, deletedEntryList, functions) => {
         location: () => singleUndeleteRow(deletedEntryList, functions),
         payGrade: () => singleUndeleteRow(deletedEntryList, functions),
         allocation: () => {
-            return deletedEntryList.map(list => {
-                return ([list.id, list.name, {
-                    text: formatMySqlTimestamp(list.lastUpdated),
-                    sortValue: list.lastUpdated
+            return deletedEntryList.map(allocation => {
+                return ([allocation.id, allocation.name, {
+                    text: formatMySqlTimestamp(allocation.lastUpdated),
+                    sortValue: allocation.lastUpdated
                 }, {
                     type: "button",
                     text: "Restore",
@@ -821,12 +690,10 @@ export const makeUndeleteRow = (type, deletedEntryList, functions) => {
                             return {
                                 ...prevState,
                                 show: true,
-                                deleteId: list.id,
-                                targetName: list.name,
-                                bodyText: `Are you sure you want to restore ${list.name}?`,
+                                bodyText: `Are you sure you want to restore ${allocation.name}?`,
                                 headerClass: variantPairings.warning.header,
                                 yesButtonVariant: "warning",
-                                handleYes: () => functions.restoreEntry(list.id, list.name)
+                                handleYes: () => functions.restoreEntry(allocation.allocationId)
                             }
                         })
                     }
