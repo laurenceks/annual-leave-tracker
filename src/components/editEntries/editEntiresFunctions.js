@@ -600,14 +600,22 @@ const makeEditRow = (type, entry, functions, editId, entryList = []) => {
                 fragment: <FormPayGrade defaultSelected={[{
                     name: entry.payGradeName,
                     id: entry.payGradeId
-                }]} onChange={(e) => functions.setEditData(e[0] ? e[0].id : null)}/>,
+                }]}
+                                        onChange={(e) => functions.setEditData(prevState => ({
+                                            ...prevState,
+                                            payGradeId: e[0] ? e[0].id : null
+                                        }))}/>,
                 invalidFeedback: `You must specify ${entry.userFirstName}'s pay grade`,
                 sortValue: entry.paygradeName
             }, {
                 fragment: <FormLocation defaultSelected={[{
                     name: entry.locationName,
                     id: entry.locationId
-                }]} onChange={(e) => functions.setEditData(e[0] ? e[0].id : null)}/>,
+                }]}
+                                        onChange={(e) => functions.setEditData(prevState => ({
+                                            ...prevState,
+                                            locationId: e[0] ? e[0].id : null
+                                        }))}/>,
                 invalidFeedback: `You must specify where ${entry.userFirstName} works`,
                 sortValue: entry.locationName
             }, {
