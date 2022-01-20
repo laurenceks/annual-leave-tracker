@@ -39,7 +39,8 @@ const addDataTemplates = {
         name: null,
         items: [],
         index: null,
-    }
+    },
+    request: null
 }
 
 const addDataForms = {
@@ -48,6 +49,7 @@ const addDataForms = {
     booking: AddFormBooking,
     payGrade: AddFormPayGrade,
     period: AddFormPeriod,
+    request: null
 }
 
 export {addDataTemplates, addDataForms};
