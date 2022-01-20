@@ -11,10 +11,10 @@ const AddFormPeriod = ({addData, setAddData}) => {
                                id={"inputAddPeriodName"}
                                label={"Name"}
                                invalidFeedback={"You must name the period"}
-                               value={addData.hours}
+                               forceCase="title"
                                onChange={(e, x) => {
                                    setAddData(prevState => {
-                                       return {...prevState, hours: x}
+                                       return {...prevState, name: x}
                                    })
                                }}/>
                 </div>
@@ -25,10 +25,9 @@ const AddFormPeriod = ({addData, setAddData}) => {
                                id={"inputAddPeriodFrom"}
                                label={"From"}
                                invalidFeedback={"You must enter a date from"}
-                               value={addData.from}
                                onChange={(e, x) => {
                                    setAddData(prevState => {
-                                       return {...prevState, from: x, to:x}
+                                       return {...prevState, from: x}
                                    })
                                }}/>
                 </div>
@@ -40,8 +39,11 @@ const AddFormPeriod = ({addData, setAddData}) => {
                                label={"To"}
                                min={addData.from}
                                invalidFeedback={"You must enter a date to"}
-                               value={addData.from}
-                    />
+                               onChange={(e, x) => {
+                                   setAddData(prevState => {
+                                       return {...prevState, to: x}
+                                   })
+                               }}/>
                 </div>
             </div>
             <div className="col-12 col-md-1 d-flex align-items-center">
