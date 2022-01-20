@@ -104,52 +104,60 @@ const Dashboard = () => {
             },
             dontHandleFeedback: !dashboardLoadedOnce.current,
             callback: (res) => {
-                const newDashboardData = {
-                    allocation: {
-                        ...res.allocation,
-                        remaining: res.allocation.total ? res.allocation.total - res.allocation.booked : "N/A",
-                    },
-                    bookings: res.bookings.map((x) => [x.dateFrom, x.dateTo, x.hours, {
-                        text: setCase(x.status, "capitalise"),
-                        className: statusCells[x.status]
-                    }, x.userComments || {
-                        className: "table-light",
-                        sortValue: 0
-                    }, x.managerComments || {
-                        className: "table-light",
-                        sortValue: ""
-                    }]),
-                    chartData: {
-                        chartMonths: {
-                            data: {
-                                booked: res.chartData.chartMonths.map((x) => x.hours),
-                                requested: res.chartData.chartMonths.map((x) => x.requested),
-                                taken: res.chartData.chartMonths.map((x) => x.taken),
-                                denied: res.chartData.chartMonths.map((x) => x.denied),
-                                approved: res.chartData.chartMonths.map((x) => x.approved),
-                            },
-                            labels: res.chartData.chartMonths.map((x) => x.month.substr(0, 3))
+                let newDashboardData = {}
+                if (!res.noPeriod) {
+                    newDashboardData = {
+                        allocation: {
+                            ...res.allocation,
+                            remaining: res.allocation.total ? res.allocation.total - res.allocation.booked : "N/A",
                         },
-                        chartHours: {
-                            data: res.chartData.chartHours.map((x) => x.hours),
-                            labels: res.chartData.chartHours.map((x) => x.label)
+                        bookings: res.bookings.map((x) => [x.dateFrom, x.dateTo, x.hours, {
+                            text: setCase(x.status, "capitalise"),
+                            className: statusCells[x.status]
+                        }, x.userComments || {
+                            className: "table-light",
+                            sortValue: 0
+                        }, x.managerComments || {
+                            className: "table-light",
+                            sortValue: ""
+                        }]),
+                        chartData: {
+                            chartMonths: {
+                                data: {
+                                    booked: res.chartData.chartMonths.map((x) => x.hours),
+                                    requested: res.chartData.chartMonths.map((x) => x.requested),
+                                    taken: res.chartData.chartMonths.map((x) => x.taken),
+                                    denied: res.chartData.chartMonths.map((x) => x.denied),
+                                    approved: res.chartData.chartMonths.map((x) => x.approved),
+                                },
+                                labels: res.chartData.chartMonths.map((x) => x.month.substr(0, 3))
+                            },
+                            chartHours: {
+                                data: res.chartData.chartHours.map((x) => x.hours),
+                                labels: res.chartData.chartHours.map((x) => x.label)
+                            }
                         }
                     }
-                }
-                newDashboardData.allocationPercentages = {
-                    remaining: res.allocation.total ?
-                        newDashboardData.allocation.remaining / res.allocation.total * 100 :
-                        100,
-                    taken: res.allocation.total ? newDashboardData.allocation.taken / res.allocation.total * 100 : 100,
-                }
-                newDashboardData.allocationPercentages.booked = 100 - newDashboardData.allocationPercentages.remaining;
-                if (res.period?.defaultedToCurrent) {
-                    setDashBoardSettings(prevState => ({
-                        selectedPeriod: [res.period],
-                        period: res.period,
-                        periodId: res.period.id,
-                        manualChange: prevState.manualChange
-                    }))
+                    newDashboardData.allocationPercentages = {
+                        remaining: res.allocation.total ?
+                            newDashboardData.allocation.remaining / res.allocation.total * 100 :
+                            100,
+                        taken: res.allocation.total ?
+                            newDashboardData.allocation.taken / res.allocation.total * 100 :
+                            100,
+                    }
+                    newDashboardData.allocationPercentages.booked =
+                        100 - newDashboardData.allocationPercentages.remaining;
+                    if (res.period?.defaultedToCurrent) {
+                        setDashBoardSettings(prevState => ({
+                            selectedPeriod: [res.period],
+                            period: res.period,
+                            periodId: res.period.id,
+                            manualChange: prevState.manualChange
+                        }))
+                    }
+                }else{
+                    newDashboardData = new dashboardDataTemplate();
                 }
                 setDashboardData(newDashboardData);
                 if (!dashboardLoadedOnce.current) {
