@@ -1,5 +1,5 @@
 <?php
-$getAllocationForUserIdByPeriod= "SELECT (SELECT `hours`
+$getAllocationForUserIdByPeriodQuery= "SELECT (SELECT `hours`
         FROM `allocations`
         WHERE `allocations`.`periodId` = `periods`.`id`
           AND `allocations`.`userId` = :userId) AS `total`,
