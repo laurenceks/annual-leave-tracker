@@ -40,44 +40,41 @@ const FormTypeahead = ({
 
     useEffect(() => {
         setSelectedState(defaultSelected);
-    }, [defaultSelected]);
+    }, [defaultSelected?.[0]?.[labelKey]]);
 
     const inputProps = {
         useFloatingLabel: useFloatingLabel,
         id: id,
         floatingLabelText: label,
-        className: inputClass,
-        ...props.inputProps
+        className: inputClass, ...props.inputProps
     };
 
-    return (
-        <div className={"formInputWrap"}>
-            <Typeahead
-                {...props}
-                allowNew={allowNew}
-                ref={typeaheadInputRef}
-                id={id}
-                form={form}
-                inputProps={{...inputProps}}
-                disabled={disabled || (options?.length <= 1 && !allowNew)}
-                options={options || []}
-                selected={options?.length === 1 && !allowNew ? options : selectedState}
-                onFocus={checkIfAncestorsHaveIsInvalidClass}
-                onChange={(e) => {
-                    forceCase && e[0] && (e[0][labelKey] = setCase(e[0][labelKey], forceCase));
-                    setSelectedState(e);
-                    onChange && onChange(e, typeaheadInputRef);
-                }}
-                onBlur={(e) => {
-                    checkIfAncestorsHaveIsInvalidClass(e);
-                    selectedState.length === 0 && typeaheadInputRef.current.clear();
-                    onBlur && onBlur(e, typeaheadInputRef);
-                }}
-                labelKey={labelKey}
-            />
-            {invalidFeedback && <InputFeedbackTooltip text={invalidFeedback}/>}
-        </div>
-    );
+    return (<div className={"formInputWrap"}>
+        <Typeahead
+            {...props}
+            allowNew={allowNew}
+            ref={typeaheadInputRef}
+            id={id}
+            form={form}
+            inputProps={{...inputProps}}
+            disabled={disabled || (options?.length <= 1 && !allowNew)}
+            options={options || []}
+            selected={options?.length === 1 && !allowNew ? options : selectedState}
+            onFocus={checkIfAncestorsHaveIsInvalidClass}
+            onChange={(e) => {
+                forceCase && e[0] && (e[0][labelKey] = setCase(e[0][labelKey], forceCase));
+                setSelectedState(e);
+                onChange && onChange(e, typeaheadInputRef);
+            }}
+            onBlur={(e) => {
+                checkIfAncestorsHaveIsInvalidClass(e);
+                selectedState.length === 0 && typeaheadInputRef.current.clear();
+                onBlur && onBlur(e, typeaheadInputRef);
+            }}
+            labelKey={labelKey}
+        />
+        {invalidFeedback && <InputFeedbackTooltip text={invalidFeedback}/>}
+    </div>);
 };
 
 FormTypeahead.propTypes = {
