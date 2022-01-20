@@ -7,17 +7,22 @@ $output = array_merge($feedbackTemplate, array("bookings" => array()));
 $input = json_decode(file_get_contents('php://input'), true);
 
 if (!$input["periodId"]) {
-    $getPeriodId = $db->prepare("SELECT `id`, `name`, `dateFrom`, `dateTo` FROM `periods` WHERE `dateFrom` <= CURRENT_DATE AND `dateTo` >= CURRENT_DATE AND `deleted` = 0");
-    $getPeriodId->execute();
-    $getPeriodId = $getPeriodId->fetch(PDO::FETCH_ASSOC);
-    $period = $getPeriodId ? $getPeriodId : null;
-    $period["defaultedToCurrent"] = true;
-    $output["period"] = $period;
+    try {
+        $getPeriodId = $db->prepare("SELECT `id`, `name`, `dateFrom`, `dateTo` FROM `periods` WHERE `dateFrom` <= CURRENT_DATE AND `dateTo` >= CURRENT_DATE AND `deleted` = 0 AND `organisationId` = :organisationId");
+        $getPeriodId->bindValue(':organisationId', $_SESSION["user"]->organisationId);
+        $getPeriodId->execute();
+        $getPeriodId = $getPeriodId->fetch(PDO::FETCH_ASSOC);
+        $period = $getPeriodId;
+        $period["defaultedToCurrent"] = true;
+        $output["period"] = $period;
+    } catch (PDOException $e) {
+        $period = null;
+    }
 } else {
     $period = $input["period"];
 }
 
-if ($period) {
+if (isset($period["id"])) {
     require "dashboardChartMonthQuery.php";
     require "../allocations/getAllocationForCurrentUserByPeriod.php";
 
@@ -32,8 +37,7 @@ if ($period) {
     $output["chartData"]["chartMonths"] = $getChartMonths->fetchAll(PDO::FETCH_ASSOC);
 
     $db->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
-    $getAllocationForUserIdByPeriod = $db->prepare($getAllocationForUserIdByPeriod);
-
+    $getAllocationForUserIdByPeriod = $db->prepare($getAllocationForUserIdByPeriodQuery);
     $getAllocationForUserIdByPeriod->bindValue(':userId', $_SESSION["user"]->userId);
     $getAllocationForUserIdByPeriod->bindValue(':organisationId', $_SESSION["user"]->organisationId);
     $getAllocationForUserIdByPeriod->bindValue(':dateFrom', $period["dateFrom"]);
@@ -41,6 +45,8 @@ if ($period) {
     $getAllocationForUserIdByPeriod->bindValue(':periodId', $period["id"]);
     $db->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
     $getAllocationForUserIdByPeriod->execute();
+
+    $output["period"] = $period;
 
     $allocationForIdAndPeriod = $getAllocationForUserIdByPeriod->fetch(PDO::FETCH_ASSOC);;
     $output["allocation"] = $allocationForIdAndPeriod;
@@ -63,6 +69,6 @@ if ($period) {
 
 $output["success"] = true;
 $output["title"] = "Data updated";
-$output["feedback"] = $period ? "Now showing data for the period " . $period["name"] : "No matching period could be found";
+$output["feedback"] = isset($period["id"]) ? "Now showing data for the period " . $period["name"] : "No matching period could be found";
 
 echo json_encode($output, JSON_NUMERIC_CHECK);
