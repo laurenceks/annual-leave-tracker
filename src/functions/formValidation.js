@@ -1,4 +1,5 @@
-const validateForm = (e, formRef, callBack, typeaheadStates = {}, passwordRequirements = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/) => {
+const validateForm = (e, formRef, callBack, typeaheadStates = {},
+                      passwordRequirements = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/) => {
     e.preventDefault();
 
     const inputsNotCheckedByRegex = ["text", "textarea", "password", "checkbox", "number", "radio"]
@@ -8,9 +9,13 @@ const validateForm = (e, formRef, callBack, typeaheadStates = {}, passwordRequir
     const validInputs = [];
     const values = {};
     const passIds = {};
-    const formInputs = Array.isArray(formRef) ? formRef.map(x => {
-        return document.getElementById(x);
-    }) : typeof(formRef) === "string" ? document.querySelectorAll(formRef) : formRef.current.querySelectorAll("input:not(.rbt-input-hint), textarea");
+    const formInputs = Array.isArray(formRef) ?
+        formRef.map(x => {
+            return document.getElementById(x);
+        }) :
+        typeof (formRef) === "string" ?
+            document.querySelectorAll(formRef) :
+            formRef.current.querySelectorAll("input:not(.rbt-input-hint), textarea");
 
     const updateOutput = (element, invalidate = true) => {
         if (invalidate) {
@@ -33,10 +38,11 @@ const validateForm = (e, formRef, callBack, typeaheadStates = {}, passwordRequir
             const validationExpressions = {
                 email: /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
                 tel: /^(((\+44\s?\d{4}|\(?0\d{4}\)?)\s?\d{3}\s?\d{3})|((\+44\s?\d{3}|\(?0\d{3}\)?)\s?\d{3}\s?\d{4})|((\+44\s?\d{2}|\(?0\d{2}\)?)\s?\d{4}\s?\d{4}))(\s?#(\d{4}|\d{3}))?$|\+[0-9]{1,3} ?[0-9 ]{1,15}/,
-                date: / ^((?:(?:1[6-9]|2[0-9])\d{2})(-)(?:(?:(?:0[13578]|1[02])(-)31)|((0[1,3-9]|1[0-2])(-)(29|30))))$|^(?:(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00)))(-)02(-)29)$|^(?:(?:1[6-9]|2[0-9])\d{2})(-)(?:(?:0[1-9])|(?:1[0-2]))(-)(?:0[1-9]|1\d|2[0-8])$/
+                date: /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$/
             }
             const exp = validationExpressions[x.type]
             updateOutput(x, !exp.test(x.value))
+            console.log(x.value, exp.test(x.value))
         } else if ((x.type === "checkbox" || x.type === "radio") && x.dataset.checkrequired === "true" && !x.checked) {
             updateOutput(x)
         } else {
@@ -55,7 +61,6 @@ const validateForm = (e, formRef, callBack, typeaheadStates = {}, passwordRequir
             }
         }
     });
-
 
     Object.keys(passIds).forEach(x => {
         if (!passIds[x].every(elm => {
