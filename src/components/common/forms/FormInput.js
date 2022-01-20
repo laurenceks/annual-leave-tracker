@@ -5,7 +5,7 @@ import {useEffect, useRef, useState} from "react";
 import useInitialise from "../../../hooks/useInitialise";
 
 const FormInput = ({
-    autocomplete,
+                       autocomplete,
                        defaultValue,
                        disabled,
                        forceCase,
@@ -25,7 +25,7 @@ const FormInput = ({
                        value,
                    }) => {
 
-    const [inputState, setInputState] = useState(defaultValue || value || "");
+    const [inputState, setInputState] = useState(defaultValue ?? value ?? "");
     const renderedOnce = useRef(false);
     const resetSetOnce = useRef(false);
 
@@ -34,27 +34,32 @@ const FormInput = ({
     })
 
     useEffect(() => {
-        renderedOnce.current && setInputState(defaultValue || value);
-    }, [defaultValue, value]);
+        renderedOnce.current && setInputState(value);
+    }, [value]);
+
+    useEffect(() => {
+        renderedOnce.current && setInputState(defaultValue);
+    }, [defaultValue]);
 
     useEffect(() => {
         resetSetOnce.current ? setInputState("") : resetSetOnce.current = true;
     }, [reset]);
 
-    return (
-        <div className={"formInputWrap"}>
+    return (<div className={"formInputWrap"}>
             <div className="form-floating">
                 <input type={type} className={`form-control formInput${inputClass ? ` ${inputClass}` : ""}`}
                        id={id}
                        name={id}
                        placeholder={placeholder || label}
-                       autocomplete={autocomplete}
+                       autoComplete={autocomplete}
                        data-passwordid={passwordId}
                        min={min}
                        max={max}
                        step={step}
                        onChange={(e) => {
-                           const returnValue = type === "number" && e.target.value ? Number(e.target.value) : forceCase && forceCase !== "" ? setCase(e.target.value, forceCase) : e.target.value;
+                           const returnValue = type === "number" && e.target.value ?
+                               Number(e.target.value) :
+                               forceCase && forceCase !== "" ? setCase(e.target.value, forceCase) : e.target.value;
                            setInputState(returnValue);
 
                            if (onChange) {
@@ -63,13 +68,12 @@ const FormInput = ({
                        }}
                        form={form}
                        disabled={disabled}
-                       value={inputState || ""}
+                       value={inputState ?? ""}
                 />
                 <label htmlFor={id}>{label}</label>
             </div>
             {invalidFeedback && <InputFeedbackTooltip text={invalidFeedback}/>}
-        </div>
-    );
+        </div>);
 };
 
 FormInput.propTypes = {
