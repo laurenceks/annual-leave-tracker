@@ -25,7 +25,7 @@ const FormInput = ({
                        value,
                    }) => {
 
-    const [inputState, setInputState] = useState(defaultValue ?? value ?? "");
+    const [inputState, setInputState] = useState(defaultValue || value || "");
     const renderedOnce = useRef(false);
     const resetSetOnce = useRef(false);
 
@@ -34,11 +34,11 @@ const FormInput = ({
     })
 
     useEffect(() => {
-        renderedOnce.current && setInputState(value);
+        setInputState(value);
     }, [value]);
 
     useEffect(() => {
-        renderedOnce.current && setInputState(defaultValue);
+        renderedOnce.current && setInputState(defaultValue || value);
     }, [defaultValue]);
 
     useEffect(() => {
@@ -68,7 +68,7 @@ const FormInput = ({
                        }}
                        form={form}
                        disabled={disabled}
-                       value={inputState ?? ""}
+                       value={inputState || ""}
                 />
                 <label htmlFor={id}>{label}</label>
             </div>
