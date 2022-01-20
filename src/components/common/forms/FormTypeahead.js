@@ -60,7 +60,7 @@ const FormTypeahead = ({
                 form={form}
                 inputProps={{...inputProps}}
                 disabled={disabled || (options?.length <= 1 && !allowNew)}
-                options={options}
+                options={options || []}
                 selected={options?.length === 1 && !allowNew ? options : selectedState}
                 onFocus={checkIfAncestorsHaveIsInvalidClass}
                 onChange={(e) => {

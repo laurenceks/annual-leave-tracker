@@ -43,7 +43,7 @@ const FormPeriod = ({
         getPeriods();
     }, [updated]);
 
-    return <FormTypeahead {...props} defaultSelected={defaultSelected} label={label} labelKey="name" options={periods}/>;
+    return <FormTypeahead {...props} defaultSelected={defaultSelected} label={label} labelKey="name" options={periods || []}/>;
 }
 
 FormPeriod.propTypes = {
