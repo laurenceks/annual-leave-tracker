@@ -597,26 +597,26 @@ const makeEditRow = (type, entry, functions, editId, entryList = []) => {
         },
         staff: () => {
             return [entry.id, entry.staffFullName, {
-                fragment: <FormPayGrade defaultSelected={[{
+                fragment: <FormPayGrade defaultSelected={entry.payGradeId ? [{
                     name: entry.payGradeName,
                     id: entry.payGradeId
-                }]}
+                }] : []}
                                         onChange={(e) => functions.setEditData(prevState => ({
                                             ...prevState,
                                             payGradeId: e[0] ? e[0].id : null
                                         }))}/>,
-                invalidFeedback: `You must specify ${entry.userFirstName}'s pay grade`,
-                sortValue: entry.paygradeName
+                invalidFeedback: `You must specify ${entry.staffFirstName}'s pay grade`,
+                sortValue: entry.payGradeName
             }, {
-                fragment: <FormLocation defaultSelected={[{
+                fragment: <FormLocation defaultSelected={entry.locationId ? [{
                     name: entry.locationName,
                     id: entry.locationId
-                }]}
+                }] : []}
                                         onChange={(e) => functions.setEditData(prevState => ({
                                             ...prevState,
                                             locationId: e[0] ? e[0].id : null
                                         }))}/>,
-                invalidFeedback: `You must specify where ${entry.userFirstName} works`,
+                invalidFeedback: `You must specify where ${entry.staffFirstName} works`,
                 sortValue: entry.locationName
             }, {
                 type: "submit",
