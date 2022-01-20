@@ -4,7 +4,7 @@ function checkFunctionExists($table, $selectKey, $keyValues, $includeDeleted = f
     require "../common/db.php";
 
     $result = false;
-    $whiteList = array("tables" => array("bookings", "allocations", "periods", "locations", "pay_grades"), "keys" => array("id", "name", "listId", "itemId"));
+    $whiteList = array("tables" => array("bookings", "allocations", "periods", "locations", "pay_grades", "users_info"), "keys" => array("id", "name", "listId", "itemId", "userId"));
 
     if (count($keyValues) > 0 && in_array($table, $whiteList["tables"], true) && in_array($selectKey, $whiteList["keys"], true)) {
         $whereString = " WHERE";

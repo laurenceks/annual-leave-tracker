@@ -44,6 +44,12 @@ const addDataTemplates = {
         items: [],
         index: null,
     },
+    staff: {
+        id: null,
+        payGradeId: null,
+        locationId: null,
+        userFullName: null,
+    },
     request: null
 }
 
@@ -53,7 +59,8 @@ const addDataForms = {
     booking: AddFormBooking,
     payGrade: AddFormPayGrade,
     period: AddFormPeriod,
-    request: null
+    request: null,
+    staff: null,
 }
 
 export {addDataTemplates, addDataForms};

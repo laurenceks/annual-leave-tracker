@@ -49,12 +49,12 @@ const EditEntries = ({
             }
         });
     }
-    const addEntry = (values) => {
+    const addEntry = (form) => {
         fetchHook({
             type: `add${setCase(type, "capitalise")}`,
             options: {
                 method: "POST",
-                body: JSON.stringify({...addData, ...values.values}),
+                body: JSON.stringify({...addData, ...form.values}),
             },
             callback: () => {
                 setAddData({...addDataTemplate});
@@ -67,6 +67,7 @@ const EditEntries = ({
         if (values.useEditData) {
             values = {...values, ...editData};
         }
+        console.log(values)
         fetchHook({
             type: `edit${setCase(type, "capitalise")}`,
             options: {

@@ -16,6 +16,8 @@ const fetchOptions = {
     restoreBooking: {url: "./php/bookings/restoreBooking.php", method: "POST"},
     getRequests: {url: "./php/bookings/getAllBookings.php", method: "GET"},
     editRequest: {url: "./php/requests/editRequest.php", method: "POST"},
+    getStaffs: {url: "./php/staffs/getAllStaffs.php", method: "POST"},
+    editStaff: {url: "./php/staffs/editStaff.php", method: "POST"},
     getLocations: {url: "./php/locations/getAllLocations.php", method: "POST"},
     addLocation: {url: "./php/locations/addLocation.php", method: "POST"},
     editLocation: {url: "./php/locations/editLocation.php", method: "POST"},

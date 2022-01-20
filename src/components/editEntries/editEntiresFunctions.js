@@ -4,6 +4,8 @@ import naturalSort from "../../functions/naturalSort";
 import formatMySqlTimestamp, {dateToShortDate, timestampToDate} from "../../functions/formatMySqlTimestamp";
 import setCase from "../../functions/setCase";
 import ModalHighlight from "../Bootstrap/modalHighlight";
+import FormLocation from "../common/forms/FormLocation";
+import FormPayGrade from "../common/forms/FormPayGrade";
 
 const statusCells = {
     approved: "table-success",
@@ -292,6 +294,26 @@ export const makeRows = (type, entryList, editId, functions) => {
                 } : {text: ""}] :
                 makeEditRow(type, period, functions))
         }),
+        staff: () => entryList.map(staff => {
+            //TODO space staff colspans correctly
+            return (staff.id !== editId ?
+                [staff.id, staff.staffFullName, staff.payGradeName, staff.locationName, !editId ? {
+                    type: "button",
+                    id: 1,
+                    text: "Edit",
+                    buttonClass: "btn-warning btn-sm",
+                    handler: () => {
+                        functions.setEditData({
+                            locationId: staff.locationId,
+                            payGradeId: staff.payGradeId,
+                            staffFullName: staff.staffFullName,
+                            id: staff.id
+                        })
+                        functions.setEditId(staff.id)
+                    }
+                } : null] :
+                makeEditRow(type, staff, functions))
+        }),
         location: () => entryList.map((entry) => singleEntryRow(entry, type, functions, editId)),
         payGrade: () => entryList.map((entry) => singleEntryRow(entry, type, functions, editId)),
         allocation: () => {
@@ -571,6 +593,39 @@ const makeEditRow = (type, entry, functions, editId, entryList = []) => {
                             })
                         }
                     })
+                }
+            }, {
+                type: "button",
+                buttonClass: "btn-danger",
+                text: "Cancel",
+                id: entry.id,
+                className: "text-center buttonCell",
+                handler: functions.getEntries
+            }];
+        },
+        staff: () => {
+            return [entry.id, entry.staffFullName, {
+                fragment: <FormPayGrade defaultSelected={[{
+                    name: entry.payGradeName,
+                    id: entry.payGradeId
+                }]} onChange={(e) => functions.setEditData(e[0] ? e[0].id : null)}/>,
+                invalidFeedback: `You must specify ${entry.userFirstName}'s pay grade`,
+                sortValue: entry.paygradeName
+            }, {
+                fragment: <FormLocation defaultSelected={[{
+                    name: entry.locationName,
+                    id: entry.locationId
+                }]} onChange={(e) => functions.setEditData(e[0] ? e[0].id : null)}/>,
+                invalidFeedback: `You must specify where ${entry.userFirstName} works`,
+                sortValue: entry.locationName
+            }, {
+                type: "submit",
+                buttonClass: "btn-success",
+                text: "Save",
+                className: "text-center buttonCell",
+                form: "editPeriodForm",
+                handler: (e) => {
+                    functions.editEntry({useEditData: true})
                 }
             }, {
                 type: "button",
