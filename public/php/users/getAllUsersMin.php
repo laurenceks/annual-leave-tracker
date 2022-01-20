@@ -10,7 +10,9 @@ $auth = new Auth($db);
 $output = array_merge($feedbackTemplate, array("users" => array()));
 
 try {
-    $getAllUsersMin = $db->prepare("SELECT `users_info`.`firstName`,
+    $getAllUsersMin = $db->prepare("
+SELECT `users_info`.`userId` as `id`,
+       `users_info`.`firstName`,
        `users_info`.`lastName`,
        CONCAT(`users_info`.`firstName`, ' ', `users_info`.`lastName`) AS `name`,
        `users_organisations`.`organisation`,
