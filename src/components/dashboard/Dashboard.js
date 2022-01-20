@@ -175,7 +175,7 @@ const Dashboard = () => {
                                        icon={<IoBarChartSharp/>}/>
                     <DashboardStatTile title={"Left"}
                                        number={dashboardData.allocation.remaining || "N/A"}
-                                       colourClass={dashboardData.allocation.remaining ? getRangeClass(dashboardData.allocationPercentages.remaining, dashboardRanges.remaining) : "null"}
+                                       colourClass={dashboardData.allocation.total ? getRangeClass(dashboardData.allocationPercentages.remaining, dashboardRanges.remaining) : "null"}
                                        icon={<IoBatteryHalfSharp/>}/>
                     <DashboardStatTile title={"Booked"}
                                        number={dashboardData.allocation.booked || 0}
@@ -227,7 +227,7 @@ const Dashboard = () => {
                 <div className="d-flex position-relative align-items-center justify-content-center rounded bg-light shadow px-3 py-2"
                      style={{height: "15rem"}}>
                     <div className="d-flex position-absolute text-center">
-                        {(dashboardData.allocation.booked) ? <div>
+                        {(dashboardData.allocation.total && dashboardData.allocation.booked) ? <div>
                             <p className="m-0 display-6">{dashboardData.allocationPercentages.remaining.toFixed(1)}%</p>
                             <p className="position-absolute w-100">Remaining</p>
                         </div> : ""}
