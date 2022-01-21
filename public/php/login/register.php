@@ -61,8 +61,9 @@ try {
             $organisationId = $input["organisation"]["id"];
         }
 
-        $addUserInfo = $db->prepare("INSERT INTO users_info (userId, firstName, lastName, admin, superAdmin, approved, organisationId) VALUES (:userId, :firstname, :lastname, :admin, :superAdmin, :approved, :organisationId)");
-        $addUserInfo->bindParam(':userId', $userId);
+        $addUserInfo = $db->prepare("INSERT INTO users_info (userId, firstName, lastName, admin, superAdmin, approved, organisationId, `editedBy`) VALUES (:userId1, :firstname, :lastname, :admin, :superAdmin, :approved, :organisationId, :userId2)");
+        $addUserInfo->bindValue(':userId1', $userId);
+        $addUserInfo->bindValue(':userId2', $userId);
         $addUserInfo->bindParam(':firstname', $input['inputRegisterFirstName']);
         $addUserInfo->bindParam(':lastname', $input['inputRegisterLastName']);
         $addUserInfo->bindParam(':admin', $admin);
