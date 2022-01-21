@@ -3,7 +3,7 @@ import DashboardStatTile from "./DashboardStatTile";
 import Table from "../common/tables/Table";
 import 'chart.js/auto';
 import {Chart} from 'react-chartjs-2';
-import {bootstrapVariables, commonChartOptions, statusCells} from "../common/styles";
+import {themeOptions, commonChartOptions, statusCells} from "../common/styles";
 import useFetch from "../../hooks/useFetch";
 import {GlobalAppContext} from "../../App";
 import {IoBarChartSharp, IoBasketSharp, IoBatteryHalfSharp, IoBookmarksSharp} from "react-icons/io5";
@@ -215,15 +215,15 @@ const Dashboard = () => {
                                labels: dashboardData.chartData.chartMonths.labels,
                                datasets: [{
                                    data: dashboardData.chartData.chartMonths.data.requested,
-                                   backgroundColor: bootstrapVariables.warning,
+                                   backgroundColor: themeOptions.warning,
                                    label: "Requested"
                                }, {
                                    data: dashboardData.chartData.chartMonths.data.approved,
-                                   backgroundColor: bootstrapVariables.success,
+                                   backgroundColor: themeOptions.success,
                                    label: "Approved"
                                }, {
                                    data: dashboardData.chartData.chartMonths.data.taken,
-                                   backgroundColor: bootstrapVariables.danger,
+                                   backgroundColor: themeOptions.danger,
                                    label: "Taken"
                                }]
                            }}
@@ -254,11 +254,11 @@ const Dashboard = () => {
                            data={{
                                datasets: [{
                                    data: dashboardData.chartData.chartHours.data,
-                                   backgroundColor: [bootstrapVariables.green,
-                                       bootstrapVariables.yellow,
-                                       bootstrapVariables.red,
-                                       bootstrapVariables.gray],
-                                   borderColor: bootstrapVariables.light,
+                                   backgroundColor: [themeOptions.success,
+                                       themeOptions.warning,
+                                       themeOptions.danger,
+                                       themeOptions.light],
+                                   borderColor: themeOptions.light,
                                }],
                                labels: dashboardData.chartData.chartHours.labels
                            }}
