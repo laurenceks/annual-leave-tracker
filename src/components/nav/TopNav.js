@@ -65,9 +65,9 @@ const TopNav = ({user}) => {
                                        renderMenuItemChildren={(option) => {
                                            return (
                                                <>
-                                                   <p className="m-0 searchMenuItemLabel text-primary">{option.label}</p>
+                                                   <h6 className="m-0 searchMenuItemLabel fw-bold">{option.label}</h6>
                                                    {option.description &&
-                                                   <p className="small"
+                                                   <p className=""
                                                       style={{whiteSpace: "normal"}}>{option.description}</p>}
                                                </>
                                            );

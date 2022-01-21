@@ -1,20 +1,38 @@
 export const searchOptions = [
     {
-        label: "Items",
-        link: "/items",
-        description: "Add or edit items",
-        adminOnly: true
-    },
-    {
-        label: "Lists",
-        link: "/lists",
-        description: "Add or edit lists",
+        label: "Allocations",
+        link: "/allocations",
+        description: "Set leave allocations for staff",
         adminOnly: true
     },
     {
         label: "Locations",
         link: "/locations",
         description: "Add or edit locations",
+        adminOnly: true
+    },
+    {
+        label: "Pay grades",
+        link: "/payGrades",
+        description: "Add or edit pay grades",
+        adminOnly: true
+    },
+    {
+        label: "Periods",
+        link: "/periods",
+        description: "Add or edit periods",
+        adminOnly: true
+    },
+    {
+        label: "Requests",
+        link: "/requests",
+        description: "Approve, deny and manage annual leave requests from staff",
+        adminOnly: true
+    },
+    {
+        label: "Staff",
+        link: "/staff",
+        description: "Set the locations and pay grades of staff",
         adminOnly: true
     },
     {
@@ -26,31 +44,11 @@ export const searchOptions = [
     {
         label: "Home",
         link: "/",
-        description: "See an overview of stock levels"
+        description: "See an overview of your leave and bookings"
     },
     {
-        label: "Dashboard",
+        label: "Bookings",
         link: "/",
-        description: "See an overview of stock levels"
-    },
-    {
-        label: "Stock",
-        link: "/stock",
-        description: "See stock levels in detail"
-    },
-    {
-        label: "Withdraw",
-        link: "/withdraw",
-        description: "Withdraw stock"
-    },
-    {
-        label: "Restock",
-        link: "/restock",
-        description: "Add stock"
-    },
-    {
-        label: "Transfer",
-        link: "/transfer",
-        description: "Move stock between locations"
+        description: "Create and edit annual leave bookings"
     },
 ]
