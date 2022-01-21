@@ -141,9 +141,7 @@ export const makeRows = (type, entryList, editId, functions) => {
                         useEditData: true,
                         id: booking.id,
                         from: booking.dateFrom,
-                        to: booking.dateTo,
-                        hours: booking.hours,
-                        userComments: booking.userComments,
+                        to: booking.dateTo
                     })
                 }
             } : {text: ""}, !editId ? {
@@ -483,7 +481,11 @@ const makeEditRow = (type, entry, functions, editId, entryList = []) => {
                             handleYes: () => validateForm(e,
                                 [inputIds.from, inputIds.to, inputIds.userComments, inputIds.hours], (x) => {
                                     if (x.isValid) {
-                                        functions.editEntry({...functions.editData})
+                                        functions.editEntry({
+                                            ...functions.editData,
+                                            hours: x.values[inputIds.hours],
+                                            userComments: x.values[inputIds.userComments]
+                                        })
                                     }
                                 })
                         }
