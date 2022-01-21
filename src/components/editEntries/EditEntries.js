@@ -118,7 +118,8 @@ const EditEntries = ({
             editEntry,
             deleteEntry,
             setDataList,
-            setEditData
+            setEditData,
+            editData
         })
     }
     const makeEntryUndeleteRow = (filteredData = dataList) => {

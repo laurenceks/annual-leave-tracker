@@ -137,6 +137,14 @@ export const makeRows = (type, entryList, editId, functions) => {
                 buttonClass: "btn-warning btn-sm",
                 handler: () => {
                     functions.setEditId(booking.id)
+                    functions.setEditData({
+                        useEditData: true,
+                        id: booking.id,
+                        from: booking.dateFrom,
+                        to: booking.dateTo,
+                        hours: booking.hours,
+                        userComments: booking.userComments,
+                    })
                 }
             } : {text: ""}, !editId ? {
                 type: "button",
@@ -312,8 +320,8 @@ export const makeRows = (type, entryList, editId, functions) => {
             const newListRows = [];
             entryList.forEach((allocation) => {
                 const cellTemplate = {
-                    cellData: {"data-rowGroupId": allocation.id},
-                    className: `td-rowGroupId-${allocation.id}`,
+                    cellData: {"data-rowGroupId": allocation.userId},
+                    className: `td-rowGroupId-${allocation.userId}`,
                     text: ""
                 };
 
@@ -377,7 +385,7 @@ export const makeRows = (type, entryList, editId, functions) => {
                                     }
                                 })
                             }
-                        } : ""] : makeEditRow(type, {...y, ...allocation}, functions, editId, entryList))));
+                        } : cellTemplate] : makeEditRow(type, {...y, ...allocation}, functions, editId, entryList))));
                 })
             })
             return newListRows;
@@ -389,6 +397,7 @@ export const makeRows = (type, entryList, editId, functions) => {
 const makeEditRow = (type, entry, functions, editId, entryList = []) => {
     const editRowFunctions = {
         booking: () => {
+            let to = functions.editData.dateTo;
             const inputIds = {
                 from: `editBookingRow-${entry.id}-from`,
                 to: `editBookingRow-${entry.id}-to`,
@@ -401,8 +410,13 @@ const makeEditRow = (type, entry, functions, editId, entryList = []) => {
                     type: "date",
                     id: inputIds.from,
                     label: "From",
-                    defaultValue: entry.dateFrom ?? "",
+                    defaultValue: functions.editData.from ?? "",
                     form: "editPeriodForm",
+                    onChange: (e, v) => functions.setEditData(prevState => ({
+                        ...prevState,
+                        from: v,
+                        to: v
+                    }))
                 },
                 invalidFeedback: "You must specify a date from",
                 sortValue: entry.dateFrom
@@ -412,7 +426,7 @@ const makeEditRow = (type, entry, functions, editId, entryList = []) => {
                     type: "date",
                     id: inputIds.to,
                     label: "To",
-                    defaultValue: entry.dateTo ?? entry.dateFrom ?? "",
+                    defaultValue: functions.editData.to,
                     form: "editPeriodForm",
                     disabled: true
                 },
@@ -454,24 +468,22 @@ const makeEditRow = (type, entry, functions, editId, entryList = []) => {
                 className: "text-center buttonCell",
                 form: "editBookingForm",
                 handler: (e) => {
-                    const dirtyBookingName = `from ${entry.dateFrom} to ${entry.dateTo} costing ${entry.hours} hours`;
+                    const dirtyBookingName = `from ${functions.editData.from} to ${functions.editData.to} costing ${functions.editData.hours} hours`;
                     functions.setModalOptions((prevState) => {
                         return {
                             ...prevState,
                             show: true,
                             deleteId: entry.id,
                             targetName: dirtyBookingName,
-                            bodyText: `Are you sure you want to edit your booking ${dirtyBookingName}?\n\nThis will change the status to "Requested" and the booking will need approval by a manager`,
+                            bodyText: <><p>Are you sure you want to edit your booking {dirtyBookingName}?</p>
+                                <p className="m-0">This will change the status
+                                    to <ModalHighlight variety="warning">Requested</ModalHighlight> and the booking will
+                                    need approval by a
+                                    manager</p></>,
                             handleYes: () => validateForm(e,
                                 [inputIds.from, inputIds.to, inputIds.userComments, inputIds.hours], (x) => {
                                     if (x.isValid) {
-                                        functions.editEntry({
-                                            from: x.values[inputIds.from],
-                                            to: x.values[inputIds.to],
-                                            hours: x.values[inputIds.hours],
-                                            userComments: x.values[inputIds.userComments],
-                                            id: entry.id
-                                        })
+                                        functions.editEntry({...functions.editData})
                                     }
                                 })
                         }
