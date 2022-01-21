@@ -27,7 +27,6 @@ const FormUser = ({
             fetchHook({
                 type: "getUsersMin",
                 callback: (x) => {
-                    console.log(x)
                     usersLoadedOnce.current = true;
                     if (filterValues) {
                         setUsers(x.users.filter((x) => {

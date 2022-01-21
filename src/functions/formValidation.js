@@ -42,7 +42,6 @@ const validateForm = (e, formRef, callBack, typeaheadStates = {},
             }
             const exp = validationExpressions[x.type]
             updateOutput(x, !exp.test(x.value))
-            console.log(x.value, exp.test(x.value))
         } else if ((x.type === "checkbox" || x.type === "radio") && x.dataset.checkrequired === "true" && !x.checked) {
             updateOutput(x)
         } else {
