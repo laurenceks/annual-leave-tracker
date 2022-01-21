@@ -26,6 +26,7 @@ const FormPeriod = ({
         const getPeriods = () => {
             fetchHook({
                 type: "getPeriods",
+                dontHandleFeedback: !periodsLoadedOnce.current,
                 callback: (x) => {
                     periodsLoadedOnce.current = true;
                     if (filterValues) {
@@ -39,7 +40,6 @@ const FormPeriod = ({
                 }
             })
         }
-
         getPeriods();
     }, [updated]);
 
