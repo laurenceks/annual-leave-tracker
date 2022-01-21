@@ -15,7 +15,7 @@ function addAllocation($db, $input, $output) {
         $output["title"] = "Allocation added";
         $output["feedback"] = $input["userFullName"] . "'s allocation for " . $input["periodName"] . " of  " . $input["hours"] . " hours was added successfully";
     } catch (PDOException $e) {
-        $output = array_merge($output, array("feedback" => "There was an error querying the database; please try again. If the error persists please contact a system administrator for assistance.", "errorMessage" => "There was an error querying the database; please try again. If the error persists please contact a system administrator for assistance."(), "errorType" => "queryError"));
+        $output = array_merge($output, array("feedback" => "There was an error querying the database; please try again. If the error persists please contact a system administrator for assistance.", "errorMessage" => "There was an error querying the database; please try again. If the error persists please contact a system administrator for assistance.", "errorType" => "queryError"));
     }
     return $output;
 }

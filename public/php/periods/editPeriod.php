@@ -34,7 +34,7 @@ if (!checkFunctionExists("periods", "id", array(array("key" => "id", "value" => 
         $output["title"] = "Period updated";
         $output["feedback"] = $input["name"] . " was updated successfully";
     } catch (PDOException $e) {
-        $output = array_merge($output, array("feedback" => "There was an error querying the database; please try again. If the error persists please contact a system administrator for assistance.", "errorMessage" => "There was an error querying the database; please try again. If the error persists please contact a system administrator for assistance."(), "errorType" => "queryError"));
+        $output = array_merge($output, array("feedback" => "There was an error querying the database; please try again. If the error persists please contact a system administrator for assistance.", "errorMessage" => "There was an error querying the database; please try again. If the error persists please contact a system administrator for assistance.", "errorType" => "queryError"));
     }
 }
 

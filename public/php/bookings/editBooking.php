@@ -28,7 +28,7 @@ if (true === false) {
         $output["title"] = "Booking updated";
         $output["feedback"] = "A booking from " . $input["from"] . " to " . $input["to"] . " costing " . $input["hours"] . "hours was updated successfully";
     } catch (PDOException $e) {
-        $output = array_merge($output, array("feedback" => "There was an error querying the database; please try again. If the error persists please contact a system administrator for assistance.", "errorMessage" => "There was an error querying the database; please try again. If the error persists please contact a system administrator for assistance."(), "errorType" => "queryError"));
+        $output = array_merge($output, array("feedback" => "There was an error querying the database; please try again. If the error persists please contact a system administrator for assistance.", "errorMessage" => "There was an error querying the database; please try again. If the error persists please contact a system administrator for assistance.", "errorType" => "queryError"));
     }
 }
 
