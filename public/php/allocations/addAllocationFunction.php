@@ -1,6 +1,6 @@
 <?php
 //TODO also check period doesn't exist, if it does maybe update it?
-function addAllocation($db, $input, $output){
+function addAllocation($db, $input, $output) {
     try {
         $addAllocation = $db->prepare("INSERT INTO `allocations` (`userId`, `periodId`, `organisationId`, `hours`, `createdBy`, `editedBy`)
                                             VALUES (:userId, :periodId, :organisationId, :hours, :uid1, :uid2)");
@@ -15,7 +15,7 @@ function addAllocation($db, $input, $output){
         $output["title"] = "Allocation added";
         $output["feedback"] = $input["userFullName"] . "'s allocation for " . $input["periodName"] . " of  " . $input["hours"] . " hours was added successfully";
     } catch (PDOException $e) {
-        $output = array_merge($output, array("feedback" => "There was an error querying the database; please try again. If the error persists please contact a system administrator for assistance.", "errorMessage" => $e->getMessage(), "errorType" => "queryError"));
+        $output = array_merge($output, array("feedback" => "There was an error querying the database; please try again. If the error persists please contact a system administrator for assistance.", "errorMessage" => "There was an error querying the database; please try again. If the error persists please contact a system administrator for assistance."(), "errorType" => "queryError"));
     }
     return $output;
 }
