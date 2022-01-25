@@ -34,6 +34,7 @@ const AddFormLocation = ({
                             invalidFeedback={"You must select a period"}
                             selected={addData.period}
                             onChange={(e) => {
+                                //TODO if only one option make sure it gets set!
                                 setAddData(prevState => {
                                     return {
                                         ...prevState,
