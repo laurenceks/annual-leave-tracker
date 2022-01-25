@@ -215,15 +215,15 @@ const Dashboard = () => {
                                labels: dashboardData.chartData.chartMonths.labels,
                                datasets: [{
                                    data: dashboardData.chartData.chartMonths.data.requested,
-                                   backgroundColor: themeOptions.warning,
+                                   backgroundColor: getComputedStyle(document.documentElement).getPropertyValue("--bs-warning"),
                                    label: "Requested"
                                }, {
                                    data: dashboardData.chartData.chartMonths.data.approved,
-                                   backgroundColor: themeOptions.success,
+                                   backgroundColor: getComputedStyle(document.documentElement).getPropertyValue("--bs-success"),
                                    label: "Approved"
                                }, {
                                    data: dashboardData.chartData.chartMonths.data.taken,
-                                   backgroundColor: themeOptions.danger,
+                                   backgroundColor: getComputedStyle(document.documentElement).getPropertyValue("--bs-success"),
                                    label: "Taken"
                                }]
                            }}
@@ -254,10 +254,10 @@ const Dashboard = () => {
                            data={{
                                datasets: [{
                                    data: dashboardData.chartData.chartHours.data,
-                                   backgroundColor: [themeOptions.success,
-                                       themeOptions.warning,
-                                       themeOptions.danger,
-                                       themeOptions.light],
+                                   backgroundColor: [getComputedStyle(document.documentElement).getPropertyValue("--bs-success"),
+                                       getComputedStyle(document.documentElement).getPropertyValue("--bs-warning"),
+                                       getComputedStyle(document.documentElement).getPropertyValue("--bs-danger"),
+                                       getComputedStyle(document.documentElement).getPropertyValue("--bs-light")],
                                    borderColor: themeOptions.light,
                                }],
                                labels: dashboardData.chartData.chartHours.labels
