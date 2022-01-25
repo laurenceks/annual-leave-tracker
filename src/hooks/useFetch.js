@@ -4,11 +4,11 @@ import {useContext} from "react";
 import {GlobalAppContext} from "../App.js";
 
 const fetchOptions = {
-    getAllocations: {url: "./php/allocations/getAllAllocations.php", method: "GET"},
-    addAllocation: {url: "./php/allocations/addAllocation.php", method: "POST"},
-    editAllocation: {url: "./php/allocations/editAllocation.php", method: "POST"},
-    deleteAllocation: {url: "./php/allocations/deleteAllocation.php", method: "POST"},
-    restoreAllocation: {url: "./php/allocations/restoreAllocation.php", method: "POST"},
+    getAllowances: {url: "./php/allowances/getAllAllowances.php", method: "GET"},
+    addAllowance: {url: "./php/allowances/addAllowance.php", method: "POST"},
+    editAllowance: {url: "./php/allowances/editAllowance.php", method: "POST"},
+    deleteAllowance: {url: "./php/allowances/deleteAllowance.php", method: "POST"},
+    restoreAllowance: {url: "./php/allowances/restoreAllowance.php", method: "POST"},
     getBookings: {url: "./php/bookings/getBookingsForCurrentUser.php", method: "GET"},
     addBooking: {url: "./php/bookings/addBooking.php", method: "POST"},
     editBooking: {url: "./php/bookings/editBooking.php", method: "POST"},

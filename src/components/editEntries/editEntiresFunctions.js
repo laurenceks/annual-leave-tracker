@@ -314,38 +314,38 @@ export const makeRows = (type, entryList, editId, functions) => {
         }),
         location: () => entryList.map((entry) => singleEntryRow(entry, type, functions, editId)),
         payGrade: () => entryList.map((entry) => singleEntryRow(entry, type, functions, editId)),
-        allocation: () => {
+        allowance: () => {
             const newListRows = [];
-            entryList.forEach((allocation) => {
+            entryList.forEach((allowance) => {
                 const cellTemplate = {
-                    cellData: {"data-rowGroupId": allocation.userId},
-                    className: `td-rowGroupId-${allocation.userId}`,
+                    cellData: {"data-rowGroupId": allowance.userId},
+                    className: `td-rowGroupId-${allowance.userId}`,
                     text: ""
                 };
 
-                allocation.periods?.sort((a, b) => naturalSort(a.name, b.name)).forEach((y, j) => {
+                allowance.periods?.sort((a, b) => naturalSort(a.name, b.name)).forEach((y, j) => {
                     newListRows.push((j === 0 ? [{
                         ...cellTemplate,
-                        rowspan: allocation.periods.length,
-                        text: allocation.userId
+                        rowspan: allowance.periods.length,
+                        text: allowance.userId
                     }, {
                         ...cellTemplate,
-                        rowspan: allocation.periods.length,
-                        text: allocation.userFullName,
+                        rowspan: allowance.periods.length,
+                        text: allowance.userFullName,
                     }, {
                         ...cellTemplate,
-                        rowspan: allocation.periods.length,
-                        text: allocation.locationName,
+                        rowspan: allowance.periods.length,
+                        text: allowance.locationName,
                     }, {
                         ...cellTemplate,
-                        rowspan: allocation.periods.length,
-                        text: allocation.payGradeName,
+                        rowspan: allowance.periods.length,
+                        text: allowance.payGradeName,
                     }] : []).concat([{
                         ...cellTemplate,
                         sortValue: y.periodName,
                         text: y.periodName
                     }].concat(
-                        (editId !== y.allocationId && editId !== `${allocation.userId}-${y.periodId}`) || !editId ? [{
+                        (editId !== y.allowanceId && editId !== `${allowance.userId}-${y.periodId}`) || !editId ? [{
                             ...cellTemplate,
                             sortValue: y.hours,
                             text: !y.deleted ? y.hours : "Deleted",
@@ -353,20 +353,20 @@ export const makeRows = (type, entryList, editId, functions) => {
                         }, !editId && {
                             ...cellTemplate,
                             type: "button",
-                            text: y.allocationId ? (y.deleted ? "Restore" : "Edit") : "Add",
-                            buttonClass: y.allocationId || y.deleted ? "btn-warning" : "btn-success",
+                            text: y.allowanceId ? (y.deleted ? "Restore" : "Edit") : "Add",
+                            buttonClass: y.allowanceId || y.deleted ? "btn-warning" : "btn-success",
                             className: "text-center " + cellTemplate.className,
                             handler: () => {
-                                functions.setEditId(y.allocationId || `${allocation.userId}-${y.periodId}`);
+                                functions.setEditId(y.allowanceId || `${allowance.userId}-${y.periodId}`);
                                 functions.setEditData({
-                                    allocationId: y.allocationId,
+                                    allowanceId: y.allowanceId,
                                     periodId: y.periodId,
                                     periodName: y.periodName,
-                                    userFullName: allocation.userFullName,
-                                    userId: allocation.userId,
+                                    userFullName: allowance.userFullName,
+                                    userId: allowance.userId,
                                 });
                             }
-                        }, y.allocationId && !editId && !y.deleted ? {
+                        }, y.allowanceId && !editId && !y.deleted ? {
                             ...cellTemplate,
                             type: "button",
                             text: "Delete",
@@ -377,13 +377,13 @@ export const makeRows = (type, entryList, editId, functions) => {
                                     return {
                                         ...prevState,
                                         show: true,
-                                        bodyText: `Are you sure you want to delete ${allocation.userFullName}'s allocation for ${y.periodName}?\n\nThis will not delete any bookings during this period.`,
-                                        handleYes: () => functions.deleteEntry(y.allocationId,
-                                            `${allocation.userFullName}'s allocation for ${y.periodName}`)
+                                        bodyText: `Are you sure you want to delete ${allowance.userFullName}'s allowance for ${y.periodName}?\n\nThis will not delete any bookings during this period.`,
+                                        handleYes: () => functions.deleteEntry(y.allowanceId,
+                                            `${allowance.userFullName}'s allowance for ${y.periodName}`)
                                     }
                                 })
                             }
-                        } : cellTemplate] : makeEditRow(type, {...y, ...allocation}, functions, editId, entryList))));
+                        } : cellTemplate] : makeEditRow(type, {...y, ...allowance}, functions, editId, entryList))));
                 })
             })
             return newListRows;
@@ -650,13 +650,13 @@ const makeEditRow = (type, entry, functions, editId, entryList = []) => {
                 handler: functions.getEntries
             }];
         },
-        allocation: () => {
+        allowance: () => {
             const inputIds = {
                 hours: `input-userIdPeriodId-${entry.userId}-${entry.periodId}-hours`,
             };
             const cellTemplate = {
                 //TODO: pass an id to group rows - perhaps piggyback on editId??
-                cellData: {"data-rowGroupId": entry.allocationId},
+                cellData: {"data-rowGroupId": entry.allowanceId},
                 className: `td-rowGroupId-${entry.id}`,
                 cellAlignClass: "align-top"
             };
@@ -670,7 +670,7 @@ const makeEditRow = (type, entry, functions, editId, entryList = []) => {
                     step: 0.01,
                     label: "Hours",
                     defaultValue: entry.hours,
-                    form: "editAllocationForm",
+                    form: "editAllowanceForm",
                 },
                 invalidFeedback: "You must specify the number of hours",
                 sortValue: entry.hours
@@ -745,11 +745,11 @@ export const makeUndeleteRow = (type, deletedEntryList, functions) => {
         period: () => singleUndeleteRow(deletedEntryList, functions),
         location: () => singleUndeleteRow(deletedEntryList, functions),
         payGrade: () => singleUndeleteRow(deletedEntryList, functions),
-        allocation: () => {
-            return deletedEntryList.map(allocation => {
-                return ([allocation.id, allocation.name, {
-                    text: formatMySqlTimestamp(allocation.lastUpdated),
-                    sortValue: allocation.lastUpdated
+        allowance: () => {
+            return deletedEntryList.map(allowance => {
+                return ([allowance.id, allowance.name, {
+                    text: formatMySqlTimestamp(allowance.lastUpdated),
+                    sortValue: allowance.lastUpdated
                 }, {
                     type: "button",
                     text: "Restore",
@@ -759,10 +759,10 @@ export const makeUndeleteRow = (type, deletedEntryList, functions) => {
                             return {
                                 ...prevState,
                                 show: true,
-                                bodyText: `Are you sure you want to restore ${allocation.name}?`,
+                                bodyText: `Are you sure you want to restore ${allowance.name}?`,
                                 headerClass: variantPairings.warning.header,
                                 yesButtonVariant: "warning",
-                                handleYes: () => functions.restoreEntry(allocation.allocationId)
+                                handleYes: () => functions.restoreEntry(allowance.allowanceId)
                             }
                         })
                     }

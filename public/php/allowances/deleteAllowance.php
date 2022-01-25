@@ -9,20 +9,20 @@ $input = json_decode(file_get_contents('php://input'), true);
 
 $output = $feedbackTemplate;
 
-if (!checkFunctionExists("allocations", "id", array(array("key" => "id", "value" => $input["id"])))) {
+if (!checkFunctionExists("allowances", "id", array(array("key" => "id", "value" => $input["id"])))) {
     $output["feedback"] = $input["name"] . " could not be found - possibly due to deletion - please try again";
-    $output["title"] = "Missing allocation";
+    $output["title"] = "Missing allowance";
     $output["errorMessage"] = $input["name"] . " could not be found";
-    $output["errorType"] = "allocationMissing";
+    $output["errorType"] = "allowanceMissing";
 } else {
     try {
-        $deleteAllocation = $db->prepare("UPDATE allocations SET deleted = 1, editedBy = :uid WHERE id = :id AND organisationId = :organisationId");
-        $deleteAllocation->bindValue(":organisationId", $_SESSION["user"]->organisationId);
-        $deleteAllocation->bindParam(":id", $input["id"]);
-        $deleteAllocation->bindValue(":uid", $_SESSION["user"]->userId);
-        $deleteAllocation->execute();
+        $deleteAllowance = $db->prepare("UPDATE allowances SET deleted = 1, editedBy = :uid WHERE id = :id AND organisationId = :organisationId");
+        $deleteAllowance->bindValue(":organisationId", $_SESSION["user"]->organisationId);
+        $deleteAllowance->bindParam(":id", $input["id"]);
+        $deleteAllowance->bindValue(":uid", $_SESSION["user"]->userId);
+        $deleteAllowance->execute();
         $output["success"] = true;
-        $output["title"] = "Allocation deleted";
+        $output["title"] = "Allowance deleted";
         $output["feedback"] = $input["name"] . " was deleted successfully";
     } catch (PDOException $e) {
         $output = array_merge($output, array("feedback" => "There was an error querying the database; please try again. If the error persists please contact a system administrator for assistance.", "errorMessage" => "There was an error querying the database; please try again. If the error persists please contact a system administrator for assistance.", "errorType" => "queryError"));

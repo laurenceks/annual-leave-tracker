@@ -1,8 +1,8 @@
 <?php
-$getAllocationForUserIdByPeriodQuery= "SELECT (SELECT `hours`
-        FROM `allocations`
-        WHERE `allocations`.`periodId` = `periods`.`id`
-          AND `allocations`.`userId` = :userId) AS `total`,
+$getAllowanceForUserIdByPeriodQuery= "SELECT (SELECT `hours`
+        FROM `allowances`
+        WHERE `allowances`.`periodId` = `periods`.`id`
+          AND `allowances`.`userId` = :userId) AS `total`,
        IFNULL((SELECT SUM(`hours`)
                FROM `bookings`
                WHERE `dateFrom` >= :dateFrom

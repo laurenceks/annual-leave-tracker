@@ -1,5 +1,5 @@
 const entryTableHeadings = {
-    allocation: ["ID", "Name", "Location", "Pay grade", "Period", {text: "Hours", colspan: 3}],
+    allowance: ["ID", "Name", "Location", "Pay grade", "Period", {text: "Hours", colspan: 3}],
     booking: ["ID", "From", "To", "Hours", "Status", "User comments", {text: "Manager comments", colspan: 2}],
     request: ["ID", "User", "From", "To", "Hours", "Status", "User comments", {text: "Manager comments", colspan: 2}],
     location: ["ID", {text: "Name", colspan: 3}],
@@ -9,7 +9,7 @@ const entryTableHeadings = {
     staff: ["ID", "Name", "Pay grade", {text: "Location", colspan: 3}],
 }
 const deletedEntryTableHeadings = {
-    allocation: ["ID", "Name", "Period", {text: "Deleted", colspan: 2}],
+    allowance: ["ID", "Name", "Period", {text: "Deleted", colspan: 2}],
     booking: ["ID", "From", "To","Hours", {text: "Deleted", colspan: 2}],
     request: null,
     staff: null,

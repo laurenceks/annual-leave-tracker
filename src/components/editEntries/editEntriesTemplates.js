@@ -2,10 +2,10 @@ import AddFormLocation from "./addEntryForms/AddFormLocation";
 import AddFormBooking from "./addEntryForms/AddFormBooking";
 import AddFormPayGrade from "./addEntryForms/AddFormPayGrade";
 import AddFormPeriod from "./addEntryForms/AddFormPeriod";
-import AddFormAllocation from "./addEntryForms/AddFormAllocation";
+import AddFormAllowance from "./addEntryForms/AddFormAllowance";
 
 const addDataTemplates = {
-    allocation: {
+    allowance: {
         user: [],
         userId: null,
         userFullName: null,
@@ -54,7 +54,7 @@ const addDataTemplates = {
 }
 
 const addDataForms = {
-    allocation: AddFormAllocation,
+    allowance: AddFormAllowance,
     location: AddFormLocation,
     booking: AddFormBooking,
     payGrade: AddFormPayGrade,

@@ -13,13 +13,13 @@ import FormPeriod from "../common/forms/FormPeriod";
 
 class dashboardDataTemplate {
     constructor() {
-        this.allocation = {
+        this.allowance = {
             total: null,
             taken: null,
             remaining: null,
             booked: null
         }
-        this.allocationPercentages = {
+        this.allowancePercentages = {
             total: null,
             taken: null,
             remaining: null,
@@ -107,9 +107,9 @@ const Dashboard = () => {
                 let newDashboardData = {}
                 if (!res.noPeriod) {
                     newDashboardData = {
-                        allocation: {
-                            ...res.allocation,
-                            remaining: res.allocation.total ? res.allocation.total - res.allocation.booked : "N/A",
+                        allowance: {
+                            ...res.allowance,
+                            remaining: res.allowance.total ? res.allowance.total - res.allowance.booked : "N/A",
                         },
                         bookings: res.bookings.map((x) => [x.dateFrom, x.dateTo, x.hours, {
                             text: setCase(x.status, "capitalise"),
@@ -138,16 +138,16 @@ const Dashboard = () => {
                             }
                         }
                     }
-                    newDashboardData.allocationPercentages = {
-                        remaining: res.allocation.total ?
-                            newDashboardData.allocation.remaining / res.allocation.total * 100 :
+                    newDashboardData.allowancePercentages = {
+                        remaining: res.allowance.total ?
+                            newDashboardData.allowance.remaining / res.allowance.total * 100 :
                             100,
-                        taken: res.allocation.total ?
-                            newDashboardData.allocation.taken / res.allocation.total * 100 :
+                        taken: res.allowance.total ?
+                            newDashboardData.allowance.taken / res.allowance.total * 100 :
                             100,
                     }
-                    newDashboardData.allocationPercentages.booked =
-                        100 - newDashboardData.allocationPercentages.remaining;
+                    newDashboardData.allowancePercentages.booked =
+                        100 - newDashboardData.allowancePercentages.remaining;
                     if (res.period?.defaultedToCurrent) {
                         setDashBoardSettings(prevState => ({
                             selectedPeriod: [res.period],
@@ -179,27 +179,27 @@ const Dashboard = () => {
             <div className="col-12 col-md-6 gy-3">
                 <div className="row gy-3">
                     <DashboardStatTile title={"Total"}
-                                       number={dashboardData.allocation.total || "N/A"}
-                                       colourClass={dashboardData.allocation.total ? "good" : "null"}
+                                       number={dashboardData.allowance.total || "N/A"}
+                                       colourClass={dashboardData.allowance.total ? "good" : "null"}
                                        icon={<IoBarChartSharp/>}/>
                     <DashboardStatTile title={"Left"}
-                                       number={dashboardData.allocation.remaining || "N/A"}
-                                       colourClass={dashboardData.allocation.total ?
-                                           getRangeClass(dashboardData.allocationPercentages.remaining,
+                                       number={dashboardData.allowance.remaining || "N/A"}
+                                       colourClass={dashboardData.allowance.total ?
+                                           getRangeClass(dashboardData.allowancePercentages.remaining,
                                                dashboardRanges.remaining) :
                                            "null"}
                                        icon={<IoBatteryHalfSharp/>}/>
                     <DashboardStatTile title={"Booked"}
-                                       number={dashboardData.allocation.booked || 0}
-                                       colourClass={dashboardData.allocation.booked ?
-                                           getRangeClass(dashboardData.allocationPercentages.booked,
+                                       number={dashboardData.allowance.booked || 0}
+                                       colourClass={dashboardData.allowance.booked ?
+                                           getRangeClass(dashboardData.allowancePercentages.booked,
                                                dashboardRanges.bookedTaken) :
                                            "good"}
                                        icon={<IoBookmarksSharp/>}/>
                     <DashboardStatTile title={"Taken"}
-                                       number={dashboardData.allocation.taken || 0}
-                                       colourClass={dashboardData.allocation.taken ?
-                                           getRangeClass(dashboardData.allocationPercentages.taken,
+                                       number={dashboardData.allowance.taken || 0}
+                                       colourClass={dashboardData.allowance.taken ?
+                                           getRangeClass(dashboardData.allowancePercentages.taken,
                                                dashboardRanges.bookedTaken) :
                                            "good"}
                                        icon={<IoBasketSharp/>}/>
@@ -223,7 +223,7 @@ const Dashboard = () => {
                                    label: "Approved"
                                }, {
                                    data: dashboardData.chartData.chartMonths.data.taken,
-                                   backgroundColor: getComputedStyle(document.documentElement).getPropertyValue("--bs-success"),
+                                   backgroundColor: getComputedStyle(document.documentElement).getPropertyValue("--bs-danger"),
                                    label: "Taken"
                                }]
                            }}
@@ -245,8 +245,8 @@ const Dashboard = () => {
                 <div className="d-flex position-relative align-items-center justify-content-center rounded bg-light shadow px-3 py-2"
                      style={{height: "15rem"}}>
                     <div className="d-flex position-absolute text-center">
-                        {(dashboardData.allocation.total && dashboardData.allocation.booked) ? <div>
-                            <p className="m-0 display-6">{dashboardData.allocationPercentages.remaining.toFixed(1)}%</p>
+                        {(dashboardData.allowance.total && dashboardData.allowance.booked) ? <div>
+                            <p className="m-0 display-6">{dashboardData.allowancePercentages.remaining.toFixed(1)}%</p>
                             <p className="position-absolute w-100">Remaining</p>
                         </div> : ""}
                     </div>

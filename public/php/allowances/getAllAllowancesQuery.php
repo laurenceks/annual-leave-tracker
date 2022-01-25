@@ -1,5 +1,5 @@
 <?php
-function getAllAllocationsQuery($userId = null) {
+function getAllAllowancesQuery($userId = null) {
     return "
 SELECT `users`.`id` as `userId`,
        `users_info`.`firstName` as userFirstName,
@@ -10,18 +10,18 @@ SELECT `users`.`id` as `userId`,
        `pay_grades`.`name` AS `payGradeName`,
        `periods`.`name` as `periodName`,
        `periods`.`id` as `periodId`,
-       (SELECT `allocations`.`id`
-        FROM `allocations`
-        WHERE `allocations`.`userId` = `users`.`id`
-          AND `allocations`.`periodId` = `periods`.`id`) AS `allocationId`,
-       (SELECT `allocations`.`hours`
-        FROM `allocations`
-        WHERE `allocations`.`userId` = `users`.`id`
-          AND `allocations`.`periodId` = `periods`.`id`) AS `hours`,
-       (SELECT `allocations`.`deleted`
-        FROM `allocations`
-        WHERE `allocations`.`userId` = `users`.`id`
-          AND `allocations`.`periodId` = `periods`.`id`) AS `deleted`
+       (SELECT `allowances`.`id`
+        FROM `allowances`
+        WHERE `allowances`.`userId` = `users`.`id`
+          AND `allowances`.`periodId` = `periods`.`id`) AS `allowanceId`,
+       (SELECT `allowances`.`hours`
+        FROM `allowances`
+        WHERE `allowances`.`userId` = `users`.`id`
+          AND `allowances`.`periodId` = `periods`.`id`) AS `hours`,
+       (SELECT `allowances`.`deleted`
+        FROM `allowances`
+        WHERE `allowances`.`userId` = `users`.`id`
+          AND `allowances`.`periodId` = `periods`.`id`) AS `deleted`
 FROM `users`
          LEFT JOIN `users_info` ON `users`.`id` = `users_info`.`userId`
          LEFT JOIN `periods` ON `users_info`.`organisationId` = `periods`.`organisationId`

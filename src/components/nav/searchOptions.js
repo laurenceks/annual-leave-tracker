@@ -1,8 +1,8 @@
 export const searchOptions = [
     {
-        label: "Allocations",
-        link: "/allocations",
-        description: "Set leave allocations for staff",
+        label: "Allowances",
+        link: "/allowances",
+        description: "Set leave allowances for staff",
         adminOnly: true
     },
     {

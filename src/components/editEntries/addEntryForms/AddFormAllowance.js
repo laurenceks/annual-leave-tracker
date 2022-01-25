@@ -2,7 +2,7 @@ import FormPeriod from "../../common/forms/FormPeriod";
 import FormUser from "../../common/forms/FormUser";
 import FormInput from "../../common/forms/FormInput";
 
-const AddFormLocation = ({
+const AddFormAllowance = ({
                              addData,
                              setAddData
                          }) => {
@@ -11,7 +11,7 @@ const AddFormLocation = ({
         <h3>Add new location</h3>
         <div className="col-12 col-md-4 mb-3 mb-md-0">
             <div className="formInputGroup">
-                <FormUser id={"inputAddAllocationUser"}
+                <FormUser id={"inputAddAllowanceUser"}
                           label={"User"}
                           invalidFeedback={"You must select a user"}
                           selected={addData.user}
@@ -29,7 +29,7 @@ const AddFormLocation = ({
         </div>
         <div className="col-12 col-md-4 mb-3 mb-md-0">
             <div className="formInputGroup">
-                <FormPeriod id={"inputAddAllocationPeriod"}
+                <FormPeriod id={"inputAddAllowancePeriod"}
                             label={"Period"}
                             invalidFeedback={"You must select a period"}
                             selected={addData.period}
@@ -70,4 +70,4 @@ const AddFormLocation = ({
     </div>);
 }
 
-export default AddFormLocation;
+export default AddFormAllowance;

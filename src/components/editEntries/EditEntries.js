@@ -73,7 +73,7 @@ const EditEntries = ({
                 body: JSON.stringify(values),
             },
             callback: (response) => {
-                if (response.success || response.errorType !== "allocationExists") {
+                if (response.success || response.errorType !== "allowanceExists") {
                     getEntries();
                 }
             }
