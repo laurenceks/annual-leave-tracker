@@ -10,6 +10,7 @@ const fetchOptions = {
     deleteAllowance: {url: "./php/allowances/deleteAllowance.php", method: "POST"},
     restoreAllowance: {url: "./php/allowances/restoreAllowance.php", method: "POST"},
     getBookings: {url: "./php/bookings/getBookingsForCurrentUser.php", method: "GET"},
+    getBookingsByDate: {url: "./php/bookings/getAllBookingsByDate.php", method: "POST"},
     addBooking: {url: "./php/bookings/addBooking.php", method: "POST"},
     editBooking: {url: "./php/bookings/editBooking.php", method: "POST"},
     deleteBooking: {url: "./php/bookings/deleteBooking.php", method: "POST"},

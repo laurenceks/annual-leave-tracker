@@ -48,7 +48,7 @@ if (isset($period["id"])) {
 
     $output["period"] = $period;
 
-    $allowanceForIdAndPeriod = $getAllowanceForUserIdByPeriod->fetch(PDO::FETCH_ASSOC);;
+    $allowanceForIdAndPeriod = $getAllowanceForUserIdByPeriod->fetch(PDO::FETCH_ASSOC);
     $output["allowance"] = $allowanceForIdAndPeriod;
 
     $output["chartData"]["chartHours"] = array(array("label" => "Total", "hours" => isset($allowanceForIdAndPeriod["total"]) ? $allowanceForIdAndPeriod["total"] : 0), array("label" => "Booked", "hours" => $allowanceForIdAndPeriod["booked"]), array("label" => "Taken", "hours" => $allowanceForIdAndPeriod["taken"]), array("label" => "Remaining", "hours" => isset($allowanceForIdAndPeriod["hours"]) ? $allowanceForIdAndPeriod["total"] - $allowanceForIdAndPeriod["booked"] : 0));

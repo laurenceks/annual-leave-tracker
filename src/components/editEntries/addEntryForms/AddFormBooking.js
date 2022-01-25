@@ -1,10 +1,41 @@
 import FormInput from "../../common/forms/FormInput";
+import {useEffect, useState} from "react";
+import useFetch from "../../../hooks/useFetch";
+import Table from "../../common/tables/Table";
+import {dateToShortDate} from "../../../functions/formatMySqlTimestamp";
 
-const AddFormBooking = ({addData, setAddData}) => {
+const AddFormBooking = ({
+                            addData,
+                            setAddData
+                        }) => {
     //TODO disable validation for comments
-    return (
+    const fetchHook = useFetch();
+    const [existingBookings, setExistingBookings] = useState([]);
+
+    useEffect(() => {
+        if (addData.from && addData.to) {
+            fetchHook({
+                type: "getBookingsByDate",
+                options: {
+                    body: JSON.stringify({
+                        dateFrom: addData.from,
+                        dateTo: addData.to
+                    })
+                },
+                dontHandleFeedback: true,
+                callback: (response) => {
+                    setExistingBookings(response?.bookings || [])
+                    console.log(response)
+                }
+            })
+        } else {
+            setExistingBookings([]);
+        }
+    }, [addData.from, addData.to]);
+
+    return (<div className="my-3">
+        <h3>Make a new booking</h3>
         <div className="row my-3">
-            <h3>Make a new booking</h3>
             <div className="col-12 col-md-3 mb-3 mb-md-0">
                 <div className="formInputGroup">
                     <FormInput type={"date"}
@@ -14,7 +45,11 @@ const AddFormBooking = ({addData, setAddData}) => {
                                value={addData.from}
                                onChange={(e, x) => {
                                    setAddData(prevState => {
-                                       return {...prevState, from: x, to:x}
+                                       return {
+                                           ...prevState,
+                                           from: x,
+                                           to: x
+                                       }
                                    })
                                }}/>
                 </div>
@@ -41,7 +76,10 @@ const AddFormBooking = ({addData, setAddData}) => {
                                step={0.01}
                                onChange={(e, x) => {
                                    setAddData(prevState => {
-                                       return {...prevState, hours: x}
+                                       return {
+                                           ...prevState,
+                                           hours: x
+                                       }
                                    })
                                }}/>
                 </div>
@@ -54,7 +92,10 @@ const AddFormBooking = ({addData, setAddData}) => {
                                value={addData.userComments}
                                onChange={(e, x) => {
                                    setAddData(prevState => {
-                                       return {...prevState, userComments: x}
+                                       return {
+                                           ...prevState,
+                                           userComments: x
+                                       }
                                    })
                                }}/>
                 </div>
@@ -63,7 +104,22 @@ const AddFormBooking = ({addData, setAddData}) => {
                 <button type={"submit"} className={"btn btn-success"}>Add</button>
             </div>
         </div>
-    );
+        <div className="row my-3">
+            <div className="col col-12 col-md-4">
+                //TODO: allowance here
+            </div>
+        </div>
+        <div className="row my-3 justify-content-center">
+            <div className="col col-12 col-md-6">
+                <Table headers={["Date", "Requested", "Approved", "Total"]}
+                       rows={existingBookings.map((x) => [dateToShortDate(x.date),
+                           `${x.requestedHours} (${x.requestedBookings})`,
+                           `${x.approvedHours} (${x.approvedBookings})`,
+                           `${x.totalHours} (${x.totalBookings})`])}
+                />
+            </div>
+        </div>
+    </div>);
 }
 
 export default AddFormBooking;
