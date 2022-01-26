@@ -1,9 +1,10 @@
 import FormInput from "../../common/forms/FormInput";
-import {useEffect, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import useFetch from "../../../hooks/useFetch";
 import Table from "../../common/tables/Table";
 import {dateToShortDate} from "../../../functions/formatMySqlTimestamp";
 import {getRangeClass} from "../../dashboard/dashboardRanges";
+import {GlobalAppContext} from "../../../App";
 
 const AddFormBooking = ({
                             addData,
@@ -13,6 +14,7 @@ const AddFormBooking = ({
     const fetchHook = useFetch();
     const [existingBookings, setExistingBookings] = useState([]);
     const [allowance, setAllowance] = useState(null);
+    const user = useContext(GlobalAppContext)[0]?.user;
 
     useEffect(() => {
         if (addData.from && addData.to) {
@@ -121,6 +123,8 @@ const AddFormBooking = ({
         </div>}
         {existingBookings.length > 0 && <div className="row my-3 justify-content-center">
             <div className="col col-12 col-md-6">
+                <h5>Existing bookings</h5>
+                {addData.from && addData.to && <h6>{user.payGradeName}/{user.locationName}, {dateToShortDate(addData.from)}-{dateToShortDate(addData.to)}</h6>}
                 <Table headers={["Date", "Requested", "Approved", "Total"]}
                        rows={existingBookings.map((x) => [dateToShortDate(x.date),
                            `${x.requestedHours} (${x.requestedBookings})`,
