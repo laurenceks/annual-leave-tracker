@@ -112,9 +112,9 @@ const AddFormBooking = ({
         {allowance && <div className="row my-3 justify-content-center">
             <div className="col col-12 col-md-6">
                 <div className={`alert m-0 alert-${getRangeClass(
-                    ((allowance.total - allowance.booked - addData.hours) / allowance.total) * 100,
+                    ((allowance.remaining - addData.hours) / allowance.total) * 100,
                     "remaining") || "secondary"}`}>After this booking you will
-                    have <span className="fw-bold">{allowance.total - allowance.booked - addData.hours}</span> hours
+                    have <span className="fw-bold">{allowance.remaining - addData.hours}</span> hours
                     remaining
                 </div>
             </div>
