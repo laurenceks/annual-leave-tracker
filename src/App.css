@@ -64,12 +64,24 @@ div.main {
   max-width: 980px;
 }
 
+/*Logo*/
+
+img.loginLogo{
+  max-height: 500px;
+}
+
+/*Login*/
+
+div.loginContainer{
+  min-height: 100vh;
+}
+
 /*Forms*/
 
 form.loginForm, div.loginForm {
   width: 100%;
   max-width: 350px;
-  margin-top: clamp(50px, 10%, 100px);
+  /*margin-top: clamp(50px, 10%, 100px);*/
 }
 
 div.formInputGroup > div.formInputWrap:first-of-type:not(:only-of-type) input,

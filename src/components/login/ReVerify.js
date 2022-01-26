@@ -3,6 +3,7 @@ import FormInput from "../common/forms/FormInput";
 import FormLink from "../common/forms/FormLink";
 import validateForm from "../../functions/formValidation.js"
 import LoginFeedback from "./LoginFeedback";
+import Copyright from "./Copyright";
 
 const ReVerify = () => {
     const [reVerifyFeedback, setReverifyFeedback] = useState({inProgress: false});
@@ -53,7 +54,7 @@ const ReVerify = () => {
                           label={"Forgot password"}/>}
                 <FormLink to={"/login"}
                           label={"Back to login"}/>
-                <p className="my-3 text-muted">&copy; Laurence Summers 2021</p>
+                <Copyright/>
             </fieldset>
         </form>
     );

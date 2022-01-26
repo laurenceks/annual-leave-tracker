@@ -6,6 +6,7 @@ import validateForm from "../../functions/formValidation.js"
 import LoginFeedback from "./LoginFeedback";
 import {GlobalAppContext} from "../../App";
 import {useNavigate} from "react-router-dom";
+import Copyright from "./Copyright";
 
 
 const Login = props => {
@@ -57,7 +58,7 @@ const Login = props => {
                 <button className="w-100 btn btn-lg btn-primary mt-3" onClick={() =>history("/reVerify")}>Resend verification email</button>}
                 <FormLink to={"/forgotPassword"} label={"Forgot password"}/>
                 <FormLink to={"/register"} label={"Register"}/>
-                <p className="my-3 text-muted">&copy; Laurence Summers 2021</p>
+                <Copyright/>
             </fieldset>
         </form>
     );

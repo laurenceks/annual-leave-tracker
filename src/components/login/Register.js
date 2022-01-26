@@ -9,6 +9,7 @@ import "@gouch/to-title-case";
 import fetchJson from "../../functions/fetchJson";
 import FormTypeahead from "../common/forms/FormTypeahead";
 import useInitialise from "../../hooks/useInitialise";
+import Copyright from "./Copyright";
 
 const Register = () => {
     const [registerFeedback, setRegisterFeedback] = useState({success: false, inProgress: false});
@@ -141,7 +142,7 @@ const Register = () => {
                           label={registerFeedback.success ? "Back to login" : "Login with an existing account"}/>
                 <FormLink to={"/privacy"}
                           label={"Privacy policy"}/>
-                <p className="my-3 text-muted">&copy; Laurence Summers 2021</p>
+                <Copyright/>
             </fieldset>
         </form>
     );

@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import LoginFeedback from "./LoginFeedback";
 import validateForm from "../../functions/formValidation";
 import FormInput from "../common/forms/FormInput";
+import Copyright from "./Copyright";
 
 const ResetPassword = ({token, selector}) => {
     const [resetPasswordFeedback, setResetPasswordFeedback] = useState({icon: null, success: false, inProgress: false});
@@ -64,7 +65,7 @@ const ResetPassword = ({token, selector}) => {
                     {(resetPasswordFeedback.feedback && !resetPasswordFeedback.inProgress) &&
                     <LoginFeedback feedbackText={resetPasswordFeedback.feedback}
                                    feedbackClass={resetPasswordFeedback.feedbackClass}/>}
-                    <p className="my-3 text-muted">&copy; Laurence Summers 2021</p>
+                    <Copyright/>
                 </fieldset>
             </form>
         </>
