@@ -29,6 +29,23 @@ const FormInput = ({
     const renderedOnce = useRef(false);
     const resetSetOnce = useRef(false);
 
+    const getReturnValue = rawValue => {
+        let returnValue = "";
+        if (type === "number" && rawValue) {
+            returnValue = Number(rawValue);
+            max && (returnValue = Math.min(returnValue, max));
+            min && (returnValue = Math.max(returnValue, min));
+        } else if (type === "date" && rawValue) {
+            returnValue = new Date(rawValue).getTime();
+            max && (returnValue = Math.min(returnValue, new Date(max).getTime()));
+            min && (returnValue = Math.max(returnValue, new Date(min).getTime()));
+            returnValue = new Date(returnValue).toISOString().split('T')[0]
+        } else {
+            returnValue = forceCase && forceCase !== "" ? setCase(rawValue, forceCase) : rawValue;
+        }
+        return returnValue;
+    }
+
     useInitialise(() => {
         renderedOnce.current = true;
     })
@@ -36,6 +53,12 @@ const FormInput = ({
     useEffect(() => {
         setInputState(value);
     }, [value]);
+
+    useEffect(() => {
+        const newValue = getReturnValue(inputState)
+        setInputState(newValue);
+        onChange && onChange(id, newValue);
+    }, [min, max]);
 
     useEffect(() => {
         renderedOnce.current && setInputState(defaultValue || value);
@@ -57,26 +80,9 @@ const FormInput = ({
                    max={max}
                    step={step}
                    onChange={(e) => {
-                       let returnValue = "";
-                       if (type === "number" && e.target.value) {
-                           returnValue = Number(e.target.value);
-                           max && (returnValue = Math.min(returnValue, max));
-                           min && (returnValue = Math.max(returnValue, min));
-                       } else if (type === "date" && e.target.value) {
-                           returnValue = new Date(e.target.value).getTime();
-                           max && (returnValue = Math.min(returnValue, new Date(max).getTime()));
-                           min && (returnValue = Math.max(returnValue, new Date(min).getTime()));
-                           returnValue = new Date(returnValue).toISOString().split('T')[0]
-                       }  else {
-                           returnValue =
-                               forceCase && forceCase !== "" ? setCase(e.target.value, forceCase) : e.target.value;
-                       }
-
+                       const returnValue = getReturnValue(e.target.value);
                        setInputState(returnValue);
-
-                       if (onChange) {
-                           onChange(id, returnValue);
-                       }
+                       onChange && onChange(id, returnValue);
                    }}
                    form={form}
                    disabled={disabled}
