@@ -3,7 +3,7 @@ import {useEffect, useState} from "react";
 import useFetch from "../../../hooks/useFetch";
 import Table from "../../common/tables/Table";
 import {dateToShortDate} from "../../../functions/formatMySqlTimestamp";
-import {dashboardRanges, getRangeClass} from "../../dashboard/dashboardRanges";
+import {getRangeClass} from "../../dashboard/dashboardRanges";
 
 const AddFormBooking = ({
                             addData,
@@ -45,6 +45,7 @@ const AddFormBooking = ({
                                label={"From"}
                                invalidFeedback={"You must enter a date from"}
                                value={addData.from}
+                               min={new Date().toISOString().split('T')[0]}
                                onChange={(e, x) => {
                                    setAddData(prevState => {
                                        return {
@@ -75,6 +76,8 @@ const AddFormBooking = ({
                                label={"Hours"}
                                invalidFeedback={"Please enter the hours this will cost"}
                                value={addData.hours}
+                               min={0}
+                               max={(allowance?.total - allowance?.booked) || null}
                                step={0.01}
                                onChange={(e, x) => {
                                    setAddData(prevState => {
@@ -108,8 +111,11 @@ const AddFormBooking = ({
         </div>
         {allowance && <div className="row my-3 justify-content-center">
             <div className="col col-12 col-md-6">
-                <div className={`alert alert-${getRangeClass(((allowance.total - allowance.booked - addData.hours)/allowance.total)*100, "remaining")||"secondary"}`}>After this booking you will
-                    have <span className="fw-bold">{allowance.total - allowance.booked - addData.hours}</span> hours remaining
+                <div className={`alert m-0 alert-${getRangeClass(
+                    ((allowance.total - allowance.booked - addData.hours) / allowance.total) * 100,
+                    "remaining") || "secondary"}`}>After this booking you will
+                    have <span className="fw-bold">{allowance.total - allowance.booked - addData.hours}</span> hours
+                    remaining
                 </div>
             </div>
         </div>}
