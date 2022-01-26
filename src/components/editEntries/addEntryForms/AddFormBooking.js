@@ -64,7 +64,6 @@ const AddFormBooking = ({
                                label={"To"}
                                invalidFeedback={"You must enter a date to"}
                                value={addData.from}
-                               min={addData.from}
                                disabled={true}
                     />
                 </div>
