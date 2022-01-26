@@ -7,17 +7,8 @@ $output = array_merge($feedbackTemplate, array("bookings" => array()));
 $input = json_decode(file_get_contents('php://input'), true);
 
 if (!$input["periodId"]) {
-    try {
-        $getPeriodId = $db->prepare("SELECT `id`, `name`, `dateFrom`, `dateTo` FROM `periods` WHERE `dateFrom` <= CURRENT_DATE AND `dateTo` >= CURRENT_DATE AND `deleted` = 0 AND `organisationId` = :organisationId");
-        $getPeriodId->bindValue(':organisationId', $_SESSION["user"]->organisationId);
-        $getPeriodId->execute();
-        $getPeriodId = $getPeriodId->fetch(PDO::FETCH_ASSOC);
-        $period = $getPeriodId;
-        $period["defaultedToCurrent"] = true;
-        $output["period"] = $period;
-    } catch (PDOException $e) {
-        $period = null;
-    }
+    require "../periods/getPeriodIdFromDateRange.php";
+    $period = getPeriodIdFromDateRange();
 } else {
     $period = $input["period"];
 }
