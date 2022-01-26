@@ -11,6 +11,7 @@ const AddFormBooking = ({
     //TODO disable validation for comments
     const fetchHook = useFetch();
     const [existingBookings, setExistingBookings] = useState([]);
+    const [allowance, setAllowance] = useState(null);
 
     useEffect(() => {
         if (addData.from && addData.to) {
@@ -24,8 +25,8 @@ const AddFormBooking = ({
                 },
                 dontHandleFeedback: true,
                 callback: (response) => {
+                    setAllowance(response?.allowance || null);
                     setExistingBookings(response?.bookings || [])
-                    console.log(response)
                 }
             })
         } else {
@@ -104,12 +105,15 @@ const AddFormBooking = ({
                 <button type={"submit"} className={"btn btn-success"}>Add</button>
             </div>
         </div>
-        <div className="row my-3">
-            <div className="col col-12 col-md-4">
-                //TODO: allowance here
+        {allowance && <div className="row my-3">
+            <div className="col col-12 col-md-6">
+                <Table headers={["Hours", "Booked", "Available", "Remaining"]}
+                       rows={[[allowance?.total,
+                           allowance?.booked,
+                           allowance?.total - allowance?.booked,
+                           allowance?.total - allowance?.booked - addData?.hours]]}
+                />
             </div>
-        </div>
-        <div className="row my-3 justify-content-center">
             <div className="col col-12 col-md-6">
                 <Table headers={["Date", "Requested", "Approved", "Total"]}
                        rows={existingBookings.map((x) => [dateToShortDate(x.date),
@@ -118,7 +122,7 @@ const AddFormBooking = ({
                            `${x.totalHours} (${x.totalBookings})`])}
                 />
             </div>
-        </div>
+        </div>}
     </div>);
 }
 

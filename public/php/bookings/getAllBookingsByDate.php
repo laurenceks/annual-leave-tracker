@@ -17,13 +17,10 @@ $getBookingsByDate->bindValue(':dateFrom', $input["dateFrom"]);
 $getBookingsByDate->bindValue(':dateTo', $input["dateTo"]);
 $getBookingsByDate->execute();
 
-$period = getPeriodIdFromDateRange($input["dateFrom"], $input["dateTo"]);
-
-//get all
-
+$output["allowance"] = getAllowanceForUserByPeriod(getPeriodIdFromDateRange($input["dateFrom"], $input["dateTo"]));
 $output["bookings"] = $getBookingsByDate->fetchAll(PDO::FETCH_ASSOC);
 $output["success"] = true;
 $output["title"] = "Bookings updated";
 $output["feedback"] = "Bookings data has been refreshed";
 
-echo json_encode($output);
+echo json_encode($output, JSON_NUMERIC_CHECK);
