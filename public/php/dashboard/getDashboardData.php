@@ -33,7 +33,7 @@ if (isset($period["id"])) {
     $allowanceForIdAndPeriod = getAllowanceForUserByPeriod($period);
     $output["allowance"] = $allowanceForIdAndPeriod;
 
-    $output["chartData"]["chartHours"] = array(array("label" => "Total", "hours" => isset($allowanceForIdAndPeriod["total"]) ? $allowanceForIdAndPeriod["total"] : 0), array("label" => "Booked", "hours" => $allowanceForIdAndPeriod["booked"]), array("label" => "Taken", "hours" => $allowanceForIdAndPeriod["taken"]), array("label" => "Remaining", "hours" => isset($allowanceForIdAndPeriod["hours"]) ? $allowanceForIdAndPeriod["total"] - $allowanceForIdAndPeriod["booked"] : 0));
+    $output["chartData"]["chartHours"] = [["label" => "Remaining", "hours" => isset($allowanceForIdAndPeriod["remaining"]) ? $allowanceForIdAndPeriod["remaining"] : 0],["label" => "Booked", "hours" => $allowanceForIdAndPeriod["booked"]], ["label" => "Taken", "hours" => $allowanceForIdAndPeriod["taken"]]];
 
     $getBookings = $db->prepare("SELECT * FROM `bookings` WHERE `dateFrom` >= :dateFrom AND `dateTo` <= :dateTo AND `userId` = :userId AND `organisationId`= :organisationId AND `deleted` = 0");
     $getBookings->bindValue(':userId', $_SESSION["user"]->userId);

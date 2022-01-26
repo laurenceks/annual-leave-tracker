@@ -3,52 +3,60 @@ require_once "../security/userLoginSecurityCheck.php";
 
 function getAllowanceForUserByPeriod($period, $userId = null) {
     require "../common/db.php";
-    $getAllowanceForUserIdByPeriodQuery = "SELECT (SELECT `hours`
-            FROM `allowances`
-            WHERE `allowances`.`periodId` = `periods`.`id`
-              AND `allowances`.`userId` = :userId) AS `total`,
-           IFNULL((SELECT SUM(`hours`)
-                   FROM `bookings`
-                   WHERE `dateFrom` >= :dateFrom
-                     AND `dateTo` <= :dateTo
-                     AND `userId` = :userId
-                     AND `organisationId` = :organisationId
-                     AND `deleted` = 0), 0) AS `booked`,
-           IFNULL((SELECT SUM(`hours`)
-                   FROM `bookings`
-                   WHERE `dateFrom` >= :dateFrom
-                     AND `dateTo` <= :dateTo
-                     AND `status` = 'approved'
-                     AND `userId` = :userId
-                     AND `organisationId` = :organisationId
-                     AND `deleted` = 0), 0) AS `approved`,
-           IFNULL((SELECT SUM(`hours`)
-                   FROM `bookings`
-                   WHERE `dateFrom` >= :dateFrom
-                     AND `dateTo` <= :dateTo
-                     AND `status` = 'requested'
-                     AND `userId` = :userId
-                     AND `organisationId` = :organisationId
-                     AND `deleted` = 0), 0) AS `requested`,
-           IFNULL((SELECT SUM(`hours`)
-                   FROM `bookings`
-                   WHERE `dateFrom` >= :dateFrom
-                     AND `dateTo` <= :dateTo
-                     AND `status` = 'denied'
-                     AND `userId` = :userId
-                     AND `organisationId` = :organisationId
-                     AND `deleted` = 0), 0) AS `denied`,
-           IFNULL((SELECT SUM(`hours`)
-                   FROM `bookings`
-                   WHERE `dateFrom` >= :dateFrom
-                     AND `dateTo` <= :dateTo
-                     AND `status` = 'approved'
-                     AND `userId` = :userId
-                     AND `organisationId` = :organisationId
-                     AND `deleted` = 0
-                     AND `dateFrom` <= CURRENT_DATE()), 0) AS `taken`
-    FROM `periods`
-    WHERE `periods`.`id` = :periodId";
+    $getAllowanceForUserIdByPeriodQuery = "
+    SELECT
+    IFNULL(`total`.`hours`, 0) AS `total`,
+    IFNULL(`total`.`hours`, 0) AS `hours`,
+    IFNULL(`b`.`booked`, 0) AS `booked`,
+       IFNULL(`a`.`approved`, 0) AS `approved`,
+       IFNULL(`r`.`requested`, 0) AS `requested`,
+       IFNULL(`d`.`denied`, 0) AS `denied`,
+       IFNULL(`t`.`taken`, 0) AS `taken`,
+       IFNULL(`total`.`hours`, 0) - `booked` AS `remaining`
+FROM (SELECT SUM(`hours`) AS `booked`
+      FROM `bookings`
+      WHERE `dateFrom` >= :dateFrom
+        AND `dateTo` <= :dateTo
+        AND `userId` = :userId
+        AND `organisationId` = :organisationId
+        AND `deleted` = 0) `b`
+         CROSS JOIN (SELECT SUM(`hours`) AS `approved`
+                     FROM `bookings`
+                     WHERE `dateFrom` >= :dateFrom
+                       AND `dateTo` <= :dateTo
+                       AND `userId` = :userId
+                       AND `status` = 'approved'
+                       AND `organisationId` = :organisationId
+                       AND `deleted` = 0) `a`
+         CROSS JOIN (SELECT SUM(`hours`) AS `requested`
+                     FROM `bookings`
+                     WHERE `dateFrom` >= :dateFrom
+                       AND `dateTo` <= :dateTo
+                       AND `userId` = :userId
+                       AND `status` = 'requested'
+                       AND `organisationId` = :organisationId
+                       AND `deleted` = 0) `r`
+         CROSS JOIN (SELECT SUM(`hours`) AS `denied`
+                     FROM `bookings`
+                     WHERE `dateFrom` >= :dateFrom
+                       AND `dateTo` <= :dateTo
+                       AND `userId` = :userId
+                       AND `status` = 'denied'
+                       AND `organisationId` = :organisationId
+                       AND `deleted` = 0) `d`
+         CROSS JOIN (SELECT SUM(`hours`) AS `taken`
+                     FROM `bookings`
+                     WHERE `dateFrom` >= CURRENT_DATE
+                       AND `dateTo` <= :dateTo
+                       AND `userId` = :userId
+                       AND `organisationId` = :organisationId
+                       AND `deleted` = 0) `t`
+         CROSS JOIN (SELECT `hours`
+                     FROM `allowances`
+                     WHERE `periodId` = :periodId
+                       AND `userId` = :userId
+                       AND `organisationId` = :organisationId
+                       AND `deleted` = 0) `total`";
     $db->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
     $getAllowanceForUserIdByPeriod = $db->prepare($getAllowanceForUserIdByPeriodQuery);
     $getAllowanceForUserIdByPeriod->bindValue(':userId', $userId ?: $_SESSION["user"]->userId);
