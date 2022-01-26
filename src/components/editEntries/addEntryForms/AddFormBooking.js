@@ -113,7 +113,8 @@ const AddFormBooking = ({
                 <div className={`alert m-0 alert-${getRangeClass(
                     ((allowance.remaining - addData.hours) / allowance.total) * 100,
                     "remaining") || "secondary"}`}>After this booking you will
-                    have <span className="fw-bold">{allowance.remaining - addData.hours}</span> hours
+                    have <span className="fw-bold">{Math.round(
+                        (allowance.remaining - addData.hours) * 100) / 100}</span> hours
                     remaining
                 </div>
             </div>
