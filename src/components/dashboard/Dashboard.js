@@ -10,6 +10,7 @@ import {IoBarChartSharp, IoBasketSharp, IoBatteryHalfSharp, IoBookmarksSharp} fr
 import setCase from "../../functions/setCase";
 import deepmerge from "deepmerge";
 import FormPeriod from "../common/forms/FormPeriod";
+import {dashboardRanges, getRangeClass} from "./dashboardRanges";
 
 class dashboardDataTemplate {
     constructor() {
@@ -49,51 +50,6 @@ const Dashboard = () => {
         selectedPeriod: [],
         manualChange: null
     });
-
-    const dashboardRanges = {
-        remaining: [{
-            upper: 25,
-            colourClass: "bad",
-            tableClass: "table-danger",
-            textClass: "text-danger"
-        }, {
-            lower: 25,
-            upper: 50,
-            colourClass: "ok",
-            tableClass: "table-warning",
-            textClass: "text-warning"
-        }, {
-            lower: 75,
-            colourClass: "good",
-            tableClass: "table-success",
-            textClass: "text-success"
-        },],
-        bookedTaken: [{
-            upper: 25,
-            colourClass: "good",
-            tableClass: "table-success"
-        }, {
-            lower: 25,
-            upper: 75,
-            colourClass: "ok",
-            tableClass: "table-warning"
-        }, {
-            lower: 75,
-            colourClass: "bad",
-            tableClass: "table-danger"
-        }]
-    }
-
-    const getRangeClass = (val, range, classType = "colourClass") => {
-        const result = range.find((x, i) => {
-            if (i === 0) {
-                return val < (x.threshold || x.upper)
-            } else {
-                return (val >= x.lower && val < x.upper) || (val >= x.lower && i === range.length - 1)
-            }
-        })
-        return result && classType === "all" ? result : result?.[classType] ? result?.[classType] : null;
-    }
 
     useEffect(() => {
         getRates({
@@ -186,21 +142,21 @@ const Dashboard = () => {
                                        number={dashboardData.allowance.remaining || "N/A"}
                                        colourClass={dashboardData.allowance.total ?
                                            getRangeClass(dashboardData.allowancePercentages.remaining,
-                                               dashboardRanges.remaining) :
+                                               "remaining", "colourClass") :
                                            "null"}
                                        icon={<IoBatteryHalfSharp/>}/>
                     <DashboardStatTile title={"Booked"}
                                        number={dashboardData.allowance.booked || 0}
                                        colourClass={dashboardData.allowance.booked ?
                                            getRangeClass(dashboardData.allowancePercentages.booked,
-                                               dashboardRanges.bookedTaken) :
+                                               "bookedTaken", "colourClass") :
                                            "good"}
                                        icon={<IoBookmarksSharp/>}/>
                     <DashboardStatTile title={"Taken"}
                                        number={dashboardData.allowance.taken || 0}
                                        colourClass={dashboardData.allowance.taken ?
                                            getRangeClass(dashboardData.allowancePercentages.taken,
-                                               dashboardRanges.bookedTaken) :
+                                               "bookedTaken", "colourClass") :
                                            "good"}
                                        icon={<IoBasketSharp/>}/>
                 </div>

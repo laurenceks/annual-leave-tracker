@@ -3,6 +3,7 @@ import {useEffect, useState} from "react";
 import useFetch from "../../../hooks/useFetch";
 import Table from "../../common/tables/Table";
 import {dateToShortDate} from "../../../functions/formatMySqlTimestamp";
+import {dashboardRanges, getRangeClass} from "../../dashboard/dashboardRanges";
 
 const AddFormBooking = ({
                             addData,
@@ -102,18 +103,17 @@ const AddFormBooking = ({
                 </div>
             </div>
             <div className="col-12 col-md-1 d-flex align-items-center">
-                <button type={"submit"} className={"btn btn-success"}>Add</button>
+                <button type={"submit"} className={"btn btn-success w-100"}>Add</button>
             </div>
         </div>
-        {allowance && <div className="row my-3">
+        {allowance && <div className="row my-3 justify-content-center">
             <div className="col col-12 col-md-6">
-                <Table headers={["Hours", "Booked", "Available", "Remaining"]}
-                       rows={[[allowance?.total,
-                           allowance?.booked,
-                           allowance?.total - allowance?.booked,
-                           allowance?.total - allowance?.booked - addData?.hours]]}
-                />
+                <div className={`alert alert-${getRangeClass(((allowance.total - allowance.booked - addData.hours)/allowance.total)*100, "remaining")||"secondary"}`}>After this booking you will
+                    have <span className="fw-bold">{allowance.total - allowance.booked - addData.hours}</span> hours remaining
+                </div>
             </div>
+        </div>}
+        {existingBookings.length > 0 && <div className="row my-3 justify-content-center">
             <div className="col col-12 col-md-6">
                 <Table headers={["Date", "Requested", "Approved", "Total"]}
                        rows={existingBookings.map((x) => [dateToShortDate(x.date),
