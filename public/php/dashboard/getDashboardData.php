@@ -15,7 +15,7 @@ if (!$input["periodId"]) {
 
 if (isset($period["id"])) {
     require "dashboardChartMonthQuery.php";
-    require "../allowances/getAllowanceForCurrentUserByPeriod.php";
+    require "../allowances/getAllowanceForUserByPeriod.php";
 
     $getChartMonths = $db->prepare($dashboardChartMonthQuery);
 
@@ -27,19 +27,10 @@ if (isset($period["id"])) {
 
     $output["chartData"]["chartMonths"] = $getChartMonths->fetchAll(PDO::FETCH_ASSOC);
 
-    $db->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
-    $getAllowanceForUserIdByPeriod = $db->prepare($getAllowanceForUserIdByPeriodQuery);
-    $getAllowanceForUserIdByPeriod->bindValue(':userId', $_SESSION["user"]->userId);
-    $getAllowanceForUserIdByPeriod->bindValue(':organisationId', $_SESSION["user"]->organisationId);
-    $getAllowanceForUserIdByPeriod->bindValue(':dateFrom', $period["dateFrom"]);
-    $getAllowanceForUserIdByPeriod->bindValue(':dateTo', $period["dateTo"]);
-    $getAllowanceForUserIdByPeriod->bindValue(':periodId', $period["id"]);
-    $db->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
-    $getAllowanceForUserIdByPeriod->execute();
 
     $output["period"] = $period;
 
-    $allowanceForIdAndPeriod = $getAllowanceForUserIdByPeriod->fetch(PDO::FETCH_ASSOC);
+    $allowanceForIdAndPeriod = getAllowanceForUserByPeriod($period);
     $output["allowance"] = $allowanceForIdAndPeriod;
 
     $output["chartData"]["chartHours"] = array(array("label" => "Total", "hours" => isset($allowanceForIdAndPeriod["total"]) ? $allowanceForIdAndPeriod["total"] : 0), array("label" => "Booked", "hours" => $allowanceForIdAndPeriod["booked"]), array("label" => "Taken", "hours" => $allowanceForIdAndPeriod["taken"]), array("label" => "Remaining", "hours" => isset($allowanceForIdAndPeriod["hours"]) ? $allowanceForIdAndPeriod["total"] - $allowanceForIdAndPeriod["booked"] : 0));
