@@ -7,7 +7,7 @@ export const dashboardRanges = {
         textClass: "text-danger"
     }, {
         lower: 25,
-        upper: 50,
+        upper: 75,
         colourClass: "ok",
         variant: "warning",
         tableClass: "table-warning",
