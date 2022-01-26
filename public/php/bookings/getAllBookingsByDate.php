@@ -17,7 +17,7 @@ $getBookingsByDate->bindValue(':dateFrom', $input["dateFrom"]);
 $getBookingsByDate->bindValue(':dateTo', $input["dateTo"]);
 $getBookingsByDate->execute();
 
-$output["allowance"] = getAllowanceForUserByPeriod(getPeriodIdFromDateRange($input["dateFrom"], $input["dateTo"]));
+$output["allowance"] = (isset($input["dateFrom"]) && isset($input["dateTo"])) ? getAllowanceForUserByPeriod(getPeriodIdFromDateRange($input["dateFrom"], $input["dateTo"])) : null;
 $output["bookings"] = $getBookingsByDate->fetchAll(PDO::FETCH_ASSOC);
 $output["success"] = true;
 $output["title"] = "Bookings updated";
