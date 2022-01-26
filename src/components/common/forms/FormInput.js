@@ -46,34 +46,46 @@ const FormInput = ({
     }, [reset]);
 
     return (<div className={"formInputWrap"}>
-            <div className="form-floating">
-                <input type={type} className={`form-control formInput${inputClass ? ` ${inputClass}` : ""}`}
-                       id={id}
-                       name={id}
-                       placeholder={placeholder || label}
-                       autoComplete={autocomplete}
-                       data-passwordid={passwordId}
-                       min={min}
-                       max={max}
-                       step={step}
-                       onChange={(e) => {
-                           const returnValue = type === "number" && e.target.value ?
-                               Number(e.target.value) :
+        <div className="form-floating">
+            <input type={type} className={`form-control formInput${inputClass ? ` ${inputClass}` : ""}`}
+                   id={id}
+                   name={id}
+                   placeholder={placeholder || label}
+                   autoComplete={autocomplete}
+                   data-passwordid={passwordId}
+                   min={min}
+                   max={max}
+                   step={step}
+                   onChange={(e) => {
+                       let returnValue = "";
+                       if (type === "number" && e.target.value) {
+                           returnValue = Number(e.target.value);
+                           max && (returnValue = Math.min(returnValue, max));
+                           min && (returnValue = Math.max(returnValue, min));
+                       } else if (type === "date" && e.target.value) {
+                           returnValue = new Date(e.target.value).getTime();
+                           max && (returnValue = Math.min(returnValue, new Date(max).getTime()));
+                           min && (returnValue = Math.max(returnValue, new Date(min).getTime()));
+                           returnValue = new Date(returnValue).toISOString().split('T')[0]
+                       }  else {
+                           returnValue =
                                forceCase && forceCase !== "" ? setCase(e.target.value, forceCase) : e.target.value;
-                           setInputState(returnValue);
+                       }
 
-                           if (onChange) {
-                               onChange(id, returnValue);
-                           }
-                       }}
-                       form={form}
-                       disabled={disabled}
-                       value={inputState || ""}
-                />
-                <label htmlFor={id}>{label}</label>
-            </div>
-            {invalidFeedback && <InputFeedbackTooltip text={invalidFeedback}/>}
-        </div>);
+                       setInputState(returnValue);
+
+                       if (onChange) {
+                           onChange(id, returnValue);
+                       }
+                   }}
+                   form={form}
+                   disabled={disabled}
+                   value={inputState || ""}
+            />
+            <label htmlFor={id}>{label}</label>
+        </div>
+        {invalidFeedback && <InputFeedbackTooltip text={invalidFeedback}/>}
+    </div>);
 };
 
 FormInput.propTypes = {
