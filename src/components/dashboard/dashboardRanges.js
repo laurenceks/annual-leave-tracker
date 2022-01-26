@@ -38,7 +38,6 @@ export const dashboardRanges = {
     }]
 }
 export const getRangeClass = (val, range, classType = "variant") => {
-    console.log(val)
     const result = dashboardRanges[range].find((x, i) => {
         if (i === 0) {
             return val < (x.threshold || x.upper)
