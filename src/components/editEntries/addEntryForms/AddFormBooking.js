@@ -34,6 +34,7 @@ const AddFormBooking = ({
             })
         } else {
             setExistingBookings([]);
+            setAllowance(null);
         }
     }, [addData.from, addData.to]);
 
