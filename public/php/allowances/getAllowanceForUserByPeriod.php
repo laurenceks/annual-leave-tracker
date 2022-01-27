@@ -33,6 +33,7 @@ FROM (SELECT SUM(`hours`) AS `booked`
                      FROM `bookings`
                      WHERE `dateFrom` >= :dateFrom
                        AND `dateTo` <= :dateTo
+                       AND `dateFrom` >= CURRENT_DATE
                        AND `userId` = :userId
                        AND `status` = 'requested'
                        AND `organisationId` = :organisationId
@@ -47,7 +48,8 @@ FROM (SELECT SUM(`hours`) AS `booked`
                        AND `deleted` = 0) `d`
          CROSS JOIN (SELECT SUM(`hours`) AS `taken`
                      FROM `bookings`
-                     WHERE `dateFrom` >= CURRENT_DATE
+                     WHERE `dateFrom` >= :dateFrom
+                       AND `dateFrom` <= CURRENT_DATE
                        AND `dateTo` <= :dateTo
                        AND `userId` = :userId
                        AND `organisationId` = :organisationId
