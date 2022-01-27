@@ -28,7 +28,7 @@ const DashboardStatTile = ({title, number, colourClass, isNotInBootstrapGrid, ic
                     <p className={`fs-4 text-end lh-1 py-1 m-0 ${classMap[colourClass]?.text} dashboardStatTileTitle`}>{title}</p>
                 </div>
                 <div className="d-flex flex-grow-1 align-items-end">
-                    <p className={`m-0 text-center lh-1 w-100 dashboardStatTileNumber ${classMap[colourClass]?.text}`}>{number}</p>
+                    <p className={`m-0 text-end lh-1 w-100 dashboardStatTileNumber ${classMap[colourClass]?.text}`}>{number}</p>
                 </div>
                 {icon && <div className="dashboardStatTileIconContainer">
                     {icon}
