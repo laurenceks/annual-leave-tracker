@@ -9,7 +9,7 @@ import PrivacyPolicy from "./login/policies/PrivacyPolicy";
 
 const NotAuthorised = () => {
 
-    return (<div className="container min-vh-100">
+    return (<div className="container loginContainer">
         <div className="row justify-content-center align-content-md-center align-content-start h-100">
             <div className="col col-12 col-md-5 d-none d-md-flex align-items-center justify-content-end h-auto">
                 <img src="./img/logo/logo.svg"

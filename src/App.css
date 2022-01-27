@@ -1,204 +1,213 @@
-@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@500&family=Source+Sans+Pro&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@500&family=Source+Sans+Pro&display=swap");
 
 /*Colours (BS)*/
 
 :root {
-  --bs-teal-200: #a6e9d5;
-  --bs-green-200: #a3cfbb;
-  --bs-green-300: #75b798;
-  --bs-green-600: #146c43;
-  --bs-green-700: #0f5132;
-  --bs-green-800: #0a3622;
-  --bs-yellow-200: #ffe69c;
-  --bs-yellow-300: #ffda6a;
-  --bs-yellow-600: #cc9a06;
-  --bs-yellow-700: #997404;
-  --bs-yellow-800: #664d03;
-  --bs-red-200: #f1aeb5;
-  --bs-red-300: #ea868f;
-  --bs-red-600: #b02a37;
-  --bs-red-700: #842029;
-  --bs-red-800: #58151c;
+    --bs-teal-200: #A6E9D5;
+    --bs-green-200: #A3CFBB;
+    --bs-green-300: #75B798;
+    --bs-green-600: #146C43;
+    --bs-green-700: #0F5132;
+    --bs-green-800: #0A3622;
+    --bs-yellow-200: #FFE69C;
+    --bs-yellow-300: #FFDA6A;
+    --bs-yellow-600: #CC9A06;
+    --bs-yellow-700: #997404;
+    --bs-yellow-800: #664D03;
+    --bs-red-200: #F1AEB5;
+    --bs-red-300: #EA868F;
+    --bs-red-600: #B02A37;
+    --bs-red-700: #842029;
+    --bs-red-800: #58151C;
 }
 
 /*Fonts*/
 
 :root {
-  /*--bs-font-sans-serif: "Source Sans Pro";*/
+    /*--bs-font-sans-serif: "Source Sans Pro";*/
 }
 
 input.form-control:-webkit-autofill.form-control:first-line,
 textarea.form-control:-webkit-autofill.form-control:first-line,
 select.form-control:-webkit-autofill.form-control:first-line,
 option.form-control:-webkit-autofill.form-control:first-line {
-  /*font-family: var(--bs-font-sans-serif);*/
-  /*font-size: 1rem;*/
+    /*font-family: var(--bs-font-sans-serif);*/
+    /*font-size: 1rem;*/
 }
 
 h1, h2, h3, h4, h5, h6 {
-  /*font-family: "Open Sans";*/
-  /*font-weight: 500;*/
+    /*font-family: "Open Sans";*/
+    /*font-weight: 500;*/
 }
 
 /*Utilities*/
 
 .cursor-pointer {
-  cursor: pointer;
+    cursor: pointer;
 }
 
 /*Main*/
 
 div#Root {
-  width: 100%;
-  height: 100%;
+    width: 100%;
+    height: 100%;
 }
 
 div.App {
-  display: flex;
-  justify-content: center;
-  width: 100%;
-  height: 100%;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
 }
 
 div.main {
-  max-width: 980px;
+    max-width: 980px;
 }
 
 /*Logo*/
 
-img.loginLogo{
-  max-height: 500px;
+img.loginLogo {
+    max-height: 500px;
 }
 
 /*Login*/
 
-div.loginContainer{
-  min-height: 100vh;
+div.loginContainer {
+    min-height: 100vh;
+}
+
+/* Avoid Chrome to see Safari hack */
+@supports (-webkit-touch-callout: none) {
+    div.loginContainer {
+        /* mobile viewport bug fix */
+        min-height: -webkit-fill-available;
+    }
 }
 
 /*Forms*/
 
 form.loginForm, div.loginForm {
-  width: 100%;
-  max-width: 350px;
-  /*margin-top: clamp(50px, 10%, 100px);*/
+    width: 100%;
+    max-width: 350px;
+    /*margin-top: clamp(50px, 10%, 100px);*/
 }
 
 div.formInputGroup > div.formInputWrap:first-of-type:not(:only-of-type) input,
 div.formInputGroup > div.formInputWrap:last-of-type input.is-invalid,
 div.rbt input.is-invalid,
 div.formInputWrap:only-of-type input.is-invalid:not(:only-of-type) {
-  border-bottom-right-radius: 0 !important;
-  border-bottom-left-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+    border-bottom-left-radius: 0 !important;
 }
 
 div.formInputGroup > div.formInputWrap:not(:first-of-type):not(:last-of-type):not(:only-child) input,
 div.formInputGroup > div.formInputWrap:not(:last-of-type) div.inputFeedbackTooltip {
-  border-radius: 0 !important;
+    border-radius: 0 !important;
 }
 
 div.formInputGroup > div.formInputWrap:not(:first-of-type) input,
 div.formInputGroup > div.formInputWrap:not(:first-of-type) div.inputFeedbackTooltip {
-  margin-top: -1px;
+    margin-top: -1px;
 }
 
 div.formInputGroup > div.formInputWrap:last-of-type:not(:only-of-type) input,
 div.formInputGroup > div.formInputWrap:last-of-type div.inputFeedbackTooltip,
 div.formInputWrap:last-of-type div.inputFeedbackTooltip {
-  border-top-left-radius: 0 !important;
-  border-top-right-radius: 0 !important;
+    border-top-left-radius: 0 !important;
+    border-top-right-radius: 0 !important;
 }
 
 input.formInput {
-  transition: border-radius 200ms ease, border-width 200ms ease;
+    transition: border-radius 200ms ease, border-width 200ms ease;
 }
 
 input.formInput:focus {
-  position: relative;
-  z-index: 1;
+    position: relative;
+    z-index: 1;
 }
 
 input.formInput.is-invalid:focus {
-  box-shadow: none;
-  border-width: 5px;
+    box-shadow: none;
+    border-width: 5px;
 }
 
 input.formInput:focus ~ label {
-  z-index: 2;
+    z-index: 2;
 }
 
 input.formInput.stackedInput, input.formInput.stackedInput ~ div.inputFeedbackTooltip {
-  margin-top: -1px;
+    margin-top: -1px;
 }
 
 input[type="checkbox"], input[type="checkbox"] ~ label {
-  cursor: pointer;
+    cursor: pointer;
 }
 
 div.form-check > div.inputFeedbackTooltip {
-  position: relative;
-  left: -1.5rem;
-  width: calc(100% + 1.5rem) !important;
+    position: relative;
+    left: -1.5rem;
+    width: calc(100% + 1.5rem) !important;
 }
 
 div.inputFeedbackTooltip {
-  overflow: hidden;
-  margin-top: 0;
-  padding-top: 0;
-  padding-bottom: 0;
-  max-height: 0;
-  transition: max-height 400ms ease, padding 400ms ease, margin 400ms ease;
+    overflow: hidden;
+    margin-top: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    max-height: 0;
+    transition: max-height 400ms ease, padding 400ms ease, margin 400ms ease;
 }
-div.formInputWrap.is-invalid{
-  position: relative;
+
+div.formInputWrap.is-invalid {
+    position: relative;
 }
 
 input.is-invalid ~ div.inputFeedbackTooltip,
 div.formInputWrap.is-invalid > div.inputFeedbackTooltip {
-  max-height: 100px;
-  padding-top: 1rem;
-  padding-bottom: 1rem;
+    max-height: 100px;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
 }
 
 input[type="checkbox"].is-invalid ~ div.inputFeedbackTooltip {
-  margin-top: 1rem;
+    margin-top: 1rem;
 }
 
 /*Icons*/
 
 .largeIcon {
-  width: 5rem;
-  height: 5rem;
+    width: 5rem;
+    height: 5rem;
 }
 
 .smallIcon {
-  width: 2rem;
-  height: 2rem;
+    width: 2rem;
+    height: 2rem;
 }
 
 span.tableIcon > svg {
-  width: 1.5rem;
-  height: 1.5rem;
+    width: 1.5rem;
+    height: 1.5rem;
 }
 
 .spinner {
-  animation: spin infinite 3s linear;
+    animation: spin infinite 3s linear;
 }
 
 @keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 /*Nav*/
 
 div.nav-link a {
-  color: inherit;
-  text-decoration: inherit;
+    color: inherit;
+    text-decoration: inherit;
 }
 
 /*div.rbt-menu a {*/
@@ -210,125 +219,125 @@ div.nav-link a {
 /*}*/
 
 div.rbt-menu a:hover p.searchMenuItemLabel {
-  color: inherit !important;
+    color: inherit !important;
 }
 
 .bg-primary .navbar-nav .nav-link.active, .bg-primary .navbar-nav .nav-link:focus, .bg-primary .navbar-nav .nav-link:hover, .bg-primary .navbar-nav .show > .nav-link {
-  color: var(--bs-primary) !important;
-  background: var(--bs-light);
+    color: var(--bs-primary) !important;
+    background: var(--bs-light);
 }
 
 ul.dropdown-menu.userDropdown {
-  right: 0;
-  left: unset;
+    right: 0;
+    left: unset;
 }
 
 .dropdown-toggle.dropdown-icon:after {
-  vertical-align: unset;
-  position: relative;
-  top: 0.1rem;
+    vertical-align: unset;
+    position: relative;
+    top: 0.1rem;
 }
 
 /*Tables*/
 
 td.buttonCell {
-  min-width: 7.5rem;
+    min-width: 7.5rem;
 }
 
 td.dashboardStockTableCell {
-  white-space: nowrap;
+    white-space: nowrap;
 }
 
 .table-hover > tbody > tr > td.hover {
-  --bs-table-accent-bg: var(--bs-table-hover-bg);
-  color: var(--bs-table-hover-color);
+    --bs-table-accent-bg: var(--bs-table-hover-bg);
+    color: var(--bs-table-hover-color);
 }
 
 /*Dashboard*/
 
 div.dashboardStatTileContainer {
-  min-height: 6rem;
-  z-index: 0;
+    min-height: 6rem;
+    z-index: 0;
 }
 
 div.dashboardStatTileTitleWrap {
-  width: min-content;
-  /*line-height: calc(100% + 0.5rem);*/
+    width: min-content;
+    /*line-height: calc(100% + 0.5rem);*/
 }
 
 p.dashboardStatTileNumber {
-  font-size: 4rem;
-  /*line-height: 100%;*/
+    font-size: 4rem;
+    /*line-height: 100%;*/
 }
 
 div.dashboardStatTileContainer-good {
-  background-color: var(--bs-green-300);
+    background-color: var(--bs-green-300);
 }
 
 div.dashboardStatTileContainer-good p.dashboardStatTileTitle {
-  color: var(--bs-green-700);
+    color: var(--bs-green-700);
 }
 
 div.dashboardStatTileContainer-good p.dashboardStatTileNumber {
-  color: var(--bs-green-700);
+    color: var(--bs-green-700);
 }
 
 div.dashboardStatTileContainer-ok {
-  background-color: var(--bs-yellow-300);
+    background-color: var(--bs-yellow-300);
 }
 
 div.dashboardStatTileContainer-ok p.dashboardStatTileTitle {
-  color: var(--bs-yellow-700);
+    color: var(--bs-yellow-700);
 }
 
 div.dashboardStatTileContainer-ok p.dashboardStatTileNumber {
-  color: var(--bs-yellow-700);
+    color: var(--bs-yellow-700);
 }
 
 div.dashboardStatTileContainer-bad {
-  background-color: var(--bs-red-300);
+    background-color: var(--bs-red-300);
 }
 
 div.dashboardStatTileContainer-bad p.dashboardStatTileTitle {
-  color: var(--bs-red-700);
+    color: var(--bs-red-700);
 }
 
 div.dashboardStatTileContainer-bad p.dashboardStatTileNumber {
-  color: var(--bs-red-700);
+    color: var(--bs-red-700);
 }
 
 div.dashboardStatTileIconContainer {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: flex-end;
-  justify-content: flex-end;
-  position: absolute;
-  padding: inherit;
-  left: 0;
-  top: 0;
-  z-index: -1;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+    position: absolute;
+    padding: inherit;
+    left: 0;
+    top: 0;
+    z-index: -1;
 }
 
 div.dashboardStatTileIconContainer > svg {
-  color: white;
-  width: auto;
-  height: 100%;
-  opacity: 0.5;
-  mix-blend-mode: lighten;
+    color: white;
+    width: auto;
+    height: 100%;
+    opacity: 0.5;
+    mix-blend-mode: lighten;
 }
 
 button.dashboardActionButton > div > svg {
-  width: auto;
-  height: 1.25rem;
-  margin-right: .25rem;
-  transition: margin-right 0.25s ease;
+    width: auto;
+    height: 1.25rem;
+    margin-right: .25rem;
+    transition: margin-right 0.25s ease;
 }
 
 button.dashboardActionButton:hover > div > svg {
-  margin-right: 1rem;
+    margin-right: 1rem;
 }
 
 button.dashboardActionButton:focus {
-  box-shadow: none;
+    box-shadow: none;
 }
