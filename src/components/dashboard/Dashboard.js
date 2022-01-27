@@ -60,7 +60,6 @@ const Dashboard = () => {
             },
             dontHandleFeedback: !dashboardLoadedOnce.current,
             callback: (res) => {
-                console.log(res)
                 let newDashboardData = {}
                 if (!res.noPeriod) {
                     newDashboardData = {
