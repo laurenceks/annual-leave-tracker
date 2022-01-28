@@ -10,16 +10,20 @@ $input = json_decode(file_get_contents('php://input'), true);
 
 $output = $feedbackTemplate;
 
-    //TODO check overlapping date periods (make a common function so bookings can use the same
 if (checkFunctionExists("periods", "id", array(array("key" => "name", "value" => $input["inputAddPeriodName"])))) {
     $output["feedback"] = "A period with that name already exists, please change the period name and try again";
+    $output["title"] = "Period already exists";
+    $output["errorMessage"] = "Period already exists";
+    $output["errorType"] = "periodExists";
+} else if (checkDatesOverlap("bookings", $input["inputAddBookingFrom"], $input["inputAddBookingFrom"], true)) {
+    $output["feedback"] = "The requested dates overlap with an existing period";
     $output["title"] = "Period already exists";
     $output["errorMessage"] = "Period already exists";
     $output["errorType"] = "periodExists";
 } else {
     try {
         $output["input"] = $input;
-        $addPeriod = $db->prepare("INSERT INTO periods (organisationId, name, dateFrom, dateTo, createdBy, editedBy) VALUES (:organisationId,:name, :dateFrom, :dateTo, :uid1, :uid2)");
+        $addPeriod = $db->prepare("INSERT INTO `periods` (`organisationId`, `name`, `dateFrom`, `dateTo`, `createdBy`, `editedBy`) VALUES (:organisationId,:name, :dateFrom, :dateTo, :uid1, :uid2)");
         $addPeriod->bindValue(":organisationId", $_SESSION["user"]->organisationId);
         $addPeriod->bindParam(":name", $input["inputAddPeriodName"]);
         $addPeriod->bindParam(":dateFrom", $input["inputAddPeriodFrom"]);

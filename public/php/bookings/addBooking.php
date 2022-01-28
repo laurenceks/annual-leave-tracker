@@ -1,7 +1,7 @@
 <?php
 require "../security/userLoginSecurityCheck.php";
 require_once "../common/db.php";
-require "../common/checkEntryExists.php";
+require "../common/checkFunctions/checkDatesOverlap.php";
 
 require "../common/feedbackTemplate.php";
 
@@ -9,8 +9,7 @@ $input = json_decode(file_get_contents('php://input'), true);
 
 $output = $feedbackTemplate;
 
-//TODO check overlapping date bookings (make a common function so bookings can use the same
-if (true === false) {
+if (checkDatesOverlap("bookings", $input["inputAddBookingFrom"], $input["inputAddBookingFrom"], true, $_SESSION["user"]->userId)) {
     $output["feedback"] = "The requested dates overlap with an existing booking";
     $output["title"] = "Booking already exists";
     $output["errorMessage"] = "Booking already exists";
