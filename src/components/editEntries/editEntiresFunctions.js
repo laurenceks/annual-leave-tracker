@@ -165,102 +165,117 @@ export const makeRows = (type, entryList, editId, functions) => {
             } : {text: ""}] : makeEditRow(type, booking, functions))
         }),
         request: () => entryList.map((request) => {
-            return (request.id !== editId ?
-                [request.id, `${request.userFullName} (${request.payGradeName}, ${request.locationName})`, {
-                    text: dateToShortDate(request.dateFrom),
-                    sortValue: request.dateFrom
-                }, {
-                    text: dateToShortDate(request.dateTo),
-                    sortValue: request.dateTo
-                }, request.hours, {
-                    text: setCase(request.status, "capitalise"),
-                    className: statusCells[request.status || "default"]
-                }, {
-                    text: request.userComments,
-                    className: request.userComments ? "" : "table-light"
-                }, {
-                    text: request.managerComments,
-                    className: request.managerComments ? "" : "table-light"
-                }, !editId && request.status !== "approved" ? {
-                    className: "text-center buttonCell",
-                    form: "editRequestForm",
-                    fragment: <>
-                        <div>
-                            <button className="btn btn-warning m-1"
-                                    onClick={() => functions.setEditId(request.id)}>
-                                Edit
-                            </button>
-                        </div>
-                        <div>
-                            <button className="btn btn-success m-1"
-                                    onClick={() => functions.setModalOptions((prevState) => {
-                                        return {
-                                            ...prevState,
-                                            show: true,
-                                            headerClass: variantPairings.success.header,
-                                            yesButtonVariant: "success",
-                                            bodyText: `Are you sure you want to approve ${request.userFullName}'s request?`,
-                                            handleYes: () => functions.editEntry({
-                                                status: "approved",
-                                                managerComments: request.managerComments,
-                                                userFullName: request.userFullName,
-                                                id: request.id
-                                            })
-                                        }
-                                    })}>
-                                Approve
-                            </button>
-                        </div>
-                        {request.status !== "denied" && <div>
-                            <button className="btn btn-danger m-1"
-                                    onClick={() => functions.setModalOptions((prevState) => {
-                                        return {
-                                            ...prevState,
-                                            show: true,
-                                            deleteId: request.id,
-                                            bodyText: `Are you sure you want to deny ${request.userFullName}'s request?`,
-                                            handleYes: () => functions.editEntry({
-                                                status: "denied",
-                                                managerComments: request.managerComments,
-                                                userFullName: request.userFullName,
-                                                id: request.id
-                                            })
-                                        }
-                                    })}>
-                                Deny
-                            </button>
-                        </div>}
-                        {request.status === "denied" && <div>
-                            <button className="btn btn-warning m-1"
-                                    onClick={() => functions.setModalOptions((prevState) => {
-                                        return {
-                                            ...prevState,
-                                            show: true,
-                                            headerClass: variantPairings.warning.header,
-                                            yesButtonVariant: "warning",
-                                            bodyText: <>Are you sure you reset {request.userFullName}'s request
-                                                to <ModalHighlight variety="warning">requested</ModalHighlight>?`</>,
-                                            handleYes: () => functions.editEntry({
-                                                feedbackVerb: "reset",
-                                                status: "requested",
-                                                managerComments: request.managerComments,
-                                                userFullName: request.userFullName,
-                                                id: request.id
-                                            })
-                                        }
-                                    })}>
-                                Reset
-                            </button>
-                        </div>}
-                    </>
-                } : {
-                    type: "button",
-                    buttonClass: "btn-warning",
-                    text: "Edit",
-                    className: "text-center buttonCell",
-                    handler: (e) => functions.setEditId(request.id)
-                }] :
-                makeEditRow(type, request, functions))
+            return (request.id !== editId ? [request.id, {
+                sortValue: `${request.userFullName}(${request.payGradeName}, ${request.locationName})`,
+                fragment: <>
+                    <p className="m-0">{request.userFullName}</p>
+                    <p className="small m-0 text-muted">{`${request.payGradeName}, ${request.locationName}`}</p>
+                </>
+            }, {
+                sortValue: `${request.dateFrom}-${request.dateTo}`,
+                fragment: <>
+                    <p className="m-0">{request.dateFrom}</p>
+                    <p className="small m-0 text-muted">to</p>
+                    <p className="m-0">{request.dateTo}</p>
+                </>
+            }, {
+                sortValue: request.hours,
+                fragment: <>
+                    <p className="m-0">{request.hours}</p>
+                    {request.status === "requested" &&
+                    <p className="small m-0 text-muted">{`${request.approvedAtLocationForPayGrade} approved`}</p>}
+                </>
+            }, {
+                text: setCase(request.status, "capitalise"),
+                className: `${statusCells[request.status || "default"]} text-center`
+            }, {
+                sortValue: request.userComments + request.managerComments,
+                className: (request.userComments || request.managerComments) ? "" : "table-light",
+                fragment: <>
+                    {request.userComments && <><p className="m-0 small text-muted">{request.userFullName}</p>
+                        <p className="m-0">{request.userComments}</p></>}
+                    {request.managerComments && <><p className="m-0 small text-muted">Manager</p>
+                        <p className="m-0">{request.managerComments}</p></>}
+                </>,
+            }, !editId && request.status !== "approved" ? {
+                className: "text-center buttonCell",
+                form: "editRequestForm",
+                fragment: <>
+                    <div>
+                        <button className="btn btn-warning m-1"
+                                onClick={() => functions.setEditId(request.id)}>
+                            Edit
+                        </button>
+                    </div>
+                    <div>
+                        <button className="btn btn-success m-1"
+                                onClick={() => functions.setModalOptions((prevState) => {
+                                    return {
+                                        ...prevState,
+                                        show: true,
+                                        headerClass: variantPairings.success.header,
+                                        yesButtonVariant: "success",
+                                        bodyText: `Are you sure you want to approve ${request.userFullName}'s request?`,
+                                        handleYes: () => functions.editEntry({
+                                            status: "approved",
+                                            managerComments: request.managerComments,
+                                            userFullName: request.userFullName,
+                                            id: request.id
+                                        })
+                                    }
+                                })}>
+                            Approve
+                        </button>
+                    </div>
+                    {request.status !== "denied" && <div>
+                        <button className="btn btn-danger m-1"
+                                onClick={() => functions.setModalOptions((prevState) => {
+                                    return {
+                                        ...prevState,
+                                        show: true,
+                                        deleteId: request.id,
+                                        bodyText: `Are you sure you want to deny ${request.userFullName}'s request?`,
+                                        handleYes: () => functions.editEntry({
+                                            status: "denied",
+                                            managerComments: request.managerComments,
+                                            userFullName: request.userFullName,
+                                            id: request.id
+                                        })
+                                    }
+                                })}>
+                            Deny
+                        </button>
+                    </div>}
+                    {request.status === "denied" && <div>
+                        <button className="btn btn-warning m-1"
+                                onClick={() => functions.setModalOptions((prevState) => {
+                                    return {
+                                        ...prevState,
+                                        show: true,
+                                        headerClass: variantPairings.warning.header,
+                                        yesButtonVariant: "warning",
+                                        bodyText: <>Are you sure you reset {request.userFullName}'s request
+                                            to <ModalHighlight variety="warning">requested</ModalHighlight>?`</>,
+                                        handleYes: () => functions.editEntry({
+                                            feedbackVerb: "reset",
+                                            status: "requested",
+                                            managerComments: request.managerComments,
+                                            userFullName: request.userFullName,
+                                            id: request.id
+                                        })
+                                    }
+                                })}>
+                            Reset
+                        </button>
+                    </div>}
+                </>
+            } : {
+                type: "button",
+                buttonClass: "btn-warning",
+                text: "Edit",
+                className: "text-center buttonCell",
+                handler: (e) => functions.setEditId(request.id)
+            }] : makeEditRow(type, request, functions))
         }),
         period: () => entryList.map(period => {
             return (period.id !== editId ?
@@ -504,16 +519,30 @@ const makeEditRow = (type, entry, functions, editId, entryList = []) => {
             const inputIds = {
                 managerComments: `editRequestRow-${entry.id}-userComments`
             };
-            return [entry.id, `${entry.userFullName} (${entry.payGradeName}, ${entry.locationName})`, {
-                text: dateToShortDate(entry.dateFrom),
-                sortValue: entry.dateFrom
+            return [entry.id, {
+                sortValue: `${entry.userFullName}(${entry.payGradeName}, ${entry.locationName})`,
+                fragment: <>
+                    <p className="m-0">{entry.userFullName}</p>
+                    <p className="small m-0 text-muted">{`${entry.payGradeName}, ${entry.locationName}`}</p>
+                </>
             }, {
-                text: dateToShortDate(entry.dateTo),
-                sortValue: entry.dateTo
-            }, entry.hours, {
+                sortValue: `${entry.dateFrom}-${entry.dateTo}`,
+                fragment: <>
+                    <p className="m-0">{entry.dateFrom}</p>
+                    <p className="small m-0 text-muted">to</p>
+                    <p className="m-0">{entry.dateTo}</p>
+                </>
+            }, {
+                sortValue: entry.hours,
+                fragment: <>
+                    <p className="m-0">{entry.hours}</p>
+                    {entry.status === "requested" &&
+                    <p className="small m-0 text-muted">{`${entry.approvedAtLocationForPayGrade} approved`}</p>}
+                </>
+            }, {
                 text: setCase(entry.status, "capitalise"),
-                className: statusCells[entry.status || "default"]
-            }, entry.userComments, {
+                className: `${statusCells[entry.status || "default"]} text-center`
+            }, {
                 type: "input",
                 props: {
                     type: "text",
