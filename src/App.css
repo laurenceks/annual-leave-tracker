@@ -263,6 +263,8 @@ div.dashboardStatTileContainer {
 
 div.dashboardStatTileTitleWrap {
     width: min-content;
+    /*writing-mode: vertical-lr;*/
+    /*text-orientation: sideways;*/
     /*line-height: calc(100% + 0.5rem);*/
 }
 
