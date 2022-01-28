@@ -1,7 +1,7 @@
 <?php
 require "../security/userLoginSecurityCheck.php";
 require_once "../common/db.php";
-require "../common/checkEntryExists.php";
+require "../common/checkFunctions/checkEntryExists.php";
 require "../common/feedbackTemplate.php";
 
 $input = json_decode(file_get_contents('php://input'), true);
