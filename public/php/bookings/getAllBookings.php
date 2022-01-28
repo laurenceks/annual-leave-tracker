@@ -15,12 +15,12 @@ $getAllBookings = $db->prepare("SELECT `bookings`.*,
        `pay_grades`.`name` AS `payGradeName`,
        IFNULL((SELECT SUM(`hours`)
                FROM `bookings` `b`
-                        LEFT JOIN `users_info` ON `bookings`.`userId` = `users_info`.`userId`
+                        LEFT JOIN `users_info` ON `b`.`userId` = `users_info`.`userId`
                         LEFT JOIN `locations` ON `users_info`.`locationId` = `locations`.`id`
                         LEFT JOIN `pay_grades` ON `users_info`.`payGradeId` = `pay_grades`.`id`
-               WHERE `bookings`.`organisationId` = :organisationId1
-                 AND `bookings`.`status` = 'approved'
-                 AND `bookings`.`dateFrom` = `b`.`dateFrom`
+               WHERE `b`.`organisationId` = :organisationId1
+                 AND `b`.`status` = 'approved'
+                 AND `b`.`dateFrom` = `b`.`dateFrom`
                  AND `users_info`.`locationId` = `locations`.`id`
                  AND `users_info`.`payGradeId` = `pay_grades`.`id`), 0) AS `approvedAtLocationForPayGrade`,
        `pay_grades`.`name` AS `payGradeName`
