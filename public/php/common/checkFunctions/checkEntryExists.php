@@ -1,7 +1,7 @@
 <?php
-function checkFunctionExists($table, $selectKey, $keyValues, $includeDeleted = false, $compareValues = false, $entryId = null) {
-    require_once "../../security/userLoginSecurityCheck.php";
-    require "../../common/db.php";
+function checkEntryExists($table, $selectKey, $keyValues, $includeDeleted = false, $compareValues = false, $entryId = null) {
+    require_once dirname(__FILE__) . "/../../security/userLoginSecurityCheck.php";
+    require dirname(__FILE__) . "/../../common/db.php";
 
     $result = false;
     $whiteList = array("tables" => array("bookings", "allowances", "periods", "locations", "pay_grades", "users_info"), "keys" => array("id", "name", "listId", "itemId", "userId"));
