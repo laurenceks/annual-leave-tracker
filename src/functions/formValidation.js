@@ -33,7 +33,7 @@ const validateForm = (e, formRef, callBack, typeaheadStates = {},
 
     formInputs.forEach(x => {
         if (!x.value || x.value === "") {
-            updateOutput(x, !x.dataset.notrequired);
+            updateOutput(x, !(x.dataset?.allownull === "true"));
         } else if (inputsNotCheckedByRegex.indexOf(x.type) === -1) {
             const validationExpressions = {
                 email: /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
