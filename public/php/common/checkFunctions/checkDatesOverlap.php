@@ -20,7 +20,7 @@ function checkDatesOverlap($table, $from, $to, $includeDeleted = false, $userId 
             if ($entryId) {
                 $check->bindValue(":id", $entryId);
             }
-            if ($entryId) {
+            if ($userId) {
                 $check->bindValue(":userId", $userId);
             }
             $check->execute();
