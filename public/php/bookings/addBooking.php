@@ -9,7 +9,7 @@ $input = json_decode(file_get_contents('php://input'), true);
 
 $output = $feedbackTemplate;
 
-if (checkDatesOverlap("bookings", $input["inputAddBookingFrom"], $input["inputAddBookingFrom"], true, $_SESSION["user"]->userId)) {
+if (checkDatesOverlap("bookings", $input["inputAddBookingFrom"], $input["inputAddBookingTo"], true, $_SESSION["user"]->userId)) {
     $output["feedback"] = "The requested dates overlap with an existing booking";
     $output["title"] = "Booking already exists";
     $output["errorMessage"] = "Booking already exists";
