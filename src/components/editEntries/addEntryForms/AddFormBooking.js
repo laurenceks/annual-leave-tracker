@@ -10,7 +10,7 @@ const AddFormBooking = ({
                             addData,
                             setAddData
                         }) => {
-    //TODO disable validation for comments
+
     const fetchHook = useFetch();
     const [existingBookings, setExistingBookings] = useState([]);
     const [allowance, setAllowance] = useState(null);
@@ -97,6 +97,7 @@ const AddFormBooking = ({
                                id={"inputAddBookingUserComments"}
                                label={"Comments"}
                                value={addData.userComments}
+                               allowNull
                                onChange={(e, x) => {
                                    setAddData(prevState => {
                                        return {
