@@ -1,7 +1,7 @@
 <?php
 require "../security/userLoginSecurityCheck.php";
 require_once "../common/db.php";
-require "../common/checkFunctionExists.php";
+require "../common/checkEntryExists.php";
 
 require "../common/feedbackTemplate.php";
 
