@@ -5,6 +5,7 @@ import {useEffect, useRef, useState} from "react";
 import useInitialise from "../../../hooks/useInitialise";
 
 const FormInput = ({
+                       allowNull,
                        autocomplete,
                        defaultValue,
                        disabled,
@@ -87,6 +88,7 @@ const FormInput = ({
                    form={form}
                    disabled={disabled}
                    value={inputState || ""}
+                   data-allownull={allowNull}
             />
             <label htmlFor={id}>{label}</label>
         </div>
@@ -108,6 +110,7 @@ FormInput.propTypes = {
     passwordId: PropTypes.number,
     step: PropTypes.number,
     reset: PropTypes.number,
+    allowNull: PropTypes.bool,
     disabled: PropTypes.bool
 };
 FormInput.defaultProps = {
@@ -116,6 +119,7 @@ FormInput.defaultProps = {
     label: "Input",
     placeholder: "Input",
     type: "text",
+    allowNull: false,
     disabled: false,
     defaultValue: "",
     forceCase: null,
