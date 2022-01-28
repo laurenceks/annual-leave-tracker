@@ -174,9 +174,9 @@ export const makeRows = (type, entryList, editId, functions) => {
             }, {
                 sortValue: `${request.dateFrom}-${request.dateTo}`,
                 fragment: <>
-                    <p className="m-0">{request.dateFrom}</p>
+                    <p className="m-0">{dateToShortDate(request.dateFrom)}</p>
                     <p className="small m-0 text-muted">to</p>
-                    <p className="m-0">{request.dateTo}</p>
+                    <p className="m-0">{dateToShortDate(request.dateTo)}</p>
                 </>
             }, {
                 sortValue: request.hours,
@@ -528,9 +528,9 @@ const makeEditRow = (type, entry, functions, editId, entryList = []) => {
             }, {
                 sortValue: `${entry.dateFrom}-${entry.dateTo}`,
                 fragment: <>
-                    <p className="m-0">{entry.dateFrom}</p>
+                    <p className="m-0">{dateToShortDate(entry.dateFrom)}</p>
                     <p className="small m-0 text-muted">to</p>
-                    <p className="m-0">{entry.dateTo}</p>
+                    <p className="m-0">{dateToShortDate(entry.dateTo)}</p>
                 </>
             }, {
                 sortValue: entry.hours,
