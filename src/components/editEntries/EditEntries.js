@@ -55,8 +55,10 @@ const EditEntries = ({
                 method: "POST",
                 body: JSON.stringify({...addData, ...form.values}),
             },
-            callback: () => {
-                setAddData({...addDataTemplate});
+            callback: (response) => {
+                if (response.success) {
+                    setAddData({...addDataTemplate});
+                }
                 addForm.current.querySelector("input").focus();
                 getEntries();
             }
@@ -153,7 +155,8 @@ const EditEntries = ({
                 return <TableSection title={`${setCase(x)} ${title}`}
                                      tableProps={{
                                          headers: entryTableHeadings[type],
-                                         rows: makeEntryRows(dataList.filter((y) => !y.deleted && y[splitOn] === x)) || [],
+                                         rows: makeEntryRows(
+                                             dataList.filter((y) => !y.deleted && y[splitOn] === x)) || [],
                                          defaultSortIndex: sortIndex,
                                          updated: typeChanged,
                                          defaultHoverGroup: editId
