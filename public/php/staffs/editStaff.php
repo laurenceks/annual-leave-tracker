@@ -9,7 +9,7 @@ $input = json_decode(file_get_contents('php://input'), true);
 
 $output = $feedbackTemplate;
 
-if (!checkFunctionExists("users_info", "id", array(array("key" => "userId", "value" => $input["id"])), true)) {
+if (!checkEntryExists("users_info", "id", array(array("key" => "userId", "value" => $input["id"])), true)) {
     $output["feedback"] = $input["staffFullName"] . " could not be found - possibly due to deletion - please try again";
     $output["title"] = "Missing staff";
     $output["errorMessage"] = $input["staffFullName"] . " could not be found";

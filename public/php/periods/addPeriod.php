@@ -2,20 +2,20 @@
 require "../security/userLoginSecurityCheck.php";
 require "../security/userAdminRightsCheck.php";
 require_once "../common/db.php";
-require "../common/checkEntryExists.php";
-
+require "../common/checkFunctions/checkEntryExists.php";
+require "../common/checkFunctions/checkDatesOverlap.php";
 require "../common/feedbackTemplate.php";
 
 $input = json_decode(file_get_contents('php://input'), true);
 
 $output = $feedbackTemplate;
 
-if (checkFunctionExists("periods", "id", array(array("key" => "name", "value" => $input["inputAddPeriodName"])))) {
+if (checkEntryExists("periods", "id", array(array("key" => "name", "value" => $input["inputAddPeriodName"])))) {
     $output["feedback"] = "A period with that name already exists, please change the period name and try again";
     $output["title"] = "Period already exists";
     $output["errorMessage"] = "Period already exists";
     $output["errorType"] = "periodExists";
-} else if (checkDatesOverlap("bookings", $input["inputAddBookingFrom"], $input["inputAddBookingFrom"], true)) {
+} else if (checkDatesOverlap("periods", $input["inputAddPeriodFrom"], $input["inputAddPeriodTo"], true)) {
     $output["feedback"] = "The requested dates overlap with an existing period";
     $output["title"] = "Period already exists";
     $output["errorMessage"] = "Period already exists";

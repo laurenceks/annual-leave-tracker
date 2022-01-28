@@ -10,7 +10,7 @@ $input = json_decode(file_get_contents('php://input'), true);
 
 $output = $feedbackTemplate;
 
-if (checkFunctionExists("pay_grades", "id", array(array("key" => "name", "value" => $input["inputAddPayGradeName"])))) {
+if (checkEntryExists("pay_grades", "id", array(array("key" => "name", "value" => $input["inputAddPayGradeName"])))) {
     $output["feedback"] = "A pay grade with that name already exists, please change the pay grade name and try again";
     $output["title"] = "Pay grade already exists";
     $output["errorMessage"] = "Pay grade already exists";

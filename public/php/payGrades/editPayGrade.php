@@ -9,12 +9,12 @@ $input = json_decode(file_get_contents('php://input'), true);
 
 $output = $feedbackTemplate;
 
-if (!checkFunctionExists("pay_grades", "id", array(array("key" => "id", "value" => $input["id"])))) {
+if (!checkEntryExists("pay_grades", "id", array(array("key" => "id", "value" => $input["id"])))) {
     $output["feedback"] = $input["name"] . " could not be found - possibly due to deletion - please try again";
     $output["title"] = "Missing pay grade";
     $output["errorMessage"] = $input["name"] . " could not be found";
     $output["errorType"] = "payGradeMissing";
-} else if (checkFunctionExists("pay_grades", "name", array(array("key" => "name", "value" => $input["name"])), false, true, $input["id"])) {
+} else if (checkEntryExists("pay_grades", "name", array(array("key" => "name", "value" => $input["name"])), false, true, $input["id"])) {
     $output["feedback"] = "A pay grade with that name already exists, please change the pay grade name and try again";
     $output["title"] = "Pay grade already exists";
     $output["errorMessage"] = "Pay grade already exists";

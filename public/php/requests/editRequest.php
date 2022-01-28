@@ -8,7 +8,7 @@ $input = json_decode(file_get_contents('php://input'), true);
 
 $output = $feedbackTemplate;
 
-if (!checkFunctionExists("bookings", "id", array(array("key" => "id", "value" => $input["id"])))) {
+if (!checkEntryExists("bookings", "id", array(array("key" => "id", "value" => $input["id"])))) {
     $output["feedback"] = "The specified booking (" . $input["id"] . ") could not be found - possibly due to deletion - please try again";
     $output["title"] = "Missing booking";
     $output["errorMessage"] = "Booking ID " . $input["id"] . " could not be found";

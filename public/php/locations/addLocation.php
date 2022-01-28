@@ -10,7 +10,7 @@ $input = json_decode(file_get_contents('php://input'), true);
 
 $output = $feedbackTemplate;
 
-if (checkFunctionExists("locations", "id", array(array("key" => "name", "value" => $input["inputAddLocationName"])))) {
+if (checkEntryExists("locations", "id", array(array("key" => "name", "value" => $input["inputAddLocationName"])))) {
     $output["feedback"] = "A location with that name already exists, please change the location name and try again";
     $output["title"] = "Location already exists";
     $output["errorMessage"] = "Location already exists";

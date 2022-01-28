@@ -10,12 +10,12 @@ $input = json_decode(file_get_contents('php://input'), true);
 $output = $feedbackTemplate;
 //TODO check overlapping date bookings (make a common function so bookings can use the same
 
-if (!checkFunctionExists("periods", "id", array(array("key" => "id", "value" => $input["id"])))) {
+if (!checkEntryExists("periods", "id", array(array("key" => "id", "value" => $input["id"])))) {
     $output["feedback"] = $input["name"] . " could not be found - possibly due to deletion - please try again";
     $output["title"] = "Missing period";
     $output["errorMessage"] = $input["name"] . " could not be found";
     $output["errorType"] = "periodMissing";
-} else if (checkFunctionExists("periods", "name", array(array("key" => "name", "value" => $input["name"])), false, true, $input["id"])) {
+} else if (checkEntryExists("periods", "name", array(array("key" => "name", "value" => $input["name"])), false, true, $input["id"])) {
     $output["feedback"] = "A period with that name already exists, please change the period name and try again";
     $output["title"] = "Period already exists";
     $output["errorMessage"] = "Period already exists";

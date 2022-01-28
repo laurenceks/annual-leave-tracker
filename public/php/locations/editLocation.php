@@ -9,12 +9,12 @@ $input = json_decode(file_get_contents('php://input'), true);
 
 $output = $feedbackTemplate;
 
-if (!checkFunctionExists("locations", "id", array(array("key" => "id", "value" => $input["id"])))) {
+if (!checkEntryExists("locations", "id", array(array("key" => "id", "value" => $input["id"])))) {
     $output["feedback"] = $input["name"] . " could not be found - possibly due to deletion - please try again";
     $output["title"] = "Missing location";
     $output["errorMessage"] = $input["name"] . " could not be found";
     $output["errorType"] = "locationMissing";
-} else if (checkFunctionExists("locations", "name", array(array("key" => "name", "value" => $input["name"])), false, true, $input["id"])) {
+} else if (checkEntryExists("locations", "name", array(array("key" => "name", "value" => $input["name"])), false, true, $input["id"])) {
     $output["feedback"] = "A location with that name already exists, please change the location name and try again";
     $output["title"] = "Location already exists";
     $output["errorMessage"] = "Location already exists";
