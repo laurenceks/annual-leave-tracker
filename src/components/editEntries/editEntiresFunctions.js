@@ -53,7 +53,7 @@ const singleEditRow = (type, entry, functions) => {
         props: {
             type: "text",
             id: inputIds.name,
-            label: "Location name",
+            label: `${setCase(type.toLowerCase(), "capitalise")} name`,
             defaultValue: entry.name,
             form: "editLocationForm",
             forceCase: "title"
