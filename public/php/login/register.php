@@ -37,7 +37,7 @@ try {
             //new organisation - add to DB list and mark user as an admin
             $superAdmin = 1;
             $approved = 1;
-            $addOrganisation = $db->prepare("INSERT INTO users_organisations (organisation, createdBy, editedBy) VALUES (:organisation, :uId1, :uId2)");
+            $addOrganisation = $db->prepare("INSERT INTO `users_organisations` (`organisation`, `createdBy`, `editedBy`) VALUES (:organisation, :uId1, :uId2)");
             $addOrganisation->bindValue(":organisation", $input["inputRegisterOrganisation"]);
             $addOrganisation->bindValue(":uId1", $userId);
             $addOrganisation->bindValue(":uId2", $userId);
@@ -46,7 +46,7 @@ try {
             $output["organisationId"] = $organisationId;
 
             //add new default location for new organisation
-            $addLocation = $db->prepare("INSERT INTO locations (organisationId, createdBy, editedBy) VALUES (:organisationId, :uId3, :uId4)");
+            $addLocation = $db->prepare("INSERT INTO `locations` (`organisationId`, `createdBy`, `editedBy`) VALUES (:organisationId, :uId3, :uId4)");
             $addLocation->bindValue(":organisationId", $organisationId);
             $addLocation->bindValue(":uId3", $userId);
             $addLocation->bindValue(":uId4", $userId);
@@ -55,13 +55,25 @@ try {
 
             $output["locationId"] = $locationId;
 
+            //add new default pay grade for new organisation
+            $addPayGrade = $db->prepare("INSERT INTO `pay_grades` (`organisationId`, `createdBy`, `editedBy`) VALUES (:organisationId, :uId5, :uId6)");
+            $addPayGrade->bindValue(":organisationId", $organisationId);
+            $addPayGrade->bindValue(":uId5", $userId);
+            $addPayGrade->bindValue(":uId6", $userId);
+            $addPayGrade->execute();
+            $payGradeId = $db->lastInsertId();
+
+            $output["payGradeId"] = $payGradeId;
+
 
         } else {
-            //organisation exists - just use passed organisationId
+            //organisation exists - just use passed organisationId etc
             $organisationId = $input["organisation"]["id"];
+            $locationId = $input["location"]["id"];
+            $payGradeId = $input["payGrade"]["id"];
         }
 
-        $addUserInfo = $db->prepare("INSERT INTO users_info (userId, firstName, lastName, admin, superAdmin, approved, organisationId, `editedBy`) VALUES (:userId1, :firstname, :lastname, :admin, :superAdmin, :approved, :organisationId, :userId2)");
+        $addUserInfo = $db->prepare("INSERT INTO `users_info` (`userId`, `firstName`, `lastName`, `admin`, `superAdmin`, `approved`, `organisationId`, `locationId`, `payGradeId`, `editedBy`) VALUES (:userId1, :firstname, :lastname, :admin, :superAdmin, :approved, :organisationId, :locationId, :payGradeId, :userId2)");
         $addUserInfo->bindValue(':userId1', $userId);
         $addUserInfo->bindValue(':userId2', $userId);
         $addUserInfo->bindParam(':firstname', $input['inputRegisterFirstName']);
@@ -70,6 +82,8 @@ try {
         $addUserInfo->bindParam(':superAdmin', $superAdmin);
         $addUserInfo->bindParam(':approved', $approved);
         $addUserInfo->bindParam(':organisationId', $organisationId);
+        $addUserInfo->bindParam(':locationId', $locationId);
+        $addUserInfo->bindParam(':payGradeId', $payGradeId);
 
         $addUserInfo->execute();
     } catch (PDOException $e) {

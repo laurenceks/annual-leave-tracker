@@ -4,26 +4,28 @@ import {Transition} from 'react-transition-group';
 
 const duration = 400;
 
-const ArrowIconTransition = ({in: inProp, children, onEnter, onExited, colourVariant}) => {
-    const width = 16;
+const CollapseTransition = ({in: inProp, children, onEnter, onExited, colourVariant}) => {
+    const height = 60;
     const defaultStyle = {
-        transition: `opacity ${duration}ms cubic-bezier(0.25, 1, 0.5, 1), max-width ${duration}ms cubic-bezier(0.25, 1, 0.5, 1)`,
+        transition: `opacity ${duration}ms cubic-bezier(0.25, 1, 0.5, 1), max-height ${duration}ms cubic-bezier(0.25, 1, 0.5, 1)`,
         opacity: 0,
-        display: "inline-block"
+        display: "block",
+        maxHeight: 0,
+        overflow: "hidden"
     }
 
     const transitionStyles = {
-        entering: {opacity: 1, maxWidth: width + "px"},
-        entered: {opacity: 1, maxWidth: width + "px"},
+        entering: {opacity: 1, maxHeight: height + "px"},
+        entered: {opacity: 1, maxHeight: height + "px"},
         exiting: {
             opacity: 0,
-            maxWidth: 0,
-            transition: `opacity ${duration}ms cubic-bezier(0.76, 0, 0.24, 1), max-width ${duration}ms cubic-bezier(0.76, 0, 0.24, 1)`,
+            maxHeight: 0,
+            transition: `opacity ${duration}ms cubic-bezier(0.76, 0, 0.24, 1), max-height ${duration}ms cubic-bezier(0.76, 0, 0.24, 1)`,
         },
         exited: {
             opacity: 0,
-            maxWidth: 0,
-            transition: `opacity ${duration}ms cubic-bezier(0.76, 0, 0.24, 1), max-width ${duration}ms cubic-bezier(0.76, 0, 0.24, 1)`,
+            maxHeight: 0,
+            transition: `opacity ${duration}ms cubic-bezier(0.76, 0, 0.24, 1), max-height ${duration}ms cubic-bezier(0.76, 0, 0.24, 1)`,
         },
     };
 
@@ -53,18 +55,18 @@ const ArrowIconTransition = ({in: inProp, children, onEnter, onExited, colourVar
     )
 }
 
-ArrowIconTransition.propTypes = {
+CollapseTransition.propTypes = {
     colourVariant: PropTypes.string,
     in: PropTypes.bool,
     onEnter: PropTypes.func,
     onExited: PropTypes.func,
 };
 
-ArrowIconTransition.defaultProps = {
+CollapseTransition.defaultProps = {
     colourVariant: null,
     in: false,
     onEnter: undefined,
     onExited: undefined,
 }
 
-export default ArrowIconTransition;
+export default CollapseTransition;
