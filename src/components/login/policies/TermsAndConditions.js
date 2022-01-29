@@ -9,22 +9,32 @@ const TermsAndConditions = ({
                                 author
                             }) => {
     const privacyLink = `${url}/#/privacy`;
-    return (<div><h1>Terms and conditions of use</h1><h2>Introduction</h2><p>These terms and conditions
-        apply between you, the User of this Website (including any sub-domains, unless expressly excluded by their own
-        terms and conditions), and {author}, the owner and operator of
-        this Website. Please read these terms and conditions carefully, as they affect your legal rights. Your agreement
-        to comply with and be bound by these terms and conditions is deemed to occur upon your first use of the Website.
-        If you do not agree to be bound by these terms and conditions, you should stop using the Website
-        immediately. </p><p>In these terms and conditions, <strong>User</strong> or <strong>Users</strong> means any
-        third party
-        that
-        accesses the Website and is not either (i) employed
-        by {author} and acting in the course of their employment or
-        (ii) engaged as a consultant or otherwise providing services
-        to {author} and accessing the Website in connection with the
-        provision of such services.</p><p>You must be at least 18 years of age to use this Website. By
-        using the Website and agreeing to these terms and conditions, you represent and warrant that you are at least 18
-        years of age.</p><h2>Intellectual property and acceptable use</h2>
+    return (<div>
+        <h1>Terms and conditions of use</h1>
+        <h2>Introduction</h2>
+        <p>These terms and conditions
+            apply between you, the User of this Website (including any sub-domains, unless expressly excluded by their
+            own
+            terms and conditions), and {author}, the owner and operator of
+            this Website. Please read these terms and conditions carefully, as they affect your legal rights. Your
+            agreement
+            to comply with and be bound by these terms and conditions is deemed to occur upon your first use of the
+            Website.
+            If you do not agree to be bound by these terms and conditions, you should stop using the Website
+            immediately. </p>
+        <p>In these terms and conditions, <strong>User</strong> or <strong>Users</strong> means any
+            third party
+            that
+            accesses the Website and is not either (i) employed
+            by {author} and acting in the course of their employment or
+            (ii) engaged as a consultant or otherwise providing services
+            to {author} and accessing the Website in connection with the
+            provision of such services.</p>
+        <p>You must be at least 18 years of age to use this Website. By
+            using the Website and agreeing to these terms and conditions, you represent and warrant that you are at
+            least 18
+            years of age.</p>
+        <h2>Intellectual property and acceptable use</h2>
         <ol>
             <li>All Content included on the Website, unless uploaded by Users, is the property
                 of {author}, our affiliates or other relevant third
@@ -40,7 +50,8 @@ const TermsAndConditions = ({
             <li>You may, for your own personal, non-commercial use only, do the following: <ol>
                 <li>retrieve, display and view the Content on a computer screen</li>
                 <li>print one copy of the Content</li>
-            </ol></li>
+            </ol>
+            </li>
             <li>You must not otherwise reproduce, modify, copy, distribute or use for commercial purposes any Content
                 without the written permission of {author}.
             </li>
@@ -57,9 +68,11 @@ const TermsAndConditions = ({
                 <li>making, transmitting or storing electronic copies of Content protected by copyright without the
                     permission of the owner.
                 </li>
-            </ol></li>
+            </ol>
+            </li>
         </ol>
-        <div><h2>Registration</h2>
+        <div>
+            <h2>Registration</h2>
             <ol>
                 <li>You must ensure that the details provided by you on registration or at any time are correct and
                     complete.
@@ -82,7 +95,8 @@ const TermsAndConditions = ({
                     </ol>
                 </li>
             </ol>
-            <div><h2>Password and security</h2>
+            <div>
+                <h2>Password and security</h2>
                 <ol>
                     <li>When you register on this Website, you will be asked to create a password, which you should keep
                         confidential and not disclose or share with anyone.
@@ -93,7 +107,8 @@ const TermsAndConditions = ({
                 </ol>
             </div>
         </div>
-        <div><h2>Privacy Policy</h2>
+        <div>
+            <h2>Privacy Policy</h2>
             <ol>
                 <li>Use of the Website is also governed by our Privacy Policy, which is incorporated into these terms
                     and conditions by this reference. To view the Privacy Policy, please click on the
@@ -144,7 +159,8 @@ const TermsAndConditions = ({
                     </li>
                     <li>loss or corruption of any data, database or software;</li>
                     <li>any special, indirect or consequential loss or damage.</li>
-                </ol></li>
+                </ol>
+            </li>
         </ol>
         <h2>General</h2>
         <ol>
@@ -181,7 +197,8 @@ const TermsAndConditions = ({
         <h2>{author} details </h2>
         <ol>
             <li>
-                <p>You can contact {author} by email on <a href={`mailTo:${email}`}>{email}</a>. </p></li>
+                <p>You can contact {author} by email on <a href={`mailTo:${email}`}>{email}</a>. </p>
+            </li>
         </ol>
         <h2>Attribution</h2>
         <ol>
