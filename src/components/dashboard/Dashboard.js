@@ -201,7 +201,7 @@ const Dashboard = () => {
                 <div className="d-flex position-relative align-items-center justify-content-center rounded bg-light shadow px-3 py-2"
                      style={{height: "15rem"}}>
                     <div className="d-flex position-absolute text-center">
-                        {(dashboardData.allowance.total && dashboardData.allowance.booked) ? <div>
+                        {(dashboardData.allowance.total && (dashboardData.allowance.booked || dashboardData.allowance.booked===0)) ? <div>
                             <p className="m-0 display-6">{dashboardData.allowancePercentages.remaining.toFixed(1)}%</p>
                             <p className="position-absolute w-100">Remaining</p>
                         </div> : ""}
