@@ -6,6 +6,7 @@ import Verify from "./login/Verify";
 import ReVerify from "./login/ReVerify";
 import TextPage from "./login/policies/TextPage";
 import PrivacyPolicy from "./login/policies/PrivacyPolicy";
+import TermsAndConditions from "./login/policies/TermsAndConditions";
 
 const NotAuthorised = () => {
 
@@ -39,6 +40,15 @@ const NotAuthorised = () => {
                         <Route path="/privacy"
                                element={<TextPage>
                                    <PrivacyPolicy
+                                       appName={"Annual Leave Tracker"}
+                                       url={window.location.pathName}
+                                       websiteName={"Annual Leave Tracker"}
+                                       email={"help@annual-leave-tracker.com"}
+                                   />
+                               </TextPage>}/>
+                        <Route path="/termsAndConditions"
+                               element={<TextPage>
+                                   <TermsAndConditions
                                        appName={"Annual Leave Tracker"}
                                        url={window.location.pathName}
                                        websiteName={"Annual Leave Tracker"}
