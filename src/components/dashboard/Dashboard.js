@@ -11,6 +11,7 @@ import setCase from "../../functions/setCase";
 import deepmerge from "deepmerge";
 import FormPeriod from "../common/forms/FormPeriod";
 import {dashboardRanges, getRangeClass} from "./dashboardRanges";
+import {dateToShortDate} from "../../functions/formatMySqlTimestamp";
 
 class dashboardDataTemplate {
     constructor() {
@@ -67,7 +68,7 @@ const Dashboard = () => {
                             ...res.allowance,
                             remaining: res.allowance.total ? res.allowance.total - res.allowance.booked : "N/A",
                         },
-                        bookings: res.bookings.map((x) => [x.dateFrom, x.dateTo, x.hours, {
+                        bookings: res.bookings.map((x) => [dateToShortDate(x.dateFrom), dateToShortDate(x.dateTo), x.hours, {
                             text: setCase(x.status, "capitalise"),
                             className: statusCells[x.status]
                         }, x.userComments || {
