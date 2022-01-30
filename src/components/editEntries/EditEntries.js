@@ -39,6 +39,7 @@ const EditEntries = ({
             options: {includeDeleted: true},
             dontHandleFeedback: !dataLoadedOnce.current,
             callback: (result) => {
+                console.log(result)
                 dataLoadedOnce.current = true;
                 splitArray.current = splitOn ? splitKeys || (result[resultsKey || `${type}s`] || []).reduce((a, b) => {
                     b[splitOn] && a.indexOf(b[splitOn]) === -1 && (a = [...a, b[splitOn]]);

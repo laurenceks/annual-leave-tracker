@@ -192,9 +192,9 @@ export const makeRows = (type, entryList, editId, functions) => {
                 sortValue: request.userComments + request.managerComments,
                 className: (request.userComments || request.managerComments) ? "" : "table-light",
                 fragment: <>
-                    {request.userComments && <><p className="m-0 small text-muted">{request.userFullName}</p>
+                    {request.userComments && <><p className="m-0 small text-muted">{request.userFullName || "User"}</p>
                         <p className="m-0">{request.userComments}</p></>}
-                    {request.managerComments && <><p className="m-0 small text-muted">Manager</p>
+                    {request.managerComments && <><p className="m-0 small text-muted">{request.managerFullName || "Manager"}</p>
                         <p className="m-0">{request.managerComments}</p></>}
                 </>,
             }, !editId && request.status !== "approved" ? {
