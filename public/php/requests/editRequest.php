@@ -15,12 +15,24 @@ if (!checkEntryExists("bookings", "id", array(array("key" => "id", "value" => $i
     $output["errorType"] = "bookingMissing";
 } else {
     try {
-        $editBooking = $db->prepare("UPDATE `bookings` SET `status` = :status, `managerComments` = :managerComments, `editedBy` = :uid WHERE `id` = :id AND `organisationId` = :organisationId");
+        $editBooking = $db->prepare("UPDATE `bookings`
+SET `status` = :status,
+    `managerCommentsId` = IF((`bookings`.`managerComments` != :managerComments1) OR
+                             (`bookings`.`managerComments` IS NULL AND :managerComments2 IS NOT NULL) OR
+                             (`bookings`.`managerComments` IS NOT NULL AND :managerComments3 IS NULL), :uid1,
+                             `bookings`.`managerCommentsId`),
+    `managerComments` = :managerComments4,
+    `editedBy` = :uid2
+WHERE `id` = :id
+  AND `organisationId` = :organisationId");
         $editBooking->bindValue(":organisationId", $_SESSION["user"]->organisationId);
         $editBooking->bindParam(":id", $input["id"]);
         $editBooking->bindParam(":status", $input["status"]);
-        $editBooking->bindParam(":managerComments", $input["managerComments"]);
-        $editBooking->bindValue(":uid", $_SESSION["user"]->userId);
+        $editBooking->bindValue(":managerComments1", $input["managerComments"]);
+        $editBooking->bindValue(":managerComments2", $input["managerComments"]);
+        $editBooking->bindValue(":managerComments3", $input["managerComments"]);
+        $editBooking->bindValue(":uid1", $_SESSION["user"]->userId);
+        $editBooking->bindValue(":uid2", $_SESSION["user"]->userId);
         $editBooking->execute();
 
         $feedbackStringEnd = isset($input["feedbackVerb"]) ? $input["feedbackVerb"] : $input["status"];
