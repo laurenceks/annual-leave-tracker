@@ -1,6 +1,6 @@
 const entryTableHeadings = {
     allowance: ["ID", "Name", "Location", "Pay grade", "Period", {text: "Hours", colspan: 3}],
-    booking: ["ID", "From", "To", "Hours", "Status", "User comments", {text: "Manager comments", colspan: 2}],
+    booking: ["ID", "From", "To", "Hours", "Status", "User comments", {text: "Manager comments", colspan: 3}],
     request: ["ID", "User", "Date", "Hours", "Status", {text: "Comments", colspan: 2}],
     location: ["ID", {text: "Name", colspan: 3}],
     payGrade: ["ID", {text: "Name", colspan: 3}],

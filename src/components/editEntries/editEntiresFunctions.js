@@ -112,7 +112,7 @@ const singleUndeleteRow = (deletedEntryList, functions) => {
     })
 }
 
-export const makeRows = (type, entryList, editId, functions) => {
+export const makeRows = (type, entryList, editId, currentUserId, functions) => {
     const rowFunctions = {
         booking: () => entryList.map((booking) => {
             return (booking.id !== editId ? [booking.id, {
@@ -125,10 +125,10 @@ export const makeRows = (type, entryList, editId, functions) => {
                 text: setCase(booking.status, "capitalise"),
                 className: statusCells[booking.status || "default"]
             }, {
-                text: booking.userComments,
+                text: booking.userComments ?? "",
                 className: booking.userComments ? "" : "table-light"
             }, {
-                text: booking.managerComments,
+                text: booking.managerComments ?? "",
                 className: booking.managerComments ? "" : "table-light"
             }, !editId && booking.status !== "expired" ? {
                 type: "button",
@@ -197,7 +197,8 @@ export const makeRows = (type, entryList, editId, functions) => {
                     {request.managerComments && <><p className="m-0 small text-muted">{request.managerFullName || "Manager"}</p>
                         <p className="m-0">{request.managerComments}</p></>}
                 </>,
-            }, !editId && request.status !== "approved" ? {
+                //TODO don't show these buttons if same userId as target
+            }, !editId && request.status !== "approved" && request.userId !== currentUserId ? {
                 className: "text-center buttonCell",
                 form: "editRequestForm",
                 fragment: <>
@@ -269,13 +270,13 @@ export const makeRows = (type, entryList, editId, functions) => {
                         </button>
                     </div>}
                 </>
-            } : {
+            } : !editId && request.userId !== currentUserId ? {
                 type: "button",
                 buttonClass: "btn-warning",
                 text: "Edit",
                 className: "text-center buttonCell",
                 handler: (e) => functions.setEditId(request.id)
-            }] : makeEditRow(type, request, functions))
+            } : ""] : makeEditRow(type, request, functions))
         }),
         period: () => entryList.map(period => {
             return (period.id !== editId ?

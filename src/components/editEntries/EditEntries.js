@@ -23,6 +23,7 @@ const EditEntries = ({
     const addDataForm = addDataForms[type];
     const fetchHook = useFetch();
     const setModalOptions = useContext(GlobalAppContext)[0].setStateFunctions.confirmModal;
+    const userId = useContext(GlobalAppContext)[0].user.userId;
     const [addData, setAddData] = useState({...addDataTemplate});
     const [editData, setEditData] = useState(null);
     const [editId, setEditId] = useState(null);
@@ -39,7 +40,6 @@ const EditEntries = ({
             options: {includeDeleted: true},
             dontHandleFeedback: !dataLoadedOnce.current,
             callback: (result) => {
-                console.log(result)
                 dataLoadedOnce.current = true;
                 splitArray.current = splitOn ? splitKeys || (result[resultsKey || `${type}s`] || []).reduce((a, b) => {
                     b[splitOn] && a.indexOf(b[splitOn]) === -1 && (a = [...a, b[splitOn]]);
@@ -112,7 +112,7 @@ const EditEntries = ({
     }
 
     const makeEntryRows = (filteredData = dataList) => {
-        return makeRows(type, filteredData, editId, {
+        return makeRows(type, filteredData, editId, userId, {
             setModalOptions,
             setEditId,
             getEntries,
