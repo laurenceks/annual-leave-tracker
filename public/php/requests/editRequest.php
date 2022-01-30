@@ -2,6 +2,7 @@
 require "../security/userLoginSecurityCheck.php";
 require_once "../common/db.php";
 require "../common/checkFunctions/checkEntryExists.php";
+require "../common/checkFunctions/checkUserIsDifferent.php";
 require "../common/feedbackTemplate.php";
 
 $input = json_decode(file_get_contents('php://input'), true);
@@ -13,6 +14,11 @@ if (!checkEntryExists("bookings", "id", array(array("key" => "id", "value" => $i
     $output["title"] = "Missing booking";
     $output["errorMessage"] = "Booking ID " . $input["id"] . " could not be found";
     $output["errorType"] = "bookingMissing";
+}else if (checkUserIsDifferent($input["id"])) {
+    $output["feedback"] = "You cannot manage your own requests";
+    $output["title"] = "Forbidden";
+    $output["errorMessage"] = "You cannot approve your own requests";
+    $output["errorType"] = "approveOwnRequest";
 } else {
     try {
         $editBooking = $db->prepare("UPDATE `bookings`
@@ -31,6 +37,7 @@ WHERE `id` = :id
         $editBooking->bindValue(":managerComments1", $input["managerComments"]);
         $editBooking->bindValue(":managerComments2", $input["managerComments"]);
         $editBooking->bindValue(":managerComments3", $input["managerComments"]);
+        $editBooking->bindValue(":managerComments4", $input["managerComments"]);
         $editBooking->bindValue(":uid1", $_SESSION["user"]->userId);
         $editBooking->bindValue(":uid2", $_SESSION["user"]->userId);
         $editBooking->execute();
