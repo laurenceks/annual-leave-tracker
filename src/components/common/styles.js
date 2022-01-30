@@ -72,6 +72,7 @@ const statusCells = {
     requested: "table-warning",
     denied: "table-danger",
     expired: "table-light",
+    taken: "table-dark",
     default: "table-light",
 }
 

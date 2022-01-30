@@ -130,7 +130,7 @@ export const makeRows = (type, entryList, editId, currentUserId, functions) => {
             }, {
                 text: booking.managerComments ?? "",
                 className: booking.managerComments ? "" : "table-light"
-            }, !editId && booking.status !== "expired" ? {
+            }, !editId && booking.status !== "expired" && booking.status !== "taken" ? {
                 type: "button",
                 id: 1,
                 text: "Edit",
@@ -144,7 +144,7 @@ export const makeRows = (type, entryList, editId, currentUserId, functions) => {
                         to: booking.dateTo
                     })
                 }
-            } : {text: ""}, !editId ? {
+            } : {text: ""}, !editId && booking.status !== "taken" ? {
                 type: "button",
                 id: 1,
                 text: "Delete",
@@ -194,17 +194,16 @@ export const makeRows = (type, entryList, editId, currentUserId, functions) => {
                 fragment: <>
                     {request.userComments && <><p className="m-0 small text-muted">{request.userFullName || "User"}</p>
                         <p className="m-0">{request.userComments}</p></>}
-                    {request.managerComments && <><p className="m-0 small text-muted">{request.managerFullName || "Manager"}</p>
+                    {request.managerComments && <>
+                        <p className="m-0 small text-muted">{request.managerFullName || "Manager"}</p>
                         <p className="m-0">{request.managerComments}</p></>}
-                </>,
-                //TODO don't show these buttons if same userId as target
+                </>, //TODO don't show these buttons if same userId as target
             }, !editId && request.status !== "approved" && request.userId !== currentUserId ? {
                 className: "text-center buttonCell",
                 form: "editRequestForm",
                 fragment: <>
                     <div>
-                        <button className="btn btn-warning m-1"
-                                onClick={() => functions.setEditId(request.id)}>
+                        <button className="btn btn-warning m-1" onClick={() => functions.setEditId(request.id)}>
                             Edit
                         </button>
                     </div>
@@ -229,21 +228,20 @@ export const makeRows = (type, entryList, editId, currentUserId, functions) => {
                         </button>
                     </div>
                     {request.status !== "denied" && <div>
-                        <button className="btn btn-danger m-1"
-                                onClick={() => functions.setModalOptions((prevState) => {
-                                    return {
-                                        ...prevState,
-                                        show: true,
-                                        deleteId: request.id,
-                                        bodyText: `Are you sure you want to deny ${request.userFullName}'s request?`,
-                                        handleYes: () => functions.editEntry({
-                                            status: "denied",
-                                            managerComments: request.managerComments,
-                                            userFullName: request.userFullName,
-                                            id: request.id
-                                        })
-                                    }
-                                })}>
+                        <button className="btn btn-danger m-1" onClick={() => functions.setModalOptions((prevState) => {
+                            return {
+                                ...prevState,
+                                show: true,
+                                deleteId: request.id,
+                                bodyText: `Are you sure you want to deny ${request.userFullName}'s request?`,
+                                handleYes: () => functions.editEntry({
+                                    status: "denied",
+                                    managerComments: request.managerComments,
+                                    userFullName: request.userFullName,
+                                    id: request.id
+                                })
+                            }
+                        })}>
                             Deny
                         </button>
                     </div>}
@@ -557,14 +555,13 @@ const makeEditRow = (type, entry, functions, editId, entryList = []) => {
                 className: "text-center buttonCell",
                 form: "editRequestForm",
                 fragment: <>
-                    <button className="btn btn-success m-1"
-                            onClick={(e) => functions.editEntry({
-                                feedbackVerb: "saved",
-                                userFullName: entry.userFullName,
-                                status: entry.status,
-                                managerComments: document.getElementById(inputIds.managerComments).value,
-                                id: entry.id
-                            })}>
+                    <button className="btn btn-success m-1" onClick={(e) => functions.editEntry({
+                        feedbackVerb: "saved",
+                        userFullName: entry.userFullName,
+                        status: entry.status,
+                        managerComments: document.getElementById(inputIds.managerComments).value,
+                        id: entry.id
+                    })}>
                         Save
                     </button>
                     <button className="btn btn-danger m-1" onClick={functions.getEntries}>Cancel</button>
@@ -644,22 +641,20 @@ const makeEditRow = (type, entry, functions, editId, entryList = []) => {
                 fragment: <FormPayGrade defaultSelected={entry.payGradeId ? [{
                     name: entry.payGradeName,
                     id: entry.payGradeId
-                }] : []}
-                                        onChange={(e) => functions.setEditData(prevState => ({
-                                            ...prevState,
-                                            payGradeId: e[0] ? e[0].id : null
-                                        }))}/>,
+                }] : []} onChange={(e) => functions.setEditData(prevState => ({
+                    ...prevState,
+                    payGradeId: e[0] ? e[0].id : null
+                }))}/>,
                 invalidFeedback: `You must specify ${entry.staffFirstName}'s pay grade`,
                 sortValue: entry.payGradeName
             }, {
                 fragment: <FormLocation defaultSelected={entry.locationId ? [{
                     name: entry.locationName,
                     id: entry.locationId
-                }] : []}
-                                        onChange={(e) => functions.setEditData(prevState => ({
-                                            ...prevState,
-                                            locationId: e[0] ? e[0].id : null
-                                        }))}/>,
+                }] : []} onChange={(e) => functions.setEditData(prevState => ({
+                    ...prevState,
+                    locationId: e[0] ? e[0].id : null
+                }))}/>,
                 invalidFeedback: `You must specify where ${entry.staffFirstName} works`,
                 sortValue: entry.locationName
             }, {
