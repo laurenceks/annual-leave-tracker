@@ -51,6 +51,7 @@ FROM (SELECT SUM(`hours`) AS `booked`
                      WHERE `dateFrom` >= :dateFrom
                        AND `dateFrom` <= CURRENT_DATE
                        AND `dateTo` <= :dateTo
+                       AND `status` = 'approved'
                        AND `userId` = :userId
                        AND `organisationId` = :organisationId
                        AND `deleted` = 0) `t`
