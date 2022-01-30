@@ -130,7 +130,7 @@ export const makeRows = (type, entryList, editId, functions) => {
             }, {
                 text: booking.managerComments,
                 className: booking.managerComments ? "" : "table-light"
-            }, !editId ? {
+            }, !editId && booking.status !== "expired" ? {
                 type: "button",
                 id: 1,
                 text: "Edit",

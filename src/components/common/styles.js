@@ -71,7 +71,7 @@ const statusCells = {
     approved: "table-success",
     requested: "table-warning",
     denied: "table-danger",
-    withdrawn: "table-light",
+    expired: "table-light",
     default: "table-light",
 }
 
