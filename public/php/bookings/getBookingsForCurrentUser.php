@@ -6,8 +6,10 @@ require "../common/feedbackTemplate.php";
 $output = array_merge($feedbackTemplate, array("bookings" => array()));
 $input = json_decode(file_get_contents('php://input'), true);
 $getAllBookings = $db->prepare("SELECT *,
-       IF((`bookings`.`status` = 'requested' AND `bookings`.`dateFrom` <= CURRENT_DATE), 'expired',
-          `bookings`.`status`) AS `status`
+       (CASE `bookings`.`status`
+       WHEN 'requested' THEN IF(`bookings`.`dateFrom` <= CURRENT_DATE, 'expired', `bookings`.`status`)
+       WHEN 'approved' THEN IF(`bookings`.`dateFrom` <= CURRENT_DATE, 'taken', `bookings`.`status`)
+            ELSE `bookings`.`status` END) AS `status`
 FROM `bookings`
 WHERE `bookings`.`userId` = :userId
   AND `bookings`.`organisationId` = :organisationId;");
