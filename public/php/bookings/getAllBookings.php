@@ -7,9 +7,14 @@ require "../common/feedbackTemplate.php";
 $output = array_merge($feedbackTemplate, array("bookings" => array()));
 $input = json_decode(file_get_contents('php://input'), true);
 $getAllBookings = $db->prepare("SELECT `bookings`.*,
+       IF((`bookings`.`status` = 'requested' AND `bookings`.`dateFrom` <= CURRENT_DATE), 'expired', `bookings`.`status`) AS `status`,
        `users_info`.`firstName`,
        `users_info`.`lastName`,
        CONCAT(`users_info`.`firstName`, ' ', `users_info`.`lastName`) AS `userFullName`,
+       `bookings`.`managerCommentsId`,
+       (SELECT CONCAT(`users_info`.`firstName`, ' ', `users_info`.`lastName`)
+        FROM `users_info`
+        WHERE `users_info`.`userId` = `bookings`.`managerCommentsId`) AS `managerFullName`,
        `users_organisations`.`organisation`,
        `locations`.`name` AS `locationName`,
        `pay_grades`.`name` AS `payGradeName`,

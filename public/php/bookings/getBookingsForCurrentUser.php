@@ -5,15 +5,12 @@ require "../common/feedbackTemplate.php";
 
 $output = array_merge($feedbackTemplate, array("bookings" => array()));
 $input = json_decode(file_get_contents('php://input'), true);
-$getAllBookings = $db->prepare("
-SELECT 
-  *
-FROM 
-  bookings 
-WHERE 
-  bookings.userId = :userId
-  AND
-  bookings.organisationId = :organisationId;");
+$getAllBookings = $db->prepare("SELECT *,
+       IF((`bookings`.`status` = 'requested' AND `bookings`.`dateFrom` <= CURRENT_DATE), 'expired',
+          `bookings`.`status`) AS `status`
+FROM `bookings`
+WHERE `bookings`.`userId` = :userId
+  AND `bookings`.`organisationId` = :organisationId;");
 
 $getAllBookings->bindValue(':userId', $_SESSION["user"]->userId);
 $getAllBookings->bindValue(':organisationId', $_SESSION["user"]->organisationId);
