@@ -5,7 +5,6 @@ require "../common/feedbackTemplate.php";
 require "getAllAllowancesQuery.php";
 
 $output = array_merge($feedbackTemplate, array("allowances" => array()));
-$input = json_decode(file_get_contents('php://input'), true);
 
 $getAllAllowances = $db->prepare(getAllAllowancesQuery());
 $getAllAllowances->bindValue(':organisationId', $_SESSION["user"]->organisationId);
