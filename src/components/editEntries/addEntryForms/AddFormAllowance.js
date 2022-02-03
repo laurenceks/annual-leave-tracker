@@ -8,7 +8,7 @@ const AddFormAllowance = ({
                          }) => {
 
     return (<div className="row my-3">
-        <h3>Add new location</h3>
+        <h3>Add new allowance</h3>
         <div className="col-12 col-md-4 mb-3 mb-md-0">
             <div className="formInputGroup">
                 <FormUser id={"inputAddAllowanceUser"}
