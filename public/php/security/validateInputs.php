@@ -1,6 +1,8 @@
 <?php
 function validateInputs($trimInput = true) {
 
+    //TODO find a way to validate array contents
+
     $rawInputs = json_decode(file_get_contents('php://input'), true);
 
     if ($rawInputs && count($rawInputs) > 0) {
@@ -47,15 +49,22 @@ function validateInputs($trimInput = true) {
             "userComments" => "string",
             "dateFrom" => "date",
             "dateTo" => "date",
-            "period" => "string",
+            "period" => "array",
             "inputAddLocationName" => "string",
-            "inputLoginRemember" => "string",
-            "inputRegisterFirstName" => "string",
-            "organisation" => "string",
-            "inputRegisterOrganisation" => "string",
-            "location" => "string",
-            "payGrade" => "string",
+            "inputLoginRemember" => FILTER_VALIDATE_BOOL,
+            "inputLoginEmail" => FILTER_VALIDATE_EMAIL,
+            "inputLoginPassword" => "password",
             "inputRegisterEmail" => FILTER_VALIDATE_EMAIL,
+            "inputRegisterFirstName" => "string",
+            "inputRegisterLastName" => "string",
+            "inputRegisterOrganisation" => "string",
+            "inputRegisterLocation" => "string",
+            "inputRegisterPayGrade" => "string",
+            "inputRegisterPassword" => "password",
+            "inputRegisterConfirmPassword" => "password",
+            "organisation" => "array",
+            "location" => "array",
+            "payGrade" => "array",
             "inputForgotEmail" => FILTER_VALIDATE_EMAIL,
             "inputReVerifyEmail" => FILTER_VALIDATE_EMAIL,
             "inputAddPayGradeName" => "string",
@@ -72,11 +81,11 @@ function validateInputs($trimInput = true) {
 
         foreach ($rawInputs as $key => $value) {
             if (isset($value) && isset($inputTypes[$key])) {
-                $value = $trimInput ? trim($value) : $value;
+                $value = ($trimInput && !is_array($value)) ? trim($value) : $value;
                 if ($value === "" && $inputTypes[$key] === "string") {
                     $valueIsValid = true;
                 } else if (gettype($inputTypes[$key]) === "string") {
-                    $valueIsValid = filter_var($value, FILTER_VALIDATE_REGEXP, $expressions[$inputTypes[$key]]);
+                    $valueIsValid = $inputTypes[$key] === "array" ? is_array($value) : filter_var($value, FILTER_VALIDATE_REGEXP, $expressions[$inputTypes[$key]]);
                 } else {
                     $valueIsValid = filter_var($value, $inputTypes[$key]);
                 }
