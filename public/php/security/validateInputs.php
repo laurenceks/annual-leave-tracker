@@ -4,11 +4,11 @@ function validateInputs($trimInput = true) {
     $rawInputs = json_decode(file_get_contents('php://input'), true);
 
     if ($rawInputs && count($rawInputs) > 0) {
-        function exitDueToInvalidInput($key) {
+        function exitDueToInvalidInput($key, $val) {
             die(json_encode([
                 "success" => false,
                 "title" => "Invalid inputs",
-                "feedback" => "Some of the inputs passed could not be validated",
+                "feedback" => "Some of the inputs passed could not be validated " . $key . " " . $val,
                 "errorMessage" => "Unable to validate input '" . ($key || "") . "'",
                 "errorType" => "invalidInput"
             ]));
@@ -16,7 +16,7 @@ function validateInputs($trimInput = true) {
 
         $validatedInputs = ["rawInputs" => $rawInputs];
         $expressions = [
-            "string" => ["options" => ["regexp" => "/[\s\S]*/"]],
+            "string" => ["options" => ["regexp" => "/^$|[\s\S]*/"]],
             "date" => ["options" => ["regexp" => "/^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$/"]],
             "password" => ["options" => ["regexp" => "/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/"]]
         ];
@@ -72,8 +72,10 @@ function validateInputs($trimInput = true) {
 
         foreach ($rawInputs as $key => $value) {
             if (isset($value) && isset($inputTypes[$key])) {
-                $value = $trimInput && trim($value);
-                if (gettype($inputTypes[$key]) === "string") {
+                $value = $trimInput ? trim($value) : $value;
+                if ($value === "" && $inputTypes[$key] === "string") {
+                    $valueIsValid = true;
+                } else if (gettype($inputTypes[$key]) === "string") {
                     $valueIsValid = filter_var($value, FILTER_VALIDATE_REGEXP, $expressions[$inputTypes[$key]]);
                 } else {
                     $valueIsValid = filter_var($value, $inputTypes[$key]);
@@ -81,7 +83,7 @@ function validateInputs($trimInput = true) {
                 if ($valueIsValid) {
                     $validatedInputs[$key] = $value;
                 } else {
-                    exitDueToInvalidInput($key);
+                    exitDueToInvalidInput($key, $value);
                 }
             }
         }
