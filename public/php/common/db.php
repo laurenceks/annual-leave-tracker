@@ -1,6 +1,8 @@
 <?php
+require_once '../vendor/autoload.php';
 
 use Symfony\Component\Dotenv\Dotenv;
+
 if ($_SERVER['HTTP_HOST'] === 'localhost' || $_SERVER["REMOTE_ADDR"] === "127.0.0.1") {
     $dotenv = new Dotenv();
     $dotenv->load(__DIR__ . '/.env.local');
@@ -26,5 +28,5 @@ try {
     $output["errorMessage"] = "There was an error querying the database; please try again. If the error persists please contact a system administrator for assistance.";
     $output["errorTypes"][] = "connectionError";
     $output["errorType"] = "connectionError";
-    echo json_encode( $output);
+    echo json_encode($output);
 }
