@@ -7,6 +7,10 @@ namespace Composer\Autoload;
 class ComposerStaticInit9e141fcb546fe16fb0bf86e625e1dc97
 {
     public static $prefixLengthsPsr4 = array (
+        'S' => 
+        array (
+            'Symfony\\Component\\Dotenv\\' => 25,
+        ),
         'P' => 
         array (
             'PHPMailer\\PHPMailer\\' => 20,
@@ -22,6 +26,10 @@ class ComposerStaticInit9e141fcb546fe16fb0bf86e625e1dc97
     );
 
     public static $prefixDirsPsr4 = array (
+        'Symfony\\Component\\Dotenv\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/dotenv',
+        ),
         'PHPMailer\\PHPMailer\\' => 
         array (
             0 => __DIR__ . '/..' . '/phpmailer/phpmailer/src',
