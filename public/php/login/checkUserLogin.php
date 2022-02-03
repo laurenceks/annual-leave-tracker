@@ -11,6 +11,8 @@ $output = array("isLoggedIn" => $auth->isLoggedIn(), "user" => null);
 if ($output["isLoggedIn"]) {
     require "../common/getUserInfo.php";
     $output["user"] = getUserInfo($auth->getUserId());
+} else {
+    $auth->destroySession();
 }
 
 echo json_encode($output);
