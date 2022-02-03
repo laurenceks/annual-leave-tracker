@@ -5,9 +5,9 @@ require_once "../common/db.php";
 require "../common/checkFunctions/checkEntryExists.php";
 require "../common/checkFunctions/checkDatesOverlap.php";
 require "../common/feedbackTemplate.php";
+require "../security/validateInputs.php";
 
-$input = json_decode(file_get_contents('php://input'), true);
-
+$input = validateInputs();
 $output = $feedbackTemplate;
 
 if (checkEntryExists("periods", "id", array(array("key" => "name", "value" => $input["inputAddPeriodName"])))) {

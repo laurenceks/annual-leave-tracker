@@ -5,8 +5,7 @@ require '../vendor/autoload.php';
 require_once "../common/db.php";
 require "../common/feedbackTemplate.php";
 require "../common/deleteUserById.php";
-
-$input = json_decode(file_get_contents('php://input'), true);
+require "../security/validateInputs.php";
 
 use Delight\Auth\Auth;
 use Delight\Auth\Role;
@@ -14,7 +13,7 @@ use Delight\Auth\UnknownIdException;
 
 $auth = new Auth($db);
 
-$input = json_decode(file_get_contents('php://input'), true);
+$input = validateInputs();
 $output = $feedbackTemplate;
 $targetIsSuperAdmin = false;
 $targetIsAdmin = false;

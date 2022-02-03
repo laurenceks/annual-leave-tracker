@@ -2,11 +2,12 @@
 require "../security/userLoginSecurityCheck.php";
 require "../common/db.php";
 require "../common/feedbackTemplate.php";
+require "../security/validateInputs.php";
 
 $output = array_merge($feedbackTemplate, array("bookings" => array()));
-$input = json_decode(file_get_contents('php://input'), true);
+$input = validateInputs();
 
-if (!$input["periodId"]) {
+if (!isset($input["periodId"])) {
     require "../periods/getPeriodIdFromDateRange.php";
     $period = getPeriodIdFromDateRange();
 } else {

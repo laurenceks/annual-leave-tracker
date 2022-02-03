@@ -6,12 +6,13 @@ require "../security/userSameOrganisationAsTargetCheck.php";
 require '../vendor/autoload.php';
 require "../common/db.php";
 require "../common/feedbackTemplate.php";
+require "../security/validateInputs.php";
 
 use Delight\Auth\Auth;
 use Delight\Auth\UnknownIdException;
 
 $auth = new Auth($db);
-$input = json_decode(file_get_contents('php://input'), true);
+$input = validateInputs();
 targetHasSameOrganisationAsCurrentUser($input["userId"]);
 $output = $feedbackTemplate;
 

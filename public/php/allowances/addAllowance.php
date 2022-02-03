@@ -5,8 +5,9 @@ require "../common/checkFunctions/checkEntryExists.php";
 require "../common/feedbackTemplate.php";
 require "addAllowanceFunction.php";
 
-$input = json_decode(file_get_contents('php://input'), true);
+require "../security/validateInputs.php";
 
+$input = validateInputs();
 $output = $feedbackTemplate;
 
 $output = addAllowance($db, $input, $output);

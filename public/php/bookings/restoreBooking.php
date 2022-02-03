@@ -3,9 +3,9 @@ require "../security/userLoginSecurityCheck.php";
 require_once "../common/db.php";
 require "../common/checkFunctions/checkEntryExists.php";
 require "../common/feedbackTemplate.php";
+require "../security/validateInputs.php";
 
-$input = json_decode(file_get_contents('php://input'), true);
-
+$input = validateInputs();
 $output = $feedbackTemplate;
 
 if (!checkEntryExists("bookings", "id", array(array("key" => "id", "value" => $input["id"])), true)) {

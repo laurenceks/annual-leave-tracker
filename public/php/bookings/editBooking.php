@@ -3,12 +3,13 @@ require "../security/userLoginSecurityCheck.php";
 require_once "../common/db.php";
 require "../common/checkFunctions/checkEntryExists.php";
 require "../common/feedbackTemplate.php";
+require "../security/validateInputs.php";
 
-$input = json_decode(file_get_contents('php://input'), true);
-
+$input = validateInputs();
 $output = $feedbackTemplate;
 
 //TODO check overlapping date bookings (make a common function so bookings can use the same
+//TODO check if status is expired or taken before changing
 if (true === false) {
     $output["feedback"] = "The requested dates overlap with an existing booking";
     $output["title"] = "Booking already exists";

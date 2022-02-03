@@ -9,11 +9,11 @@ use Delight\Auth\TokenExpiredException;
 use Delight\Auth\TooManyRequestsException;
 
 require_once "../../common/db.php";
+require "../../security/validateInputs.php";
 
 $auth = new Auth($db);
 
-$input = json_decode(file_get_contents('php://input'), true);
-
+$input = validateInputs();
 $output = array("success" => false, "feedback" => "An unknown error occurred", "input" => $input);
 
 if (!$input || !$input['selector'] || !$input['token']) {
@@ -33,7 +33,14 @@ if (!$input || !$input['selector'] || !$input['token']) {
             require_once "../loginEmail/composeLoginEmail.php";
             require "../../common/appConfig.php";
 
-            $emailParams = composeLoginEmail(array("headline" => $appName . " password reset", "subheadline" => "Your password has been reset, " . $userDetails->firstName, "body" => "Your account password has been reset. If this wasn't you, click the button below and then \"Forgot password\" change your password again.", "buttonText" => "Login", "alt" => "Your " . $appName . " account password has been reset", "url" => "/#/login",));
+            $emailParams = composeLoginEmail(array(
+                "headline" => $appName . " password reset",
+                "subheadline" => "Your password has been reset, " . $userDetails->firstName,
+                "body" => "Your account password has been reset. If this wasn't you, click the button below and then \"Forgot password\" change your password again.",
+                "buttonText" => "Login",
+                "alt" => "Your " . $appName . " account password has been reset",
+                "url" => "/#/login",
+            ));
             $mailToSend = composeSmtpMail($userDetails->email, $userDetails->firstName . " " . $userDetails->lastName, $appName . " password reset", $emailParams["message"], $emailParams["messageAlt"]);
             $output["mail"] = sendSmtpMail($mailToSend);
             $output["feedback"] = 'Password has been reset';

@@ -11,11 +11,11 @@ use Delight\Auth\UserAlreadyExistsException;
 
 
 require_once "../common/db.php";
+require "../security/validateInputs.php";
 
 $auth = new Auth($db);
 
-$input = json_decode(file_get_contents('php://input'), true);
-
+$input = validateInputs();
 $output = array("success" => false, "feedback" => "An unknown error occurred", "mail" => new stdClass());
 
 try {

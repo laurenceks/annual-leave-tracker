@@ -6,12 +6,17 @@ use Delight\Auth\ConfirmationRequestNotFound;
 use Delight\Auth\TooManyRequestsException;
 
 require_once "../../common/db.php";
+require "../../security/validateInputs.php";
 
 $auth = new Auth($db);
 
-$input = json_decode(file_get_contents('php://input'), true);
-
-$output = array("success" => false, "feedback" => "An unknown error occurred", "mail" => new stdClass(), "keepFormActive" => false);
+$input = validateInputs();
+$output = array(
+    "success" => false,
+    "feedback" => "An unknown error occurred",
+    "mail" => new stdClass(),
+    "keepFormActive" => false
+);
 
 try {
     $auth->resendConfirmationForEmail($input["inputReVerifyEmail"], function ($selector, $token) use ($input, &$output) {

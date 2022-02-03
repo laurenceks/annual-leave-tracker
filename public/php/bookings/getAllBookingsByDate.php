@@ -5,11 +5,12 @@ require "../common/feedbackTemplate.php";
 require "bookingsByDateQuery.php";
 require "../periods/getPeriodIdFromDateRange.php";
 require "../allowances/getAllowanceForUserByPeriod.php";
+require "../security/validateInputs.php";
 
 $output = array_merge($feedbackTemplate, array("bookings" => array()));
-$input = json_decode(file_get_contents('php://input'), true);
-$getBookingsByDate = $db->prepare($bookingsByDateQuery);
+$input = validateInputs();
 
+$getBookingsByDate = $db->prepare($bookingsByDateQuery);
 $getBookingsByDate->bindValue(':organisationId', $_SESSION["user"]->organisationId);
 $getBookingsByDate->bindValue(':locationId', $_SESSION["user"]->locationId);
 $getBookingsByDate->bindValue(':payGradeId', $_SESSION["user"]->payGradeId);
