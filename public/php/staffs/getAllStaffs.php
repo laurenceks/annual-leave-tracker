@@ -4,7 +4,7 @@ require "../common/db.php";
 require "../common/feedbackTemplate.php";
 
 $output = array_merge($feedbackTemplate, array("locations" => array()));
-$input = json_decode(file_get_contents('php://input'), true);
+
 $getAllStaff = $db->prepare("
 SELECT 
   `users_info`.`userId` AS `id`,
