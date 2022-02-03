@@ -23,7 +23,7 @@ function validateInputs($trimInput = true) {
 
         $inputTypes = [
             "userId" => FILTER_VALIDATE_INT,
-            "maskedEmail" => FILTER_VALIDATE_EMAIL,
+            "maskedEmail" => "string",
             "maskedFirstName" => "string",
             "maskedLastName" => "string",
             "inputAccountFirstName" => "string",
