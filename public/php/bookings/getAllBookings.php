@@ -5,7 +5,6 @@ require "../common/db.php";
 require "../common/feedbackTemplate.php";
 
 $output = array_merge($feedbackTemplate, array("bookings" => array()));
-$input = json_decode(file_get_contents('php://input'), true);
 $getAllBookings = $db->prepare("SELECT `bookings`.*,
        IF((`bookings`.`status` = 'requested' AND `bookings`.`dateFrom` <= CURRENT_DATE), 'expired', `bookings`.`status`) AS `status`,
        `users_info`.`firstName`,
