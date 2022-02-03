@@ -4,7 +4,7 @@ require "../common/db.php";
 require "../common/feedbackTemplate.php";
 
 $output = array_merge($feedbackTemplate, array("bookings" => array()));
-$input = json_decode(file_get_contents('php://input'), true);
+
 $getAllBookings = $db->prepare("SELECT *,
        (CASE `bookings`.`status`
        WHEN 'requested' THEN IF(`bookings`.`dateFrom` <= CURRENT_DATE, 'expired', `bookings`.`status`)
