@@ -20,6 +20,8 @@ FROM (SELECT SUM(`hours`) AS `booked`
         AND `dateTo` <= :dateTo
         AND `userId` = :userId
         AND `organisationId` = :organisationId
+        AND `status` != 'denied'
+        AND NOT (`status` = 'requested' AND `dateFrom` < CURRENT_DATE)
         AND `deleted` = 0) `b`
          CROSS JOIN (SELECT SUM(`hours`) AS `approved`
                      FROM `bookings`
