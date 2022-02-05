@@ -4,7 +4,6 @@ function validateInputs($trimInput = true) {
     //TODO find a way to validate array contents
 
     $rawInputs = json_decode(file_get_contents('php://input'), true);
-
     if ($rawInputs && count($rawInputs) > 0) {
         function exitDueToInvalidInput($key, $val) {
             die(json_encode([
@@ -77,17 +76,26 @@ function validateInputs($trimInput = true) {
             "staffFullName" => "string",
             "locationId" => FILTER_VALIDATE_INT,
             "payGradeId" => FILTER_VALIDATE_INT,
+            "weekStart" => FILTER_VALIDATE_INT,
+            "splitByLocation" => FILTER_VALIDATE_BOOL,
+            "splitByPayGrade" => FILTER_VALIDATE_BOOL,
+            "dateGroup" => "string",
+            "groupSplitBy" => "string",
         ];
 
         foreach ($rawInputs as $key => $value) {
             if (isset($value) && isset($inputTypes[$key])) {
-                $value = ($trimInput && !is_array($value)) ? trim($value) : $value;
+                $value = ($trimInput && $inputTypes[$key] === "string") ? trim($value) : $value;
                 if ($value === "" && $inputTypes[$key] === "string") {
-                    $valueIsValid = true;
+                    $valueIsValid = gettype(value) === "string";
                 } else if (gettype($inputTypes[$key]) === "string") {
-                    $valueIsValid = $inputTypes[$key] === "array" ? is_array($value) : filter_var($value, FILTER_VALIDATE_REGEXP, $expressions[$inputTypes[$key]]);
+                    $value = $inputTypes[$key] === "array" ? is_array($value) : filter_var($value, FILTER_VALIDATE_REGEXP, $expressions[$inputTypes[$key]]);
+                    $valueIsValid = $value !== false;
+                } else if ($inputTypes[$key] === FILTER_VALIDATE_BOOL) {
+                    $valueIsValid = true;
+                    $value = filter_var($value, FILTER_VALIDATE_BOOL);
                 } else {
-                    $valueIsValid = filter_var($value, $inputTypes[$key]);
+                    $valueIsValid = filter_var($value, $inputTypes[$key]) !== false;
                 }
                 if ($valueIsValid) {
                     $validatedInputs[$key] = $value;
