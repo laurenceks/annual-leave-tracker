@@ -73,7 +73,15 @@ try {
 
     $output["success"] = true;
     $output["title"] = "Hours updated";
-    $output["feedback"] = "Now showing data for the period XXXX";
+    $output["feedback"] = "Now showing approved hours for " . date("d/m/Y", strtotime($input["from"])) . " to " . date("d/m/Y", strtotime($input["to"])) . ($input["dateGroup"] === "day" ? "" : " broken down by " . $input["dateGroup"] . ($input["dateGroup"] === "week" ? " (starting on " . jddayofweek($input["weekStart"], 1) . ")" : ""));
+    if ($input["splitByLocation"] || $input["splitByPayGrade"]) {
+        $output["feedback"] .= $input["dateGroup"] === "day" ? " broken down by " : ", ";
+        if ($input["splitByLocation"] && $input["splitByPayGrade"]) {
+            $output["feedback"] .= $input["groupSplitBy"] === "locationId" ? "location, pay grade" : "pay grade, location";
+        } else {
+            $output["feedback"] .= $input["splitByLocation"] ? "location" : "pay grade";
+        }
+    }
 } catch (PDOException $e) {
     $output = array_merge($output, array(
         "feedback" => "There was an error querying the database; please try again. If the error persists please contact a system administrator for assistance.",
