@@ -87,7 +87,7 @@ function validateInputs($trimInput = true) {
             if (isset($value) && isset($inputTypes[$key])) {
                 $value = ($trimInput && $inputTypes[$key] === "string") ? trim($value) : $value;
                 if ($value === "" && $inputTypes[$key] === "string") {
-                    $valueIsValid = gettype(value) === "string";
+                    $valueIsValid = gettype($value) === "string";
                 } else if (gettype($inputTypes[$key]) === "string") {
                     $value = $inputTypes[$key] === "array" ? is_array($value) : filter_var($value, FILTER_VALIDATE_REGEXP, $expressions[$inputTypes[$key]]);
                     $valueIsValid = $value !== false;
