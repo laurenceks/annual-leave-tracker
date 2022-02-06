@@ -19,7 +19,7 @@ const fetchWithAuthCheck = (url, options, responseType = "json") => {
                     return Promise.reject({error:401, errorMessage: `401 - permission denied (${responseJson.errorMessage || responseJson.text || responseJson.feedback})`});
                 }
             } catch (e) {
-                return Promise.reject({error: e, errorMessage: responseText});
+                return Promise.reject({error: e, errorMessage: responseText, isError: true});
             }
         } else {
             return Promise.reject(new Error(await response.text()));
