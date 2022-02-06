@@ -103,7 +103,7 @@ WHERE `aDate` BETWEEN @`minDate` AND @`maxDate`
           ELSE TRUE END
 ORDER BY `aDate`, `locationId`;";
 
-$hoursByDateSplitQuery = "SELECT CASE @`interval` WHEN 'month' THEN DATE_FORMAT(aDate, '%b %y') WHEN 'year' THEN YEAR(`aDate`) ELSE `aDate` END AS `date`,
+$hoursByDateSplitQuery = "SELECT CASE @`interval` WHEN 'month' THEN DATE_FORMAT(`aDate`, '%b %y') WHEN 'year' THEN YEAR(`aDate`) ELSE `aDate` END AS `date`,
        IF(@`splitByLocation` = TRUE, `locations`.`id`, NULL) AS `locationId`,
        IF(@`splitByLocation` = TRUE, `locations`.`name`, NULL) AS `locationName`,
        IF(@`splitByPayGrade` = TRUE, `pay_grades`.`id`, NULL) AS `payGradeId`,
@@ -202,6 +202,7 @@ FROM (
                       @`splitByPayGrade` := :splitByPayGrade,
                       @`splitByLocation` := :splitByLocation,
                       @`interval` := :interval,
+                      @`groupSplitBy` := :groupSplitBy,
                       @`organisationId` := :organisationId) `d`
      ) `e`
          CROSS JOIN `locations`
@@ -215,5 +216,5 @@ WHERE `aDate` BETWEEN @`minDate` AND @`maxDate`
           WHEN 'month' THEN `aDate` = DATE_ADD(DATE_ADD(LAST_DAY(`aDate`), INTERVAL 1 DAY), INTERVAL -1 MONTH)
           WHEN 'year' THEN `aDate` = DATE(CONCAT(YEAR(`aDate`), '-01-01'))
           ELSE TRUE END
-GROUP BY `aDate`, `locationId`, `payGradeId`
-ORDER BY `aDate`, `locationId`, `payGradeId`;";
+GROUP BY `aDate`, IF(@`groupSplitBy` = 'locationId', `locationId`, `payGradeId`), IF(@`groupSplitBy` = 'locationId', `payGradeId`, `locationId`)
+ORDER BY `aDate`, IF(@`groupSplitBy` = 'locationId', `locationId`, `payGradeId`), IF(@`groupSplitBy` = 'locationId', `payGradeId`, `locationId`);";
