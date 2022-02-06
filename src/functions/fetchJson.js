@@ -8,8 +8,15 @@ const fetchJson = (url, options, successHandler, errorHandler = null) => {
         if (e.errorMessage) {
             console.error(e.errorMessage || e.feedback || "An internal server error occurred");
         }
-        if (errorHandler && e.error !== 401) {
-            errorHandler({...e, title: "Server error", feedback: e.feedback || "An internal server error occurred", isError: true});
+        if (errorHandler && e.error !== 401 && e.isError) {
+            errorHandler({
+                ...e,
+                title: "Server error",
+                feedback: e.feedback || "An internal server error occurred",
+                isError: e.isError
+            });
+        } else {
+            console.error(e);
         }
     });
 }
