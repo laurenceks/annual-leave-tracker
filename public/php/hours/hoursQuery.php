@@ -139,7 +139,7 @@ $hoursByDateSplitQuery = "SELECT CASE @`interval` WHEN 'month' THEN DATE_FORMAT(
                  AND `bookings`.`status` = 'approved')
            , 0) AS `hours`
 FROM (
-         SELECT @`maxDate` - INTERVAL (`a`.`a` + (10 * `b`.`a`) + (100 * `c`.`a`)) DAY AS `aDate`
+         SELECT @`maxDate` - INTERVAL (`a`.`a` + (10 * `b`.`a`) + (100 * `c`.`a`)+ (1000 * `d`.`a`)) DAY AS `aDate`
          FROM (SELECT 0 AS `a`
                UNION ALL
                SELECT 1
@@ -197,13 +197,32 @@ FROM (
                SELECT 8
                UNION ALL
                SELECT 9) `c`,
+              (SELECT 0 AS `a`
+               UNION ALL
+               SELECT 1
+               UNION ALL
+               SELECT 2
+               UNION ALL
+               SELECT 3
+               UNION ALL
+               SELECT 4
+               UNION ALL
+               SELECT 5
+               UNION ALL
+               SELECT 6
+               UNION ALL
+               SELECT 7
+               UNION ALL
+               SELECT 8
+               UNION ALL
+               SELECT 9) `d`,
               (SELECT @`minDate` := :minDate,
                       @`maxDate` := :maxDate,
                       @`splitByPayGrade` := :splitByPayGrade,
                       @`splitByLocation` := :splitByLocation,
                       @`interval` := :interval,
                       @`groupSplitBy` := :groupSplitBy,
-                      @`organisationId` := :organisationId) `d`
+                      @`organisationId` := :organisationId) `vars`
      ) `e`
          CROSS JOIN `locations`
          CROSS JOIN `pay_grades`
