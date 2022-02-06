@@ -11,6 +11,7 @@ import Users from "./users/Users";
 import ProtectedRoute from "./common/ProtectedRoute";
 import Logout from "./login/Logout";
 import EditEntries from "./editEntries/EditEntries";
+import Hours from "./hours/Hours";
 
 const Main = () => {
     const [globalAppContext] = useContext(GlobalAppContext);
@@ -34,6 +35,7 @@ const Main = () => {
                 <Route path="/account/*" element={<Account/>}/>
                 <Route path="/locations"
                        element={<ProtectedRoute element={<EditEntries type={"location"} title={"locations"}/>}/>}/>
+                <Route path="/hours" element={<ProtectedRoute element={<Hours/>}/>}/>
                 <Route path="/payGrades"
                        element={<ProtectedRoute element={<EditEntries type={"payGrade"} title={"pay grades"}/>}/>}/>
                 <Route path="/periods"
@@ -41,8 +43,7 @@ const Main = () => {
                 <Route path="/allowances"
                        element={<ProtectedRoute element={<EditEntries type={"allowance"}
                                                                       title={"allowances"}
-                                                                      includeDeleted={false}
-                       />}/>}/>
+                                                                      includeDeleted={false}/>}/>}/>
                 <Route path="/requests"
                        element={<ProtectedRoute element={<EditEntries type={"request"}
                                                                       title={"requests"}
@@ -57,8 +58,7 @@ const Main = () => {
                                                                       includeDeleted={false}
                                                                       resultsKey="staff"
                                                                       splitOn="status"/>}/>}/>
-                <Route path="/users"
-                       element={<ProtectedRoute element={<Users userId={globalAppContext.userId}/>}/>}/>
+                <Route path="/users" element={<ProtectedRoute element={<Users userId={globalAppContext.userId}/>}/>}/>
                 <Route path="*" element={<Navigate to="/"/>}/>
             </Routes>
         </div>
