@@ -21,7 +21,7 @@ const Table = ({
                    allowSorting,
                    length,
                    updated,
-                   showPaginationButtons
+                   showPaginationButtons,
                }) => {
 
     const headerIndex = headers.findIndex((x) => (x.text || x) === defaultSortHeading);
@@ -43,19 +43,19 @@ const Table = ({
 
     useEffect(() => {
         setCurrentPageIndex(0);
-    }, [updated])
+    }, [updated]);
 
     useEffect(() => {
         const countPages = (arr) => {
             pageCount.current = length ? Math.ceil(arr.length / length) || null : null;
             pageNumbers.current = pageCount.current ? [...Array(pageCount.current).keys()].map(x => ++x) : [];
-        }
+        };
 
         const sortTableRows = (a, b, columnStructure = null,
                                aIndex = sortSettings.index + (columnCount.current - a.length),
                                bIndex = sortSettings.index + (columnCount.current - b.length)) => {
             if (columnStructure) {
-                const col = columnStructure.reduce((a, b, c) => c < sortSettings.index ? a + b : a, 0)
+                const col = columnStructure.reduce((a, b, c) => c < sortSettings.index ? a + b : a, 0);
                 aIndex = columnStructure?.length === a.length ? aIndex : col;
                 bIndex = columnStructure?.length === b.length ? bIndex : col;
             }
@@ -81,20 +81,20 @@ const Table = ({
                 let groupedRows = [];
                 let rowIndex = 0;
                 sortedRows.forEach((rowArray) => {
-                    const rowLength = rowArray.find((x) => x.rowspan)?.rowspan
+                    const rowLength = rowArray.find((x) => x.rowspan)?.rowspan;
                     if (rowLength) {
-                        columnStructures.push(rowArray.map((x) => (x.rowspan && x.rowspan > 1) ? 0 : 1))
-                        groupedRows.push(sortedRows.slice(rowIndex, rowIndex + rowLength))
+                        columnStructures.push(rowArray.map((x) => (x.rowspan && x.rowspan > 1) ? 0 : 1));
+                        groupedRows.push(sortedRows.slice(rowIndex, rowIndex + rowLength));
                         rowIndex += rowLength;
                     }
-                })
+                });
                 if (!columnStructures.every((x) => x[sortSettings.index])) {
-                    groupedRows.sort((a, b) => sortTableRows(a[0], b[0]))
+                    groupedRows.sort((a, b) => sortTableRows(a[0], b[0]));
                     !sortSettings.ascending && groupedRows.reverse();
                 } else {
                     groupedRows.forEach((x, i) => {
                         if (!x.some((x) => x.some((x) => x.type === "input"))) { //for each row group, sort each inner row
-                            x.sort((a, b) => sortTableRows(a, b, columnStructures[i]))
+                            x.sort((a, b) => sortTableRows(a, b, columnStructures[i]));
                             !sortSettings.ascending && x.reverse();
                         }
 
@@ -104,7 +104,7 @@ const Table = ({
                         const spannedRowCells = [...x.find((y) => y.length === maxFindCols)].filter(
                             (y) => y.rowspan && y.rowspan > 1);
 
-                        x = x.map(y => y.filter(z => !z.rowspan || z.rowspan === 1))
+                        x = x.map(y => y.filter(z => !z.rowspan || z.rowspan === 1));
                         const firstValues = [...x[0]];
                         x[0] = columnStructures[i].map((y) => y ? firstValues.shift() : spannedRowCells.shift());
                         groupedRows[i] = x;
@@ -139,9 +139,9 @@ const Table = ({
                                      setSortSettings(prevState => {
                                          return {
                                              ascending: i === prevState.index ? !prevState.ascending : true,
-                                             index: i
-                                         }
-                                     })
+                                             index: i,
+                                         };
+                                     });
                                  }}>
                                 <div className="d-flex flex-row align-items-center">
                                     {(x.text || x.length > 0 || isValidElement(x)) &&
@@ -154,7 +154,7 @@ const Table = ({
                                     <div>{x.text ?? x}</div>
                                 </div>
                             </th>) :
-                            null
+                            null;
                     })}
                 </tr>
                 </thead>
@@ -168,16 +168,15 @@ const Table = ({
                                               align={y?.cellAlignClass}
                                               hoverGroup={{
                                                   current: currentHoverGroup,
-                                                  set: setCurrentHoverGroup
-                                              }}/>
+                                                  set: setCurrentHoverGroup,
+                                              }}/>;
 
                         })}
-                    </tr>)
+                    </tr>);
                 })}
                 </tbody>
             </table>
-            {(length && pageCount.current > 1 && showPaginationButtons) &&
-            <nav aria-label="Table pages">
+            {(length && pageCount.current > 1 && showPaginationButtons) && <nav aria-label="Table pages">
                 <ul className="pagination justify-content-center">
                     <li className={`page-item user-select-none ${currentPageIndex === 0 ?
                         "disabled" :
@@ -197,7 +196,7 @@ const Table = ({
                                     onClick={i !== currentPageIndex ?
                                         (() => setCurrentPageIndex(i)) :
                                         null}>{x}</button>
-                        </li>
+                        </li>;
                     })}
                     <li className={`page-item user-select-none ${currentPageIndex === pageCount.current - 1 ?
                         "disabled" :
@@ -244,7 +243,7 @@ Table.defaultProps = {
     rowEnter: null,
     rowLeave: null,
     defaultSortIndex: 0,
-    length: 10
-}
+    length: 10,
+};
 
 export default Table;
