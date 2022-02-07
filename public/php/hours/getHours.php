@@ -39,28 +39,29 @@ try {
         $altKeyId = $splitKeyId === "locationId" ? "payGradeId" : "locationId";
         $altKeyName = $splitKeyId === "locationId" ? "payGradeName" : "locationName";
         $previousRow = ["date" => null, $splitKeyId => null];
+        $output["hoursRaw"] = $getHours->fetchAll(PDO::FETCH_ASSOC);
 
         foreach ($getHours as $row) {
             if ($previousRow["date"] === $row["date"]) {
                 $lastRowIndex = count($output["hours"]) - 1;
                 if ($secondSplit) {
-                    $lastSplitIndex = isset($output["hours"][$lastRowIndex]["split"]) ? (count($output["hours"][$lastRowIndex]["split"]) - 1) : 0;
+                    $lastSplitIndex = isset($output["hours"][$lastRowIndex]["subGroup"]) ? (count($output["hours"][$lastRowIndex]["subGroup"]) - 1) : 0;
                     if ($previousRow[$splitKeyId] === $row[$splitKeyId]) {
-                        $output["hours"][$lastRowIndex]["split"][$lastSplitIndex]["split"][] = makeArraySplit($row, $altKeyId, $altKeyName);
+                        $output["hours"][$lastRowIndex]["subGroup"][$lastSplitIndex]["subGroup"][] = makeArraySplit($row, $altKeyId, $altKeyName);
                     } else {
-                        $output["hours"][$lastRowIndex]["split"][] = array_merge(makeArraySplit($row, $splitKeyId, $splitKeyName, false), [
-                            "split" => [makeArraySplit($row, $altKeyId, $altKeyName)]
+                        $output["hours"][$lastRowIndex]["subGroup"][] = array_merge(makeArraySplit($row, $splitKeyId, $splitKeyName, false), [
+                            "subGroup" => [makeArraySplit($row, $altKeyId, $altKeyName)]
                         ]);
                     }
                 } else {
-                    $output["hours"][$lastRowIndex]["split"][] = makeArraySplit($row, $splitKeyId, $splitKeyName);
+                    $output["hours"][$lastRowIndex]["subGroup"][] = makeArraySplit($row, $splitKeyId, $splitKeyName);
                 }
             } else {
                 $output["hours"][] = [
                     "date" => $row["date"],
-                    "split" => [
+                    "subGroup" => [
                         array_merge(makeArraySplit($row, $splitKeyId, $splitKeyName, !$secondSplit), $secondSplit ? [
-                            "split" => [makeArraySplit($row, $altKeyId, $altKeyName)]
+                            "subGroup" => [makeArraySplit($row, $altKeyId, $altKeyName)]
                         ] : [])
                     ]
                 ];
