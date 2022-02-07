@@ -248,7 +248,7 @@ td.dashboardStockTableCell {
     white-space: nowrap;
 }
 
-.table-hover > tbody > tr > td.hover {
+td.hover {
     --bs-table-accent-bg: var(--bs-table-hover-bg);
     color: var(--bs-table-hover-color);
 }
