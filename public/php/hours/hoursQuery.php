@@ -104,6 +104,7 @@ WHERE `aDate` BETWEEN @`minDate` AND @`maxDate`
 ORDER BY `aDate`, `locationId`;";
 
 $hoursByDateSplitQuery = "SELECT CASE @`interval` WHEN 'month' THEN DATE_FORMAT(`aDate`, '%b %y') WHEN 'year' THEN YEAR(`aDate`) ELSE `aDate` END AS `date`,
+       `aDate` AS 'dateSortValue',
        IF(@`splitByLocation` = TRUE, `locations`.`id`, NULL) AS `locationId`,
        IF(@`splitByLocation` = TRUE, `locations`.`name`, NULL) AS `locationName`,
        IF(@`splitByPayGrade` = TRUE, `pay_grades`.`id`, NULL) AS `payGradeId`,
