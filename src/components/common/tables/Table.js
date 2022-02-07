@@ -1,27 +1,29 @@
-import {isValidElement, useEffect, useRef, useState} from "react";
+import {isValidElement, useCallback, useEffect, useRef, useState} from "react";
 import PropTypes from 'prop-types';
 import TableCell from "./TableCell";
 import naturalSort from "../../../functions/naturalSort";
 import {IoArrowDown, IoArrowUp} from "react-icons/io5";
 import ArrowIconTransition from "../transitions/ArrowIconTransition";
+import TableFilter from "./TableFilter";
 
 const Table = ({
-                   title,
-                   headers,
-                   rows,
-                   tableClassName,
-                   fullWidth,
-                   rowEnter,
-                   rowLeave,
+                   allowFiltering,
+                   allowSorting,
                    defaultHoverGroup,
+                   defaultSortDirection,
                    defaultSortHeading,
                    defaultSortIndex,
-                   defaultSortDirection,
+                   fullWidth,
+                   headers,
                    hoverClass,
-                   allowSorting,
                    length,
-                   updated,
+                   rowEnter,
+                   rowLeave,
+                   rows,
                    showPaginationButtons,
+                   tableClassName,
+                   title,
+                   updated,
                }) => {
 
     const headerIndex = headers.findIndex((x) => (x.text || x) === defaultSortHeading);
@@ -34,6 +36,7 @@ const Table = ({
     const [currentHeadingHoverIndex, setCurrentHeadingHoverIndex] = useState(null);
     const [currentHoverGroup, setCurrentHoverGroup] = useState(defaultHoverGroup);
     const [tableRows, setTableRows] = useState(rows);
+    const [filterValues, setFilterValues] = useState(headers.map(() => null));
     const [currentPageIndex, setCurrentPageIndex] = useState(0);
     const columnCount = useRef(0);
     const pageCount = useRef(null);
@@ -44,6 +47,17 @@ const Table = ({
     useEffect(() => {
         setCurrentPageIndex(0);
     }, [updated]);
+
+    const filterColumns = useCallback((rows) => {
+        return (rows.filter((x) => {
+            return filterValues.every((y, i) => {
+                const offsetIndex = i + (x.length - columnCount.current);
+                let filterValue = (x[offsetIndex]?.text?.toString().toLowerCase() || (typeof x[offsetIndex] === "string" && x[offsetIndex]?.toLowerCase()) || (typeof x[offsetIndex] === "number" ?
+                    x[offsetIndex]?.toString().toLowerCase() : "")).trim();
+                return !filterValue || !y || y.split(",").filter((x) => !!x).some((z) => filterValue.includes(z.trim()));
+            });
+        }));
+    }, [filterValues]);
 
     useEffect(() => {
         const countPages = (arr) => {
@@ -120,8 +134,9 @@ const Table = ({
                 length && (sortedRows = sortedRows.splice(currentStart, length));
             }
         }
-        setTableRows(sortedRows);
-    }, [sortSettings, rows, currentPageIndex]);
+        setTableRows(allowFiltering ? filterColumns(sortedRows) : sortedRows);
+    }, [sortSettings, rows, currentPageIndex, filterValues]);
+
     return (<div className={`table-responsive ${fullWidth && "w-100"}`}>
         {(rows && rows.length > 0) ? <>
             <table className={`table ${hoverClass ? "table-hover" : ""} ${tableClassName}`}>
@@ -159,6 +174,26 @@ const Table = ({
                 </tr>
                 </thead>
                 <tbody>
+                {allowFiltering && <tr>
+                    {headers.map((x, i) => {
+                        return (<TableCell key={`filter-row-${i}`}
+                                           className="filter-row"
+                                           cellData={{"data-rowGroupId": "filter-row"}}
+                                           content={{
+                                               fragment:
+                                                   <TableFilter placeholder={"Filter " + (x.text || x || "").toLowerCase()}
+                                                                onChange={(id, v) => setFilterValues(prevState => {
+                                                                    const newFilterValues = [...prevState];
+                                                                    newFilterValues[i] = v;
+                                                                    return newFilterValues;
+                                                                })}/>,
+                                           }}
+                                           hoverGroup={{
+                                               current: currentHoverGroup,
+                                               set: setCurrentHoverGroup,
+                                           }}/>);
+                    })}
+                </tr>}
                 {tableRows.map((x, i) => {
                     return (<tr key={`${title}-tr-${i}`} onMouseEnter={rowEnter} onMouseLeave={rowLeave}>
                         {x.map((y, j) => {
@@ -221,6 +256,7 @@ Table.propTypes = {
     headers: PropTypes.array,
     rows: PropTypes.array,
     fullWidth: PropTypes.bool,
+    allowFiltering: PropTypes.bool,
     allowSorting: PropTypes.bool,
     showPaginationButtons: PropTypes.bool,
     hoverClass: PropTypes.bool,
@@ -238,6 +274,7 @@ Table.defaultProps = {
     rows: [],
     fullWidth: false,
     hoverClass: true,
+    allowFiltering: false,
     allowSorting: true,
     showPaginationButtons: true,
     rowEnter: null,
