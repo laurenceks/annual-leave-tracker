@@ -48,15 +48,45 @@ const Table = ({
         setCurrentPageIndex(0);
     }, [updated]);
 
-    const filterColumns = useCallback((rows) => {
-        return (rows.filter((x) => {
-            return filterValues.every((y, i) => {
-                const offsetIndex = i + (x.length - columnCount.current);
-                let filterValue = (x[offsetIndex]?.text?.toString().toLowerCase() || (typeof x[offsetIndex] === "string" && x[offsetIndex]?.toLowerCase()) || (typeof x[offsetIndex] === "number" ?
-                    x[offsetIndex]?.toString().toLowerCase() : "")).trim();
-                return !filterValue || !y || y.split(",").filter((x) => !!x).some((z) => filterValue.includes(z.trim()));
+    const filterColumns = useCallback((rows, containsSpanRows = false) => {
+        const filterRows = (row, index, arr, allowNullCellValue = false) => {
+            return row.every((rowValue, i) => {
+                const filterValue = filterValues[i + (columnCount.current - row.length)];
+                let cellValue = (rowValue?.text?.toString()
+                    .toLowerCase() || (typeof rowValue === "string" && rowValue?.toLowerCase()) || (typeof rowValue === "number" ?
+                    rowValue?.toString()
+                        .toLowerCase() :
+                    "")).trim();
+                return !filterValue || (!cellValue && allowNullCellValue) || filterValue.split(",")
+                    .filter((filterElement) => !!filterElement)
+                    .some((filterElement) => cellValue.includes(filterElement.trim()));
             });
-        }));
+        };
+        if (containsSpanRows) {
+            const filteredRows = [];
+            rows.forEach((x, i) => {
+                if ([[...x].map((y) => y.rowspan && y.rowspan > 1 ? y : null)].filter(
+                    (y, i, arr) => filterRows(y, i, arr, true)).length > 0) {
+                    if (x.some((y) => y.rowspan)) {
+                        let subGroup = rows.slice(i, i + x[x.findIndex((y) => y.rowspan)].rowspan);
+                        let rowspanCols = subGroup.map((y) => y.filter((z) => z.rowspan && z.rowspan > 1))[0];
+                        subGroup = subGroup.map((y) => y.filter((z) => !z.rowspan || z.rowspan === 1))
+                            .filter(filterRows);
+                        rowspanCols = rowspanCols.map((y) => ({
+                            ...y,
+                            rowspan: subGroup.length,
+                        }));
+                        if (subGroup.length > 0) {
+                            subGroup[0] = rowspanCols.concat(subGroup[0]);
+                            filteredRows.push(...subGroup);
+                        }
+                    }
+                }
+            });
+            return filteredRows;
+        } else {
+            return rows.filter(filterRows);
+        }
     }, [filterValues]);
 
     useEffect(() => {
@@ -86,12 +116,12 @@ const Table = ({
 
         columnCount.current = headers.reduce((a, b) => a + (b.colspan || 1), 0);
         const currentStart = currentPageIndex * (length || 0);
-
         let sortedRows = [...rows];
+        const containsSortedRows = sortedRows.some(x => x.some((x) => x?.rowspan && x?.rowspan > 1));
         if (allowSorting) {
             const maxCols = headers.reduce(countColumnsInRow, 0);
             const columnStructures = [];
-            if (sortedRows.some(x => x.some((x) => x?.rowspan && x?.rowspan > 1))) {
+            if (containsSortedRows) {
                 let groupedRows = [];
                 let rowIndex = 0;
                 sortedRows.forEach((rowArray) => {
@@ -134,7 +164,7 @@ const Table = ({
                 length && (sortedRows = sortedRows.splice(currentStart, length));
             }
         }
-        setTableRows(allowFiltering ? filterColumns(sortedRows) : sortedRows);
+        setTableRows(allowFiltering ? filterColumns(sortedRows, containsSortedRows) : sortedRows);
     }, [sortSettings, rows, currentPageIndex, filterValues]);
 
     return (<div className={`table-responsive ${fullWidth && "w-100"}`}>
@@ -274,7 +304,7 @@ Table.defaultProps = {
     rows: [],
     fullWidth: false,
     hoverClass: true,
-    allowFiltering: false,
+    allowFiltering: true,
     allowSorting: true,
     showPaginationButtons: true,
     rowEnter: null,
