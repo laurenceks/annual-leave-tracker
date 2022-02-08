@@ -349,6 +349,7 @@ const Hours = () => {
                rows={hoursRows}
             //disable sorting if more than one split grouping
                allowSorting={!(hoursSettings.splitByLocation && hoursSettings.splitByPayGrade)}
+               allowFiltering={!(hoursSettings.splitByLocation && hoursSettings.splitByPayGrade)}
                hoverClass={!(hoursSettings.splitByPayGrade || hoursSettings.splitByLocation)}/>
     </div>);
 };
